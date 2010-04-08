@@ -1,0 +1,6 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartArguments>$(OutDir)\$(ProjectName).exe</StartArguments>
+    <StartWorkingDirectory>D:\directx_programming\InteractingMeshes\bin\Debug\</StartWorkingDirectory>
+  </PropertyGroup>
+</Project>
