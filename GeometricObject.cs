@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Direct3D = Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
+using InteractingMeshes.BSP;
 
 
 namespace InteractingMeshes
@@ -98,6 +99,9 @@ namespace InteractingMeshes
             }
         }
 
+        /// <summary>
+        /// Points of a mesh
+        /// </summary>
         public List<Vector3> Points
         {
             get
@@ -105,6 +109,14 @@ namespace InteractingMeshes
                 return MeshUtils.GetPoints(this.Mesh, this.Position);
             }
         }
+
+        //public List<Polygon> Polygons
+        //{
+        //    get
+        //    {
+        //        BSP.BSPNode
+        //    }
+        //}
 
         #endregion 
 

@@ -45,13 +45,13 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="BSP\BSPNode.cs" />
     <Compile Include="BSP\Polygon.cs" />
+    <Compile Include="BSP\Region.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="GeometricObject.cs" />
     <Compile Include="GilbertJohnsonKeerthi.cs" />
-    <Compile Include="BSP\Region.cs" />
     <Compile Include="MeshUtils.cs" />
-    <Compile Include="BSP\BSPNode.cs" />
     <Compile Include="SpaceApplication.cs">
       <SubType>Form</SubType>
     </Compile>
