@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
+using InteractingMeshes.BSP;
 
 namespace InteractingMeshes
 {
@@ -433,7 +434,11 @@ namespace InteractingMeshes
                     }
                     else
                     {
+                        
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
+
+                        //List<Polygon> polygons = obj.Polygons;
+
                         obj.Rotation += this.rotate;
                         this.rotate = new Vector3(0, 0, 0);
 

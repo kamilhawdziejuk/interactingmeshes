@@ -57,6 +57,19 @@ namespace InteractingMeshes
         }
 
         /// <summary>
+        /// Get indices from mesh
+        /// </summary>
+        /// <param name="_mesh"></param>
+        /// <returns></returns>
+        public static Face[] GetIndices(Direct3D.Mesh _mesh)
+        {
+            Face[] intData = 
+                (Face[])_mesh.IndexBuffer.Lock(0, typeof(Face), Direct3D.LockFlags.NoOverwrite, _mesh.NumberFaces);
+            _mesh.IndexBuffer.Unlock();
+            return intData;
+        }
+
+        /// <summary>
         /// Get points from mesh
         /// </summary>
         /// <param name="_mesh"></param>
@@ -85,17 +98,18 @@ namespace InteractingMeshes
         public static List<Polygon> GetPolygons(Direct3D.Mesh _mesh)
         {
             Vertex[] vertices = GetVertexes(_mesh);
-            //List<Vector3> points = new List<Vector3>();
+            Face[] indices = GetIndices(_mesh);
+
             List<Polygon> polygonLst = new List<Polygon>();
 
-            for (int i = 0; i < vertices.Length; i+=3)
+            for (int i = 0; i < indices.Length; ++i)
             {
-                Vector3 p0 = vertices[3 * i].Vector;
-                Vector3 p1 = vertices[3 * i + 1].Vector;
-                Vector3 p2 = vertices[3 * i + 2].Vector;
+                Vector3 p0 = vertices[indices[i].v1].Vector;
+                Vector3 p1 = vertices[indices[i].v2].Vector;
+                Vector3 p2 = vertices[indices[i].v3].Vector;
                 Polygon poly = new Polygon();
-                poly.Add(p0); 
-                poly.Add(p1); 
+                poly.Add(p0);
+                poly.Add(p1);
                 poly.Add(p2);
                 polygonLst.Add(poly);
             }

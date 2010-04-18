@@ -49,6 +49,7 @@
     <Compile Include="BSP\Polygon.cs" />
     <Compile Include="BSP\Region.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="Face.cs" />
     <Compile Include="GeometricObject.cs" />
     <Compile Include="GilbertJohnsonKeerthi.cs" />
     <Compile Include="MeshUtils.cs" />

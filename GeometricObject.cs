@@ -83,11 +83,6 @@ namespace InteractingMeshes
                 }
             }
         }
-        /// <summary>
-        /// Matrix
-        /// </summary>
-        //private Matrix = new Matrix();
-        //private 
 
         /// <summary>
         /// Mesh
