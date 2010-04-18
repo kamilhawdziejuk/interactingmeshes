@@ -13,8 +13,37 @@ namespace InteractingMeshes
     /// </summary>
     public struct Vertex
     {
-        public float x, y, z; // Position of vertex in 3D space
-        public int color;     // Diffuse color of vertex
+        #region --- Static fields ---
+
+        /// <summary>
+        /// Vertex format
+        /// </summary>
+        public static readonly Direct3D.VertexFormats FVF_Flags = Direct3D.VertexFormats.Position | Direct3D.VertexFormats.Diffuse;
+
+        #endregion
+
+        #region --- Public fields ---
+
+        /// <summary>
+        /// Position x of vertex in 3D space
+        /// </summary>
+        public float x;
+        /// <summary>
+        /// Position y of vertex in 3D space
+        /// </summary>
+        public float y;
+        /// <summary>
+        /// Position z of vertex in 3D space
+        /// </summary>
+        public float z;
+        /// <summary>
+        /// Diffuse color of vertex
+        /// </summary>
+        public int color;
+
+        #endregion
+
+        #region --- Creating and destroying objects ---
 
         /// <summary>
         /// Contruktor
@@ -29,6 +58,13 @@ namespace InteractingMeshes
             color = _color;
         }
 
+        #endregion
+
+        #region --- Public properties ---
+
+        /// <summary>
+        /// Vector
+        /// </summary>
         public Vector3 Vector
         {
             get
@@ -37,6 +73,7 @@ namespace InteractingMeshes
             }
         }
 
-        public static readonly Direct3D.VertexFormats FVF_Flags = Direct3D.VertexFormats.Position | Direct3D.VertexFormats.Diffuse;
+        #endregion
+
     };
 }

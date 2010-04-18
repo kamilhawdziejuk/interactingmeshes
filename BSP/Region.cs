@@ -46,6 +46,8 @@ namespace InteractingMeshes.KdTree
 
         #endregion
 
+        #region --- public methods ---
+
         /// <summary>
         /// Does the point is inside the region
         /// </summary>
@@ -56,5 +58,7 @@ namespace InteractingMeshes.KdTree
             return (LowBound.X <= _point.X && LowBound.Y <= _point.Y && LowBound.Z <= _point.Z &&
                     HighBound.X >= _point.X && HighBound.Y >= _point.Y && HighBound.Z >= _point.Z);
         }
+
+        #endregion
     }
 }

@@ -28,6 +28,9 @@ namespace InteractingMeshes.BSP
         POINT_ON_PLANE = 0
     }
 
+    /// <summary>
+    /// Binary Space Partitioning Node
+    /// </summary>
     public class BSPNode
     {
         public static readonly int MaxDepth = 64;
@@ -61,6 +64,8 @@ namespace InteractingMeshes.BSP
         }
 
         #endregion
+
+        #region --- Public static methods ---
 
         /// <summary>
         /// Constructs BSP tree fron an input list of polygons.
@@ -114,6 +119,17 @@ namespace InteractingMeshes.BSP
             return null;
         }
 
+        #endregion
+
+        #region --- Private static methods ---
+
+        /// <summary>
+        /// Splitting polygons by a plane
+        /// </summary>
+        /// <param name="poly"></param>
+        /// <param name="_splitPlane"></param>
+        /// <param name="_frontPart"></param>
+        /// <param name="_backPart"></param>
         private static void SplitPolygon(Polygon poly, Plane _splitPlane, out List<Polygon> _frontPart, out List<Polygon> _backPart)
         {
             int numFront = 0, numBack = 0;
@@ -313,5 +329,7 @@ namespace InteractingMeshes.BSP
             }
             return PointOnPlanePosition.POINT_ON_PLANE;
         }
+
+        #endregion
     }
 }

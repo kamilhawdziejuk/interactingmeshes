@@ -1,4 +1,6 @@
-﻿using System;
+﻿//20-02-2010
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Direct3D = Microsoft.DirectX.Direct3D;
@@ -61,6 +63,9 @@ namespace InteractingMeshes
             }
         }
 
+        /// <summary>
+        /// Rotation
+        /// </summary>
         public Vector3 Rotation
         {
             get
@@ -110,13 +115,16 @@ namespace InteractingMeshes
             }
         }
 
-        //public List<Polygon> Polygons
-        //{
-        //    get
-        //    {
-        //        BSP.BSPNode
-        //    }
-        //}
+        /// <summary>
+        /// Polygons (faces) of a mesh
+        /// </summary>
+        public List<Polygon> Polygons
+        {
+            get
+            {
+                return MeshUtils.GetPolygons(this.Mesh);
+            }
+        }
 
         #endregion 
 
@@ -138,20 +146,5 @@ namespace InteractingMeshes
         }
 
         #endregion
-
-        ///// <summary>
-        ///// Matrix
-        ///// </summary>
-        //public Matrix Matrix
-        //{
-        //    get
-        //    {
-        //        return this.matrix;
-        //    }
-        //    set
-        //    {
-        //        this.matrix = value;
-        //    }
-        //}
     }
 }

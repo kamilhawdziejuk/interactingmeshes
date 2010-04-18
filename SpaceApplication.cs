@@ -1,4 +1,5 @@
 //Kamil Hawdziejuk
+//Space application http://code.google.com/p/interactingmeshes/
 
 using Microsoft.DirectX;
 using Direct3D = Microsoft.DirectX.Direct3D;
@@ -11,6 +12,9 @@ using System.Collections.Generic;
 
 namespace InteractingMeshes
 {
+    /// <summary>
+    /// Space application main class
+    /// </summary>
     public class SpaceApplication : Form
     {
         #region --- Static fields ---
@@ -489,6 +493,9 @@ namespace InteractingMeshes
 
         #endregion
 
+        /// <summary>
+        /// Initialize components
+        /// </summary>
         private void InitializeComponent()
         {
             this.SuspendLayout();
