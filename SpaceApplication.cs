@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
-using InteractingMeshes.BSP;
 
 namespace InteractingMeshes
 {
@@ -64,7 +63,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Region of a screen
         /// </summary>
-        private KdTree.Region viewRegion = new KdTree.Region(new Vector3(-16, -16, -16), new Vector3(16, 16, 16));
+        private Region viewRegion = new Region(new Vector3(-16, -16, -16), new Vector3(16, 16, 16));
 
         /// <summary>
         /// View of a camera
@@ -287,7 +286,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Region of a view
         /// </summary>
-        public KdTree.Region ViewRegion
+        public Region ViewRegion
         {
             get
             {
@@ -438,7 +437,7 @@ namespace InteractingMeshes
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
 
                         //List<Polygon> polygons = obj.Polygons;
-
+                        //BSPNode.BuildBSPTree(polygons, 2);
                         obj.Rotation += this.rotate;
                         this.rotate = new Vector3(0, 0, 0);
 

@@ -6,7 +6,6 @@ using System.Text;
 using Direct3D = Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using InteractingMeshes.BSP;
 
 namespace InteractingMeshes
 {
@@ -99,6 +98,8 @@ namespace InteractingMeshes
         {
             Vertex[] vertices = GetVertexes(_mesh);
             Face[] indices = GetIndices(_mesh);
+           // int[] adjecency = new int[_mesh.NumberFaces * 3];
+           // _mesh.GenerateAdjacency((float)0.01, adjecency);
 
             List<Polygon> polygonLst = new List<Polygon>();
 

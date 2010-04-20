@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Text;
 using Direct3D = Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
-using InteractingMeshes.BSP;
 
 
 namespace InteractingMeshes
