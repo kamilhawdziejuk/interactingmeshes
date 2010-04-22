@@ -121,7 +121,7 @@ namespace InteractingMeshes
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
             GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 4, 20, 10);
+            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 4, 3, 4);
             torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
 
             GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
@@ -436,8 +436,8 @@ namespace InteractingMeshes
                         
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
 
-                        //List<Polygon> polygons = obj.Polygons;
-                        //BSPNode.BuildBSPTree(polygons, 2);
+                        List<Polygon> polygons = obj.Polygons;
+                        BSPNode bspNode = BSPNode.BuildBSPTree(polygons, 2);
                         obj.Rotation += this.rotate;
                         this.rotate = new Vector3(0, 0, 0);
 

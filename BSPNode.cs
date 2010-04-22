@@ -33,13 +33,15 @@ namespace InteractingMeshes
     /// </summary>
     public class BSPNode
     {
-        public static readonly int MaxDepth = 64;
+        public static readonly int MaxDepth = 8;
 
         public static readonly int MinLeafSize = -1;
 
         public BSPNode parent;
-        public BSPNode frontTree;
-        public BSPNode backTree;
+        public BSPNode frontTree = null;
+        public BSPNode backTree = null;
+
+        List<Polygon> Polygons = new List<Polygon>();
 
 
         #region --- Creating and destroying objects ---
@@ -50,6 +52,7 @@ namespace InteractingMeshes
         /// <param name="_polygons"></param>
         public BSPNode(List<Polygon> _polygons)
         {
+            this.Polygons.AddRange(_polygons);
         }
 
         /// <summary>
@@ -61,6 +64,14 @@ namespace InteractingMeshes
         {
             this.frontTree = _frontTree;
             this.backTree = _backTree;
+            if (this.frontTree != null)
+            {
+                this.Polygons.AddRange(_frontTree.Polygons);
+            }
+            if (this.backTree != null)
+            {
+                this.Polygons.AddRange(_backTree.Polygons);
+            }
         }
 
         #endregion
@@ -115,8 +126,11 @@ namespace InteractingMeshes
                         break;
                 }
             }
-
-            return null;
+            // Recursively build child subtrees and return new tree root combining them
+            BSPNode frontTree = BuildBSPTree(frontList, _depth + 1);
+            BSPNode backTree = BuildBSPTree(backList, _depth + 1);
+            return new BSPNode(frontTree, backTree);
+            //return null;
         }
 
         #endregion
@@ -152,10 +166,13 @@ namespace InteractingMeshes
                         // Edge (a, b) straddles, output intersection point to both sides
                         Microsoft.DirectX.Vector3 i = IntersectEdgeAgainstPlane(a, b, _splitPlane);
                         /////////////////assert(ClassifyPointToPlane(i, _splitPlane) == POINT_ON_PLANE);
-                        frontVerts[numFront++] = backVerts[numBack++] = i;
+                        frontVerts.Add(i);
+                        backVerts.Add(i);
+                       // frontVerts[numFront++] = backVerts[numBack++] = i;
                     }
                     // In all three cases, output b to the front side
-                    frontVerts[numFront++] = b;
+                    frontVerts.Add(b);
+                    //frontVerts[numFront++] = b;
                 }
                 else if (bSide == PointOnPlanePosition.POINT_BEHIND_PLANE)
                 {
@@ -164,23 +181,31 @@ namespace InteractingMeshes
                         // Edge (a, b) straddles plane, output intersection point
                         Microsoft.DirectX.Vector3 i = IntersectEdgeAgainstPlane(a, b, _splitPlane);
                         //assert(ClassifyPointToPlane(i, plane) == POINT_ON_PLANE);
-                        frontVerts[numFront++] = backVerts[numBack++] = i;
+                        frontVerts.Add(i);
+                        backVerts.Add(i);
+                        //frontVerts[numFront++] = backVerts[numBack++] = i;
                     }
                     else if (aSide == PointOnPlanePosition.POINT_ON_PLANE)
                     {
                         // Output a when edge (a, b) goes from ‘
-                        backVerts[numBack++] = a;
+                        //backVerts[numBack++] = a;
+                        backVerts.Add(a);
                     }
                     // In all three cases, output b to the back side
-                    backVerts[numBack++] = b;
+                    //backVerts[numBack++] = b;
+                    backVerts.Add(b);
                 }
                 else
                 {
                     // b is on the plane. In all three cases output b to the front side
-                    frontVerts[numFront++] = b;
+                   // frontVerts[numFront++] = b;
+                    frontVerts.Add(b);
                     // In one case, also output b to back side
                     if (aSide == PointOnPlanePosition.POINT_BEHIND_PLANE)
-                        backVerts[numBack++] = b;
+                    {
+                        backVerts.Add(b);
+                    }
+                        //backVerts[numBack++] = b;
                 }
                 // Keep b as the starting point of the next edge
                 a = b;
@@ -259,9 +284,9 @@ namespace InteractingMeshes
         private static Plane PickSplittingPlane(List<Polygon> _polygons)
         {
             // Blend factor for optimizing for balance or splits (should be tweaked)
-            float K = 0.8f;
+            float K = 0.2f;
             // Variables for tracking best splitting plane seen so far
-            Plane bestPlane = new Plane();
+            Plane bestPlane = Plane.Empty;
             float bestScore = float.MaxValue;
             // Try the plane of each polygon as a dividing plane
             for (int i = 0; i < _polygons.Count; i++)
@@ -324,7 +349,7 @@ namespace InteractingMeshes
         private static PointOnPlanePosition ClassifyPointToPlane(Microsoft.DirectX.Vector3 _point, Plane _plane)
         {
             //compute signed distance of point from plane
-            double dist = GeometricUtils.Distance(_plane, _point); 
+            double dist = Vector3.Dot(GeometricUtils.GetNormal(_plane), _point) - _plane.D;
             //classify p based on the signed distance
             if (dist > 0.01)
             {
