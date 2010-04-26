@@ -36,6 +36,7 @@ namespace InteractingMeshes
         //public Matrix orientation = Matrix.Identity;
         //private Mogre.Mesh ogreMesh = null;
         public Matrix GeometryMatrix = Matrix.Identity;
+
         private string id = String.Empty;
 
         #endregion

@@ -16,7 +16,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Points
         /// </summary>
-        public List<Vector3> Points = new List<Vector3>();
+        public List<Vertex> Points = new List<Vertex>();
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace InteractingMeshes
         /// Adds point to the polygon
         /// </summary>
         /// <param name="_point"></param>
-        public void Add(Vector3 _point)
+        public void Add(Vertex _point)
         {
             this.Points.Add(_point);
         }
@@ -47,7 +47,7 @@ namespace InteractingMeshes
         /// Construktor
         /// </summary>
         /// <param name="_points"></param>
-        public Polygon(List<Vector3> _points)
+        public Polygon(List<Vertex> _points)
         {
             this.Points.AddRange(_points);
         }

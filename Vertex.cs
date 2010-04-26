@@ -58,6 +58,19 @@ namespace InteractingMeshes
             color = _color;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="_vector"></param>
+        /// <param name="_id"></param>
+        public Vertex(Vector3 _vector, int _id)
+        {
+            x = _vector.X;
+            y = _vector.Y;
+            z = _vector.Z;
+            color = 0;
+        }
+
         #endregion
 
         #region --- Public properties ---
@@ -70,6 +83,23 @@ namespace InteractingMeshes
             get
             {
                 return new Vector3(x, y, z);
+            }
+            set
+            {
+                this.x = value.X;
+                this.y = value.Y;
+                this.z = value.Z;
+            }
+        }
+
+        /// <summary>
+        /// ID of a vertex - means the object, which contains that vertex
+        /// </summary>
+        public int ID
+        {
+            get
+            {
+                return color;
             }
         }
 

@@ -121,7 +121,7 @@ namespace InteractingMeshes
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
             GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 4, 3, 4);
+            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 10, 3, 4);
             torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
 
             GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
@@ -135,10 +135,10 @@ namespace InteractingMeshes
             teapot.Mesh = Direct3D.Mesh.Teapot(this.device);// .Box(this.device, 3, 4, 5);
 
 
-            this.objects.Add(sphere);
+            //this.objects.Add(sphere);
             this.objects.Add(torus);
             this.objects.Add(box);
-            this.objects.Add(teapot);
+            //this.objects.Add(teapot);
 
             this.ActiveObject = torus;
         }
@@ -242,10 +242,16 @@ namespace InteractingMeshes
                     break;
                     //3
                 case 51:
-                    this.ActiveObject = this.objects[2];
+                    if (this.objects.Count > 2)
+                    {
+                        this.ActiveObject = this.objects[2];
+                    }
                     break;
                 case 52:
-                    this.ActiveObject = this.objects[3];
+                    if (this.objects.Count > 3)
+                    {
+                        this.ActiveObject = this.objects[3];
+                    }
                     break;
             }
 
@@ -423,7 +429,11 @@ namespace InteractingMeshes
                     {
                         if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, this.ActiveObject.Points))
                         {
-                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+
+                            if (MeshCollision.TestBSPCollision(obj, this.ActiveObject))
+                            {
+                                obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+                            }
                         }
                         else
                         {
@@ -436,8 +446,6 @@ namespace InteractingMeshes
                         
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
 
-                        List<Polygon> polygons = obj.Polygons;
-                        BSPNode bspNode = BSPNode.BuildBSPTree(polygons, 2);
                         obj.Rotation += this.rotate;
                         this.rotate = new Vector3(0, 0, 0);
 

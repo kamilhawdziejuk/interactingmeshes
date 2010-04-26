@@ -105,9 +105,9 @@ namespace InteractingMeshes
 
             for (int i = 0; i < indices.Length; ++i)
             {
-                Vector3 p0 = vertices[indices[i].v1].Vector;
-                Vector3 p1 = vertices[indices[i].v2].Vector;
-                Vector3 p2 = vertices[indices[i].v3].Vector;
+                Vertex p0 = vertices[indices[i].v1];
+                Vertex p1 = vertices[indices[i].v2];
+                Vertex p2 = vertices[indices[i].v3];
                 Polygon poly = new Polygon();
                 poly.Add(p0);
                 poly.Add(p1);

@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="BSPNode.cs" />
     <Compile Include="GeometricUtils.cs" />
+    <Compile Include="MeshCollision.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="Camera.cs" />
