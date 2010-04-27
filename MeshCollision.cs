@@ -25,7 +25,12 @@ namespace InteractingMeshes
             both.AddRange(polygons2);
 
             BSPNode bspNode = BSPNode.BuildBSPTree(both, 3);
-            return bspNode.CollisionExist();
+            if (bspNode == null)
+            {
+                return false;
+            }
+            return true;
+            //return bspNode.CollisionExist();
         }
     }
 }

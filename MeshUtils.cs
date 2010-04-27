@@ -94,7 +94,7 @@ namespace InteractingMeshes
         /// </summary>
         /// <param name="_mesh"></param>
         /// <returns></returns>
-        public static List<Polygon> GetPolygons(Direct3D.Mesh _mesh)
+        public static List<Polygon> GetPolygons(Direct3D.Mesh _mesh, Vector3 _position)
         {
             Vertex[] vertices = GetVertexes(_mesh);
             Face[] indices = GetIndices(_mesh);
@@ -108,6 +108,9 @@ namespace InteractingMeshes
                 Vertex p0 = vertices[indices[i].v1];
                 Vertex p1 = vertices[indices[i].v2];
                 Vertex p2 = vertices[indices[i].v3];
+                p0.Vector = p0.Vector + _position;
+                p1.Vector = p1.Vector + _position;
+                p2.Vector = p2.Vector + _position;
                 Polygon poly = new Polygon();
                 poly.Add(p0);
                 poly.Add(p1);

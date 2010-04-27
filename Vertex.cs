@@ -68,7 +68,7 @@ namespace InteractingMeshes
             x = _vector.X;
             y = _vector.Y;
             z = _vector.Z;
-            color = 0;
+            color = _id;
         }
 
         #endregion

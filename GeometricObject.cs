@@ -117,7 +117,7 @@ namespace InteractingMeshes
         {
             get
             {
-                return MeshUtils.GetPolygons(this.Mesh);
+                return MeshUtils.GetPolygons(this.Mesh, this.Position);
             }
         }
 

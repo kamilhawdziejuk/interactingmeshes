@@ -121,14 +121,18 @@ namespace InteractingMeshes
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
             GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 10, 3, 4);
+            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 7, 5, 6);
             torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
 
             GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
             sphere.Mesh = Direct3D.Mesh.Sphere(this.device, 4, 10, 20);
 
             GeometricObject box = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box.Mesh = Direct3D.Mesh.Box(this.device, 3, 4, 5);
+            box.Mesh = Direct3D.Mesh.Box(this.device, 8, 8, 8);
+
+
+            GeometricObject box2 = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
+            box2.Mesh = Direct3D.Mesh.Box(this.device, 1, 2, 2);
 
 
             GeometricObject teapot = new GeometricObject("teapot", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
@@ -137,10 +141,11 @@ namespace InteractingMeshes
 
             //this.objects.Add(sphere);
             this.objects.Add(torus);
-            this.objects.Add(box);
+            this.objects.Add(box2);
+            //this.objects.Add(box2);
             //this.objects.Add(teapot);
 
-            this.ActiveObject = torus;
+            this.ActiveObject = box;
         }
 
         /// <summary>
@@ -423,19 +428,20 @@ namespace InteractingMeshes
                 device.VertexFormat = Direct3D.CustomVertex.TransformedColored.Format;
                 this.speedmodifier += 0.01f;
                 // Vertex[] vertData = MeshUtils.GetVertexes(this.activeObject.Mesh);
+                bool isCollision = false;
                 foreach (GeometricObject obj in this.objects)
                 {
                     if (obj != this.ActiveObject)
                     {
                         if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, this.ActiveObject.Points))
                         {
-
                             if (MeshCollision.TestBSPCollision(obj, this.ActiveObject))
                             {
+                                isCollision = true;
                                 obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
                             }
                         }
-                        else
+                        if (!isCollision)
                         {
                             obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
                             //obj.GeometryMatrix.RotateAxis(new Vector3(1, 1, 1), this.speedmodifier);

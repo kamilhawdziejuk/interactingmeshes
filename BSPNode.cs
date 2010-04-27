@@ -187,7 +187,7 @@ namespace InteractingMeshes
                         backVerts.Add(new Vertex(i,a.ID));
                     }
                     // In all three cases, output b to the front side
-                    frontVerts.Add(b);
+                    frontVerts.Add(b);//new Vertex(b.Vector, a.ID));
                 }
                 else if (bSide == PointOnPlanePosition.POINT_BEHIND_PLANE)
                 {
@@ -301,7 +301,7 @@ namespace InteractingMeshes
         private static Plane PickSplittingPlane(List<Polygon> _polygons)
         {
             // Blend factor for optimizing for balance or splits (should be tweaked)
-            float K = 0.2f;
+            float K = 0f;
             // Variables for tracking best splitting plane seen so far
             Plane bestPlane = Plane.Empty;
             float bestScore = float.MaxValue;
