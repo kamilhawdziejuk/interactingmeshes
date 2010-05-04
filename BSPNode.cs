@@ -1,6 +1,7 @@
 ﻿//11-04-2010
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.DirectX;
 
@@ -36,7 +37,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Max depth
         /// </summary>
-        public static readonly int MaxDepth = 8;
+        public static readonly int MaxDepth = 128;
 
         /// <summary>
         /// Min leaf size
@@ -96,7 +97,7 @@ namespace InteractingMeshes
         /// <param name="_polygons"></param>
         /// <param name="_depth">Depth</param>
         /// <returns></returns>
-        public static BSPNode BuildBSPTree(List<Polygon> _polygons, int _depth)
+        public static BSPNode BuildBSPTree(List<Polygon> _polygons, int _depth, int _ID)
         {
             if (_polygons.Count == 0 || !BSPNode.DifferentObjectsExist(_polygons))
             {
@@ -110,18 +111,31 @@ namespace InteractingMeshes
                 return new BSPNode(_polygons);
             }
 
-            Plane splitPlane = PickSplittingPlane(_polygons);
+            //(List<Polygon>)(from polygon in _polygons where polygon.Points[0].ID == _ID select new { }); 
+            var polygons = new List<Polygon>();
 
-            List<Polygon> frontList = new List<Polygon>();
-            List<Polygon> backList = new List<Polygon>();
+            foreach (var polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
+            {
+                polygons.Add(polygon);
+            }
+
+            Plane splitPlane = PickSplittingPlane(polygons,_polygons);
+
+            var frontList = new List<Polygon>();
+            var backList = new List<Polygon>();
+            var coplanarList = new List<Polygon>();
 
             //test each polygon against the dividing plane, adding them to the front list, back list, or both, as appropriate
-            for (int i = 0; i < numPolygons; ++i)
+            for (var i = 0; i < numPolygons; ++i)
             {
                 Polygon poly = _polygons[i];
                 switch (ClassifyPolygonToPlane(poly, splitPlane))
                 {
                     case PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE: //COPLANAR_WITH_PLANE, next case
+                        {
+                            coplanarList.Add(poly);
+                            break;
+                        }
                     case PolygonOnPlanePosition.POLYGON_IN_FRONT_OF_PLANE: //IN_FRONT_OF_PLANE
                         frontList.Add(poly);
                         break;
@@ -138,10 +152,35 @@ namespace InteractingMeshes
                 }
             }
 
+            int frontIDs = 0;
+            var backIDs = 0;
+            for (var k = 0; k < frontList.Count; ++k )
+            {
+                if (frontList[k].Points[0].ID == _ID)
+                {
+                    frontIDs += 1;
+                }
+            }
+            for (var k = 0; k < backList.Count; ++k)
+            {
+                if (backList[k].Points[0].ID == _ID)
+                {
+                    backIDs += 1;
+                }
+            }
+
+            if (frontIDs > backIDs)
+            {
+                frontList.AddRange(coplanarList);
+            }
+            else
+            {
+                backList.AddRange(coplanarList);
+            }
 
             // Recursively build child subtrees and return new tree root combining them
-            BSPNode frontTree = BuildBSPTree(frontList, _depth + 1);
-            BSPNode backTree = BuildBSPTree(backList, _depth + 1);
+            BSPNode frontTree = BuildBSPTree(frontList, _depth + 1, _ID);
+            BSPNode backTree = BuildBSPTree(backList, _depth + 1, _ID);
             if (frontTree == null && backTree == null)
             {
                 return null;
@@ -154,6 +193,8 @@ namespace InteractingMeshes
         #endregion
 
         #region --- Private static methods ---
+
+
 
         /// <summary>
         /// Splitting polygons by a plane
@@ -298,18 +339,18 @@ namespace InteractingMeshes
         /// </summary>
         /// <param name="_polygons"></param>
         /// <returns></returns>
-        private static Plane PickSplittingPlane(List<Polygon> _polygons)
+        private static Plane PickSplittingPlane(List<Polygon> _polygons0, List<Polygon> _polygons)
         {
             // Blend factor for optimizing for balance or splits (should be tweaked)
-            float K = 0f;
+            float K = 0.2f;
             // Variables for tracking best splitting plane seen so far
             Plane bestPlane = Plane.Empty;
             float bestScore = float.MaxValue;
             // Try the plane of each polygon as a dividing plane
-            for (int i = 0; i < _polygons.Count; i++)
+            for (int i = 0; i < _polygons0.Count; i++)
             {
-                int numInFront = 0, numBehind = 0, numStraddling = 0;
-                Plane plane = GetPlaneFromPolygon(_polygons[i]);
+                int numInFront = 0, numBehind = 0, numStraddling = 0, numCoplanar = 0;
+                Plane plane = GetPlaneFromPolygon(_polygons0[i]);
 
                 // Test against all other polygons
                 for (int j = 0; j < _polygons.Count; j++)
@@ -321,6 +362,8 @@ namespace InteractingMeshes
                     {
                         case PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE:
                         /* Coplanar polygons treated as being in front of plane */
+                            numCoplanar++;
+                            break;
                         case PolygonOnPlanePosition.POLYGON_IN_FRONT_OF_PLANE:
                             numInFront++;
                             break;
@@ -334,6 +377,15 @@ namespace InteractingMeshes
                 }
                 // Compute score as a weighted combination (based on K, with K in range
                 // 0..1) between balance and splits (lower score is better)
+                if (numInFront < numBehind)
+                {
+                    numInFront += numCoplanar;
+                }
+                else
+                {
+                    numBehind += numCoplanar;
+                }
+
                 float score = K * numStraddling + (1.0f - K) * System.Math.Abs(numInFront - numBehind);
                 if (score < bestScore)
                 {
@@ -365,14 +417,13 @@ namespace InteractingMeshes
         /// <summary>
         /// Classify point <c>_point</c> to a plane thickened by a fiven thickness epsilon
         /// </summary>
-        /// <param name="_point"></param>
+        /// <param name="_vertex"></param>
         /// <param name="_plane"></param>
         /// <returns></returns>
         private static PointOnPlanePosition ClassifyPointToPlane(Vertex _vertex, Plane _plane)
         {
             //compute signed distance of point from plane
-            double dist = Vector3.Dot(GeometricUtils.GetNormal(_plane), _vertex.Vector) - _plane.D;
-            //classify p based on the signed distance
+            double dist = GeometricUtils.GetDistanceSigned(_plane, _vertex.Vector);
             if (dist > 0.01)
             {
                 return PointOnPlanePosition.POINT_IN_FRONT_OF_PLANE; //in front of plane

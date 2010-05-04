@@ -110,6 +110,7 @@ namespace InteractingMeshes
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
+            
             Direct3D.Device deviceSender = (Direct3D.Device)sender;
             deviceSender.Transform.Projection =
                 Matrix.PerspectiveFovLH(Direct3D.Geometry.DegreeToRadian(45.0f),
@@ -121,29 +122,33 @@ namespace InteractingMeshes
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
             GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 7, 5, 6);
+            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 10, 8, 8);
             torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
 
             GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            sphere.Mesh = Direct3D.Mesh.Sphere(this.device, 4, 10, 20);
+            sphere.Mesh = Direct3D.Mesh.Sphere(this.device, 10, 3, 2);
 
             GeometricObject box = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box.Mesh = Direct3D.Mesh.Box(this.device, 8, 8, 8);
+            box.Mesh = Direct3D.Mesh.Box(this.device, 10, 10, 10);
 
 
             GeometricObject box2 = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box2.Mesh = Direct3D.Mesh.Box(this.device, 1, 2, 2);
+            box2.Mesh = Direct3D.Mesh.Box(this.device, 2, 2, 2);
 
-
-            GeometricObject teapot = new GeometricObject("teapot", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
+            var teapot = new GeometricObject("teapot", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
             teapot.Mesh = Direct3D.Mesh.Teapot(this.device);// .Box(this.device, 3, 4, 5);
 
+            var polygon = new GeometricObject("polygon", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
+            polygon.Mesh = Direct3D.Mesh.Polygon(this.device, 10, 4);
+            //polygon.Mesh.
 
-            //this.objects.Add(sphere);
+
+            this.objects.Add(sphere);
             this.objects.Add(torus);
+           // this.objects.Add(polygon);
             this.objects.Add(box2);
-            //this.objects.Add(box2);
-            //this.objects.Add(teapot);
+            this.objects.Add(box);
+           // this.objects.Add(teapot);
 
             this.ActiveObject = box;
         }
@@ -435,7 +440,7 @@ namespace InteractingMeshes
                     {
                         if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, this.ActiveObject.Points))
                         {
-                            if (MeshCollision.TestBSPCollision(obj, this.ActiveObject))
+                            if (MeshCollision.TestBspCollision(obj, this.ActiveObject))
                             {
                                 isCollision = true;
                                 obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);

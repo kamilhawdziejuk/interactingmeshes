@@ -76,8 +76,8 @@ namespace InteractingMeshes
             {
                 if (this.rotation != value)
                 {
-                    Vector3 rotat = value - this.rotation;
-                    Matrix rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);// (value.Y, value.X, value.Z);
+                    var rotat = value - this.rotation;
+                    var rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);// (value.Y, value.X, value.Z);
                     this.GeometryMatrix *= rot;
                     this.rotation = value;
                 }
