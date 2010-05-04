@@ -122,14 +122,14 @@ namespace InteractingMeshes
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
             GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 10, 8, 8);
+            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 5, 8, 8);
             torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
 
             GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
             sphere.Mesh = Direct3D.Mesh.Sphere(this.device, 10, 3, 2);
 
             GeometricObject box = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box.Mesh = Direct3D.Mesh.Box(this.device, 10, 10, 10);
+            box.Mesh = Direct3D.Mesh.Box(this.device, 4, 3, 2);
 
 
             GeometricObject box2 = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
