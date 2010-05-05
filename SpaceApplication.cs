@@ -41,26 +41,6 @@ namespace InteractingMeshes
         #region --- Private fields ---
 
         /// <summary>
-        /// Objects in scene
-        /// </summary>
-        private List<GeometricObject> objects = new List<GeometricObject>();
-
-        /// <summary>
-        /// Active object to manipulate
-        /// </summary>
-        private GeometricObject activeObject = null;
-
-        /// <summary>
-        /// Movement of active object
-        /// </summary>
-        private Vector3 move = new Vector3(0,0,0);
-
-        /// <summary>
-        /// Rotation of active objects on all axies
-        /// </summary>
-        private Vector3 rotate = new Vector3(0, 0, 0);
-
-        /// <summary>
         /// Region of a screen
         /// </summary>
         private Region viewRegion = new Region(new Vector3(-16, -16, -16), new Vector3(16, 16, 16));
@@ -73,7 +53,13 @@ namespace InteractingMeshes
         /// <summary>
         /// Drawing device
         /// </summary>
-        private Direct3D.Device device = null;    
+        private Direct3D.Device device = null;
+
+        /// <summary>
+        /// Manager for objects
+        /// </summary>
+        private ObjectsManager manager = null;
+
        // DirectSound.Device sound = null;
         //DirectInput.Device keyboard = null;
         //DirectInput.Device mouse = null;
@@ -110,7 +96,6 @@ namespace InteractingMeshes
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
-            
             Direct3D.Device deviceSender = (Direct3D.Device)sender;
             deviceSender.Transform.Projection =
                 Matrix.PerspectiveFovLH(Direct3D.Geometry.DegreeToRadian(45.0f),
@@ -121,36 +106,8 @@ namespace InteractingMeshes
             deviceSender.RenderState.CullMode = Cull.None;
             deviceSender.RenderState.FillMode = FillMode.WireFrame;    
 
-            GeometricObject torus = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0,0,0));
-            torus.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 5, 8, 8);
-            torus.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
-
-            GeometricObject sphere = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            sphere.Mesh = Direct3D.Mesh.Sphere(this.device, 10, 3, 2);
-
-            GeometricObject box = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box.Mesh = Direct3D.Mesh.Box(this.device, 4, 3, 2);
-
-
-            GeometricObject box2 = new GeometricObject("box", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            box2.Mesh = Direct3D.Mesh.Box(this.device, 2, 2, 2);
-
-            var teapot = new GeometricObject("teapot", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            teapot.Mesh = Direct3D.Mesh.Teapot(this.device);// .Box(this.device, 3, 4, 5);
-
-            var polygon = new GeometricObject("polygon", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
-            polygon.Mesh = Direct3D.Mesh.Polygon(this.device, 10, 4);
-            //polygon.Mesh.
-
-
-            this.objects.Add(sphere);
-            this.objects.Add(torus);
-           // this.objects.Add(polygon);
-            this.objects.Add(box2);
-            this.objects.Add(box);
-           // this.objects.Add(teapot);
-
-            this.ActiveObject = box;
+     
+            this.Manager.Reset();
         }
 
         /// <summary>
@@ -168,11 +125,11 @@ namespace InteractingMeshes
             base.OnMouseWheel(e);
             if (e.Delta > 0)
             {
-                this.move.Z += 1;
+                this.Manager.Move.Z += 1;
             }
             else
             {
-                this.move.Z -= 1;
+                this.Manager.Move.Z -= 1;
             }
         }
 
@@ -194,6 +151,29 @@ namespace InteractingMeshes
             
             switch (_e.KeyValue)
             {
+                case 97:
+                    {
+                        this.Manager.Add("sphere");
+                        break;
+                    }
+                case 98:
+                    {
+                        this.Manager.Add("box");
+                        break;
+                    }
+
+                case 99:
+                    {
+                        this.Manager.Add("torus");
+                        break;
+                    }
+
+                case 100:
+                    {
+                        this.Manager.Add("polygon");
+                        break;
+                    }
+
                     //'c' - camera move
                 case 67:
                     this.camera.Position.X += (float)Math.Cos(1);
@@ -214,59 +194,48 @@ namespace InteractingMeshes
                     break;
                     //+
                 case 187:
-                    this.move.Z -= 1;
+                    this.Manager.Move.Z -= 1;
                     break;
                     //-
                 case 189:
-                    this.move.Z += 1;
+                    this.Manager.Move.Z += 1;
                     break;
                     //left arrow
                 case 37:
-                    this.move.X -= 1;
+                    this.Manager.Move.X -= 1;
                     break;
                     //right arrow
                 case 39:
-                    this.move.X += 1;
+                    this.Manager.Move.X += 1;
                     break;
                     //up arrow
                 case 38:
-                    this.move.Y += 1;
+                    this.Manager.Move.Y += 1;
                     break;
                     //down arrow
                 case 40:
-                    this.move.Y -= 1;
+                    this.Manager.Move.Y -= 1;
                     break;
                 case 107:
-                    this.move.Z += 1;
+                    this.Manager.Move.Z += 1;
                     break;
                 case 109:
-                    this.move.Z -= 1;
-                    break;
-                    //1
-                case 49:
-                    this.ActiveObject = this.objects[0];
-                    break;
-                    //2
-                case 50:
-                    this.ActiveObject = this.objects[1];
-                    break;
-                    //3
-                case 51:
-                    if (this.objects.Count > 2)
-                    {
-                        this.ActiveObject = this.objects[2];
-                    }
-                    break;
-                case 52:
-                    if (this.objects.Count > 3)
-                    {
-                        this.ActiveObject = this.objects[3];
-                    }
+                    this.Manager.Move.Z -= 1;
                     break;
             }
 
+            //deleting active object
+            if (_e.KeyValue == 46)
+            {
+                this.Manager.RemoveActiveObject();
+            }
 
-            //this.activeObject.Position = this.move;
+
+            //changing objects
+            if (_e.KeyValue >= 49 && _e.KeyValue <=58)
+            {
+                this.ActiveObject = this.Manager.GetObject(_e.KeyValue-49);
+            }
 
             switch (_e.KeyCode)
             {
@@ -286,10 +255,10 @@ namespace InteractingMeshes
                     --this.speedmodifier;
                     break;
                 case System.Windows.Forms.Keys.W:
-                    this.rotate.Y += 0.1f;
+                    this.Manager.Rotate.Y += 0.1f;
                     break;
                 case System.Windows.Forms.Keys.A:
-                    this.rotate.X += 0.1f;
+                    this.Manager.Rotate.X += 0.1f;
                     break;
 
             }
@@ -310,6 +279,14 @@ namespace InteractingMeshes
             }
         }
 
+        public ObjectsManager Manager
+        {
+            get
+            {
+                return this.manager;
+            }
+        }
+
         /// <summary>
         /// Operating object
         /// </summary>
@@ -317,16 +294,11 @@ namespace InteractingMeshes
         {
             get
             {
-                return this.activeObject;
+                return this.Manager.ActiveObject;
             }
             set
             {
-                if (this.activeObject != null)
-                {
-                    this.activeObject.Mesh = MeshUtils.ChangeMeshColor(this.activeObject.Mesh, Color.White, device);
-                }
-                value.Mesh = MeshUtils.ChangeMeshColor(value.Mesh, Color.Green, device);
-                this.activeObject = value;
+                this.Manager.ActiveObject = value;
             }
         }
 
@@ -362,7 +334,7 @@ namespace InteractingMeshes
         public SpaceApplication()
 		{
             this.ClientSize = new Size(screenwidth, screenheight);// Specify the client size
-			this.Text = "My First DirectX Program"; // Specify the title
+			this.Text = "Intersacting meshes"; // Specify the title
         }
 
         #endregion
@@ -393,6 +365,8 @@ namespace InteractingMeshes
                     (float)this.ClientSize.Width / this.ClientSize.Height,
                     0.1f, 100.0f);
 
+                this.manager = new ObjectsManager(this.device);
+
                 //events
                 //device.DeviceLost += new EventHandler(this.InvalidateDeviceObjects);
                 //device.DeviceReset += new EventHandler(this.RestoreDeviceObjects);
@@ -401,6 +375,7 @@ namespace InteractingMeshes
                 // Register an event-handler for DeviceReset and call it to continue
                 // our setup.
                 device.DeviceReset += new System.EventHandler(this.OnResetDevice);
+
                 this.OnResetDevice(device, null);
 				return true;
 			}
@@ -434,7 +409,7 @@ namespace InteractingMeshes
                 this.speedmodifier += 0.01f;
                 // Vertex[] vertData = MeshUtils.GetVertexes(this.activeObject.Mesh);
                 bool isCollision = false;
-                foreach (GeometricObject obj in this.objects)
+                foreach (GeometricObject obj in this.Manager.Objects)
                 {
                     if (obj != this.ActiveObject)
                     {
@@ -457,17 +432,17 @@ namespace InteractingMeshes
                         
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
 
-                        obj.Rotation += this.rotate;
-                        this.rotate = new Vector3(0, 0, 0);
+                        obj.Rotation += this.Manager.Rotate;
+                        this.Manager.Rotate = new Vector3(0, 0, 0);
 
-                        obj.Position += this.move;
+                        obj.Position += this.Manager.Move;
 
                         if (!this.ViewRegion.Contains(obj.Position))
                         {
                             //MessageBox.Show("Out of the screen");
-                            obj.Position -= this.move;
+                            obj.Position -= this.Manager.Move;
                         }
-                        this.move = new Vector3(0, 0, 0);
+                        this.Manager.Move = new Vector3(0, 0, 0);
                     }
                     device.Transform.World = obj.GeometryMatrix;
                     obj.Mesh.DrawSubset(0);
@@ -526,7 +501,7 @@ namespace InteractingMeshes
             // UsingDirectX
             // 
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "UsingDirectX";
+            this.Name = "Mesh intersecting";
             //this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.UsingDirectX_MouseMove);
             this.ResumeLayout(false);
 
