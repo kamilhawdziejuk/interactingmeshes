@@ -92,16 +92,6 @@ Instytut Informatyki
 
 \chapter*{Wstêp}
 
-a - ±
-e - ê
-c - æ
-s - ¶
-n - ñ
-o - ó
-z - ¼
-z - ¿
-
-
 Detekcja kolizji jest jedn± z fundamentalnych czê¶ci wielu ró¿nych aplikacji. Nachodzenie na siebie obiektów jest czêsto niepo¿±danym stanem. System wykrywania i naprawiania kolizji odpowiadaæ ma w swoim zamierzeniu za zapewnienie poprawnego i stabilnego stanu symulowanego ¶rodowiska, wymuszaj±c odpowiednie zachowanie obiektów w momencie wzajemnej interakcji.
 I tak na przyk³ad w grach komputerowych uniemo¿liwia postaciom przechodzenie przez ¶ciany czy te¿ upadanie poni¿ej poziomu pod³ogi. Dostarcza mo¿liwo¶ci takich jak odpowied¼ na pytanie czy jeden u¿ytkownik mo¿e zobaczyæ drugiego, b±d¼ czy jest w zasiêgu strza³u wroga. W robotyce system wykrywania kolizji jest u¿ywany do planowania ruchu i wytyczania ¶cie¿ek poruszaj±cych siê robotów tak, aby nie napotyka³y na przeszkody. W aplikacjach do prototypowania uczestniczy w modelowaniu drogich i wa¿nych czê¶ci przed etapem ich produkcji, co ma ogromny wp³yw na oszczêdno¶æ. Jest tak¿e integraln± czê¶ci± wielu systemów CAD do projektowania przemys³owego, zapewniaj±c wymogi konstrukcyjne produktów firmy. Jest wreszcie u¿ywany w testach zderzeñ, wypadków i katastrof wewn±trz specjalnie do tego celu stworzonych ¶rodowisk symulacyjnych . 
 \clearpage
@@ -110,27 +100,9 @@ I tak na przyk³ad w grach komputerowych uniemo¿liwia postaciom przechodzenie prz
 
 Istnieje wiele istotnych czynników wp³ywaj±cych na decyzje podejmowane podczas projektowania systemu wykrywania kolizji. Czynniki te mo¿na podzieliæ na nastêpuj±ce kategorie:	
 
-1.	\textbf{Reprezentacja obiektów w aplikacji}.
-Wybrana reprezentacja geometryczna dla sceny oraz pojawiaj±cych siê w niej obiektów wp³ywa w oczywisty sposób na algorytmy wykrywaj±ce w niej kolizje.  W szczególno¶ci dla reprezentacji z mniejszymi wymogami zaprojektowany  mo¿e byæ bardziej ogólny system. W kolejnym rozdziale bardziej szczegó³owo przybli¿one zostan± sposoby przedstawiania obiektów w  scenie. W niniejszej pracy najbardziej skupimy siê na powszechnie wykorzystywanych obecnie siatkach trók±tów.
+\section{Obiekty i ich reprezentacja}
 
-2.	\textbf{Ró¿ne rodzaje zapytañ o kolizje}.
-Im dok³adniejsze sprawdzenia i wyniki s± potrzebne, tym wiêksza staje siê z³o¿ono¶æ ca³ego systemu zarówno pod k±tem obliczeniowym jak i pamiêciowym. Ponadto nie wszystkie reprezentacje obiektów wspieraj± wszystkie zapytania. Warto zwróciæ na to uwagê.
-
-3.	\textbf{Parametry ¶rodowiska}
-Aplikacja symuluj±ca (np. CAD lub gra) sama w sobie zawiera liczne parametry, które wp³ywaj± po¶rednio b±d¼ bezpo¶rednio na system wykrywania kolizji. Wp³ywaj± na to miêdzy innymi: liczba obiektów, ich rozmiary, pozycje, mo¿liwy sposób poruszania, zezwalanie na przenikanie, tryb ich wykrywania oraz rozwi±zywania itd.
-
-4.	\textbf{Wydajno¶æ}.
-Systemy detekcji kolizji maj± czêsto du¿y narzut obliczeniowy. Szczególnie w aplikacjach czasu rzeczywistego zak³ada siê, ¿e wykrywanie i rozwi±zywanie kolizji przebiega w sposób p³ynny, on-line.
-
-5.	\textbf{Mo¿liwo¶ci}.
-Nie wszystkie aplikacje wymagaj± tego samego poziomu symulacji ¶rodowiska.
-
-6.	\textbf{£atwo¶æ implementacji i prostota u¿ytkowania}.
-Wiêkszo¶æ projektów jest ograniczona czasowo. 
-
-\clearpage
-
-\chapter{Obiekty i ich reprezentacja}
+Wybrana reprezentacja geometryczna dla sceny oraz pojawiaj±cych siê w niej obiektów wp³ywa w oczywisty sposób na algorytmy wykrywaj±ce w niej kolizje. W szczególno¶ci dla reprezentacji z mniejszymi wymogami zaprojektowany  mo¿e byæ bardziej ogólny system.
 
 \begin{df} 
 Obiektem geometrycznym nazywamy obiekt przestrzenny reprezentuj±cy figurê geometryczn±, a wiêc dowolny podzbiór punktów przestrzeni euklidesowej.
@@ -138,9 +110,9 @@ Obiektem geometrycznym nazywamy obiekt przestrzenny reprezentuj±cy figurê geomet
 
 W niniejszej pracy skupimy siê na obiektach z przestrzeni $R^3$.
 
-Obiekty takie w grafice komputerowej  bardzo czêsto reprezentowane s± w postaci przybli¿onej. Istniej± specjalne algorytmy triangulacji, których zadanie polega na rozbiciu bardziej z³o¿onych obiektów na siatki trójk±tów, które je pokrywaj±. W procesie tym powstaje wielok±t (wielo¶cian), który jest mo¿liwie bliskim przybli¿eniem danego obiektu. Warto w tym miejscu wspomnieæ, ¿e triangulacja wspierana jest coraz bardziej ze strony sprzêtowej i ze wzglêdów wydajno¶ciowych zajmuj± siê tym obecnie pozdespo³y graficzne ju¿ w procesie renderowania. Dlatego te¿ w systemach kolizji równie¿ najczê¶ciej wybieran± reprezentacj± jest siatka wielok±tów (przewa¿nie trójk±tów) reprezentuj±cych obiekt z przestrzenii. 
+Obiekty takie w grafice komputerowej  bardzo czêsto reprezentowane s± w postaci przybli¿onej. Istniej± specjalne algorytmy triangulacji, których zadanie polega na rozbiciu bardziej z³o¿onych obiektów na siatki trójk±tów, które je pokrywaj±. W procesie tym powstaje wielok±t (wielo¶cian), który jest mo¿liwie bliskim przybli¿eniem danego obiektu. Warto w tym miejscu wspomnieæ, ¿e triangulacja coraz bardziej wspierana jest ze strony sprzêtowej i ze wzglêdów wydajno¶ciowych zajmuj± siê tym obecnie pozdespo³y graficzne jeszcze w procesie renderowania. Dlatego te¿ w systemach kolizji najczê¶ciej wybieran± reprezentacj± jest siatka wielok±tów (przewa¿nie trójk±tów) reprezentuj±cych obiekt z przestrzenii. 
 
-W zwi±zku z tym naszym naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, ¿e wszystkie analizowane obiekty s± wielo¶cianami, a ka¿dy z nich utworzony jest z:
+W zwi±zku z tym, naszym naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, i¿  wszystkie analizowane obiekty s± wielo¶cianami, a ka¿dy z nich utworzony jest z:
 
 - ¶cian - wielok±tów, które razem tworz± powierzchniê wielo¶cianu;
 
@@ -149,7 +121,22 @@ W zwi±zku z tym naszym naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, ¿e 
 - wierzcho³ków, bêd±cych koñcami krawêdzi wielo¶cianu.
 
 
+\section{Ró¿ne rodzaje zapytañ o kolizje}
+Im dok³adniejsze sprawdzenia i wyniki s± potrzebne, tym wiêksza staje siê z³o¿ono¶æ ca³ego systemu zarówno pod k±tem obliczeniowym jak i pamiêciowym. Ponadto nie wszystkie reprezentacje obiektów wspieraj± wszystkie zapytania. Warto zwróciæ na to uwagê.
+
+\section{Parametry ¶rodowiska}
+Aplikacja symuluj±ca (np. CAD lub gra) sama w sobie zawiera liczne parametry, które wp³ywaj± po¶rednio b±d¼ bezpo¶rednio na system wykrywania kolizji. Wp³ywaj± na to miêdzy innymi: liczba obiektów, ich rozmiary, pozycje, mo¿liwy sposób poruszania, zezwalanie na przenikanie, tryb ich wykrywania oraz rozwi±zywania itd.
+
+\section{Kwestie wydajno¶ci i mo¿liwo¶ci implementacyjnych}
+Systemy detekcji kolizji maj± czêsto du¿y narzut obliczeniowy. Szczególnie w aplikacjach czasu rzeczywistego zak³ada siê, ¿e wykrywanie i rozwi±zywanie kolizji przebiega w sposób p³ynny, on-line.
+
+Nie wszystkie aplikacje wymagaj± tego samego poziomu symulacji ¶rodowiska ponadto wiêkszo¶æ projektów jest ograniczona czasowo. 
+
+\clearpage
+
 \chapter{Algorytmy wykrywania kolizji}
+
+Problem wykrywania kolizji jest z³o¿onym zagadnieniem.
 
 \section{Szybkie testy na sferach i prostopad³o¶cianach}
 
