@@ -13,6 +13,10 @@
 \usepackage[polish]{babel}
 \usepackage{polski}
 
+\usepackage{graphicx}
+\usepackage{epstopdf}
+
+\DeclareGraphicsExtensions{.pdf,.jpg,.png,.eps,.ps}
 \linespread{1.4}
 
 \def\thechapter{\arabic{chapter}}
@@ -136,9 +140,44 @@ Nie wszystkie aplikacje wymagaj± tego samego poziomu symulacji ¶rodowiska ponadt
 
 \chapter{Algorytmy wykrywania kolizji}
 
-Problem wykrywania kolizji jest z³o¿onym zagadnieniem.
+W tym rozdziale przedstawimy szczegó³owo algorytmy odpowiadaj±ce na ró¿ne rodzaje zapytañ o kolizje. Poniewa¿ wykorzystywane s± one g³ównie w aplikacjach czasu rzeczywistego, to ogromne znaczenia ma ich wydajno¶æ. Z drugiej strony czêsto wystarczaj±ca jest przybli¿ona odpowied¼ na to pytanie. W zwi±zku z tym do tematu wykrywania kolizji podchodzi siê etapowo.
+
+Ka¿dy z poszczególnych testów, opisanych w tym rozdziale, odpowiada na pytanie czy istnieje kolizja przy pewnej reprezentacji danych obiektów. Je¶li obiekty s± bardzo z³o¿one, to czêsto wystarczaj±cym testem jest odpowied¼ na pytanie czy np. sfery (prostopad³o¶ciany) opisuj±ce bry³y ze sob± koliduj±. S± to tak zwane szybkie testy, opisane podrozdziale 2.1. Brak kolizji dla tych przybli¿onych reprezentacji oznacza oczywi¶cie brak kolizji dla owych obiektów. Istnienie jej nie oznacza oczywi¶cie, ¿e oba obiekty faktycznie s± ze sob± w kolizji i  mo¿emy wtedy przej¶æ do bardziej szczegó³owych testów. Testy, które mo¿emy przeprowadziæ w kolejnym etapie mog± odrzuciæ nam kolizje, przy za³o¿eniu, ¿e obiekty s± wypuk³e - opisane s± one w podrozdziale 2.2. Kolejne, szczególowe opisane s± w rozdziale 2.3.
 
 \section{Szybkie testy na sferach i prostopad³o¶cianach}
+
+OOB (Oriented Bounding Box) - Zorientowany prostopad³o¶cian otaczaj±cy.
+
+Test kolizji dwóch obiektów OOB jest testem, który sprawdza czy dwa zorientowane prostopad³o¶ciany mog± byæ odzielone (odseparowane w przestrzeni) pewn± p³aszczyzn±. 
+
+\begin{tw}[Separating plane teory]
+Niech $A$ i $B$ bêd± dwoma roz³±cznymi niepustymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna oddzielaj±ca zbiory A i B.
+\end{tw}
+
+Sprawdzamy czy w ustalonym kierunku $L$, suma po³owy d³ugo¶ci przek±tnych zrzutowanych na ten kierunek jest wiêksza ni¿ odleg³o¶æ pomiêdzy rzutem na t± prost± ¶rodków tych prostopad³o¶cianów, czyli gdy $|T\cdot L| > r_A + r_B$.
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{OOB_test.eps}
+\caption[Rozmiar 20]{Przeciêcie }
+  \label{zrodlo}
+\end{figure}
+
+
+Mo¿na udowodniæ, ¿e wystarczy sprawdziæ 15 kierunków, po których nale¿y przetestowaæ przeciêcia dwóch obiektów A i B w scenie 3D. Kierunki te to odpowiednio 3 osie wspó³rzêdnych obiektu A, 3 osie wspó³rzêdnych obiektu B oraz 9 prostopad³ych do ka¿dej kombinacji dwóch pozosta³ych. Je¶li obiekty nie przecinaj± siê na której¶ z nich, to nie mamy do czynienia z kolizj±, w przeciwnym razie tak. 
+
+Liczba operacji w te¶cie mo¿e byæ zredukowana przez przeniesienie obiektu B do uk³adu obiektu A.
+Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza macierz przej¶cia z B do A. Wsztstkie testy do przeprowadzenia przedstawia poni¿sza tabela:
+
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{OOB_test_table.eps}
+\caption[Rozmiar 20]{Testy kolizji}
+  \label{zrodlo}
+\end{figure}
 
 \section{Testy oparte na wypuk³o¶ciach bry³ - algorytm GJK}
 
