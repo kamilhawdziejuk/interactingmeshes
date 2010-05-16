@@ -416,12 +416,15 @@ namespace InteractingMeshes
                 {
                     if (obj != ActiveObject)
                     {
-                        if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, ActiveObject.Points))
+                        if (BoxCollision.TestOverlap(obj, this.ActiveObject, 0.01))
                         {
-                            if (MeshCollision.TestBspCollision(obj, ActiveObject))
+                            if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, ActiveObject.Points))
                             {
-                                isCollision = true;
-                                obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+                                if (MeshCollision.TestBspCollision(obj, ActiveObject))
+                                {
+                                    isCollision = true;
+                                    obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+                                }
                             }
                         }
                         if (!isCollision)

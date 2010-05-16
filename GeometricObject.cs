@@ -52,7 +52,7 @@ namespace InteractingMeshes
         {
             get
             {
-                if (this.boundingBox.Equals(AABox.UnitBox))
+                //if (this.boundingBox.Equals(AABox.UnitBox))
                 {
                     Vector3 minPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
                     Vector3 maxPoint = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -76,11 +76,11 @@ namespace InteractingMeshes
                         {
                             maxPoint.X = point.X;
                         }
-                        if (point.Y > minPoint.Y)
+                        if (point.Y > maxPoint.Y)
                         {
                             maxPoint.Y = point.Y;
                         }
-                        if (point.Z > minPoint.Z)
+                        if (point.Z > maxPoint.Z)
                         {
                             maxPoint.Z = point.Z;
                         }

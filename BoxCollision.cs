@@ -15,7 +15,7 @@ namespace InteractingMeshes
         /// <param name="_second">second element</param>
         /// <param name="_overlapTolerance">overlap threshold</param>
         /// <returns>true if two objects overlap more than given tolerance</returns>
-        public bool TestOverlap(GeometricObject _first, GeometricObject _second, double _overlapTolerance)
+        public static bool TestOverlap(GeometricObject _first, GeometricObject _second, double _overlapTolerance)
         {
             AABox A = _first.BoundingBox;
             AABox B = _second.BoundingBox;
@@ -32,7 +32,8 @@ namespace InteractingMeshes
 
             Matrix mB2A = Matrix.Multiply(fgi, _second.GlobalTransformation);
 
-            return BoxCollision.BoxOverlapTest(A, B, mB2A, _overlapTolerance);
+            bool isCollision = BoxCollision.BoxOverlapTest(A, B, mB2A, _overlapTolerance);
+            return isCollision;
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace InteractingMeshes
         /// <param name="_overlapTolerance">Tolerance of this test. (essentialy both boxes are deflated with this value)</param>
         /// <seealso cref="BoxOverlapTest"/>
         /// <returns>true if there is an overlap</returns>
-        public static bool BoxOverlapTest(AABox _A, AABox _B, Matrix _mB2A, double _overlapTolerance)
+        private static bool BoxOverlapTest(AABox _A, AABox _B, Matrix _mB2A, double _overlapTolerance)
         {
             double t, t2;
             var tolerance = new Vector3((float) _overlapTolerance, (float) _overlapTolerance, (float) _overlapTolerance);
