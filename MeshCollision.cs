@@ -1,10 +1,6 @@
 ﻿//22-04-2010
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Direct3D = Microsoft.DirectX.Direct3D;
 
 namespace InteractingMeshes
 {
@@ -21,7 +17,7 @@ namespace InteractingMeshes
             List<Polygon> polygons1 = _first.Polygons;
             List<Polygon> polygons2 = _second.Polygons;
 
-            List<Polygon> both = new List<Polygon>(polygons1);
+            var both = new List<Polygon>(polygons1);
             both.AddRange(polygons2);
             BSPNode bspNode = null;
             if (polygons1.Count < polygons2.Count)
@@ -30,8 +26,7 @@ namespace InteractingMeshes
             }
             else
             {
-                bspNode = BSPNode.BuildBSPTree(both, 3, _second.Polygons[0].Points[0].ID);  
-
+                bspNode = BSPNode.BuildBSPTree(both, 3, _second.Polygons[0].Points[0].ID);
             }
 
             return bspNode != null;

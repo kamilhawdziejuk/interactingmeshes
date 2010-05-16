@@ -146,15 +146,26 @@ Ka¿dy z poszczególnych testów, opisanych w tym rozdziale, odpowiada na pytanie c
 
 \section{Szybkie testy na sferach i prostopad³o¶cianach}
 
-OOB (Oriented Bounding Box) - Zorientowany prostopad³o¶cian otaczaj±cy.
+\begin{df}[Zorientowany prostopad³o¶cian otaczaj±cy (OOB)]
+Przez OOB (Object oriented box) oznaczaæ bêdziemy prostopad³o¶cian, który jest zorientowany zgodnie z pewn± macierz± orientacji w przestrzeni. 
+\end{df}
 
-Test kolizji dwóch obiektów OOB jest testem, który sprawdza czy dwa zorientowane prostopad³o¶ciany mog± byæ odzielone (odseparowane w przestrzeni) pewn± p³aszczyzn±. 
+Test kolizji dwóch obiektów OOB bazuje na nastêpuj±cym fundamentalnym twierdzeniu z analizy bry³ wypuk³ych: 
 
-\begin{tw}[Separating plane teory]
-Niech $A$ i $B$ bêd± dwoma roz³±cznymi niepustymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna oddzielaj±ca zbiory A i B.
+\begin{tw}[O odzielaj±cej hiperp³aszczy¼nie]
+Niech $A$ i $B$ bêd± dwoma niepustymi, roz³±cznymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna $P$ oddzielaj±ca zbiory A i B, tzn. istnieje wektor $a \in R^n$ , $a = 0$, takie ¿e:
+$$ \sup {a^Tx} <\sup a^Tz$$
 \end{tw}
 
-Sprawdzamy czy w ustalonym kierunku $L$, suma po³owy d³ugo¶ci przek±tnych zrzutowanych na ten kierunek jest wiêksza ni¿ odleg³o¶æ pomiêdzy rzutem na t± prost± ¶rodków tych prostopad³o¶cianów, czyli gdy $|T\cdot L| > r_A + r_B$.
+Test ten  sprawdza, czy dwa zorientowane prostopad³o¶ciany mog± byæ odzielone (odseparowane) w przestrzeni pewn± p³aszczyzn±. Intuicyjnie dwa wypuk³e obiekty nie sa ze sob± w kolizji, je¶li istnieje przerwa pomiêdzy nimi. 
+
+\begin{df}[O¶ odzielaj±ca]
+Dla zadanej p³aszczyzny $P$ oddzielaj±cej obiekty $A$ i $B$, definiujemy o¶ odzielaj±c± jako liniê $L$ prostopad³± do $P$. 
+\end{df}
+
+O¶ nazywana jest tak, poniewa¿ ortogonalne rzuty takich obiektów $A$ i $B$ na $L$ w rezultacie daj± dwa nieprzecinaj±ce siê przedzia³y. Zauwa¿my od razu, ¿e o¶ odzielaj±ca istnieje wtedy i tylko wtedy, gdy istnieje p³aszczyzna odzielaj±ca. Okazuje siê, ¿e w praktyce o wiele ³atwiej jest wykonywaæ testi na istnienie osi odzielaj±cej, ni¿ p³aszczyzny odzielaj±cej.
+
+Przy ustalonym kierunku $L$, dla ka¿dego z obiektów wyznaczamy punkt najdalej wysuniêty od jego ¶rodka (dla obiektów symetrycznych, takich jak OOB, kierunek wysuniêcia nie ma tutaj znaczenia). Obliczamy nastêpnie promienie $r_A$ i $r_B$, bêd±cymi rzutami tych d³ugo¶ci na kierunek $L$. Obiekty s± odseparowane, je¶li odleg³o¶æ pomiêdzy ¶rodkami tych obiektów jest wiêksza ni¿ odleg³o¶æ pomiêdzy sum± d³ugo¶ci tych promieni, czyli gdy $|T\cdot L| > r_A + r_B$.
 
 \begin{figure}[htbp]
  \centering
@@ -164,11 +175,17 @@ Sprawdzamy czy w ustalonym kierunku $L$, suma po³owy d³ugo¶ci przek±tnych zrzuto
   \label{zrodlo}
 \end{figure}
 
+Osie oddzielaj±ce s± stosunkowo ³atwe do wyznaczenia. Na dodatek dla wypuk³ych wielo¶cianów mo¿na znacz±co zredukowaæ ilo¶æ koniecznych testów do przeprowadzenia. Pomijaj±c kolejno¶æ, dwa wielo¶ciany mog± wchodziæ ze sob± w kontakt na 6 ró¿nych sposobów. Mog± to byæ iterakcje ¶ciana-¶ciana, ¶ciana-krawêd¼, ¶ciana-wierzcho³ek, krawêd¼-krawêd¼, krawêd¼-wierzcho³ek lub wierzcho³ek-wierzcho³ek.
 
-Mo¿na udowodniæ, ¿e wystarczy sprawdziæ 15 kierunków, po których nale¿y przetestowaæ przeciêcia dwóch obiektów A i B w scenie 3D. Kierunki te to odpowiednio 3 osie wspó³rzêdnych obiektu A, 3 osie wspó³rzêdnych obiektu B oraz 9 prostopad³ych do ka¿dej kombinacji dwóch pozosta³ych. Je¶li obiekty nie przecinaj± siê na której¶ z nich, to nie mamy do czynienia z kolizj±, w przeciwnym razie tak. 
+Dla przypadków iterakcji ¶ciana-¶ciana i ¶ciana-krawêd¼ wystarczy sprawdziæ normalne ¶cian dla obu obiektów jako potencjalnych osi rozdzielaj±cych. Dla przypadku krawêd¼-krawêd¼ potencjalne osie rozdzielaj±ce to odpowiednio iloczyny wektorowe obu krawêdzi, gdy¿ punkty na krawêdziach najbli¿ej wzglêdem siebie liczone s± po kierunku prostopad³ym do obu z nich. Reasumuj±c test odseparowania dwóch wielo¶cianów mo¿e byæ sprowadzony do przetestowania nastêpuj±cych przypadków:
+- osie równoleg³e do normalnych ¶cian obiektu A
+- osie równoleg³e do normalnych ¶cian obiektu B
+- osie równoleg³e do wektorów bêd±cych iloczynami wektorowymi wszystkich krawêdzi obiektu A z krawêdziami obiektu B
+
+Jak tylko o¶ odzielaj±ca zostanie znaleziona, test zwraca odpowied¼ przecz±c± (brak kolizji). W przypadku, gdy ¿adna z osi nie jest osi± rozdzielaj±c±, kolizja istnieje. Dla dwóch wielo¶cianów o odpowiedniej ilo¶ci ¶cian $F$ oraz ilo¶ci krawêdzi $E$ istnieje potencjalnie $2*F + E$ osi rozdzielaj±cych. W zwi±zku z tym, ¿e ¶ciany w obiektach OOB s± równoleg³e do siebie wystarczy tutaj sprawdziæ 15 kierunków, po których nale¿y przetestowaæ przeciêcia dwóch obiektów A i B w scenie 3D. Kierunki te to odpowiednio 3 osie wspó³rzêdnych obiektu A, 3 osie wspó³rzêdnych obiektu B oraz 9 prostopad³ych do ka¿dej kombinacji dwóch pozosta³ych. 
 
 Liczba operacji w te¶cie mo¿e byæ zredukowana przez przeniesienie obiektu B do uk³adu obiektu A.
-Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza macierz przej¶cia z B do A. Wsztstkie testy do przeprowadzenia przedstawia poni¿sza tabela:
+Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza macierz przej¶cia z B do A. Wszystkie testy do przeprowadzenia przedstawia poni¿sza tabela:
 
 
 \begin{figure}[htbp]

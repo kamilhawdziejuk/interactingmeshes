@@ -47,6 +47,8 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="AABox.cs" />
+    <Compile Include="BoxCollision.cs" />
     <Compile Include="BSPNode.cs" />
     <Compile Include="Face.cs" />
     <Compile Include="GeometricUtils.cs" />

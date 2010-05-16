@@ -1,8 +1,5 @@
 ﻿//11-04-2010
-using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX;
 
 namespace InteractingMeshes
 {

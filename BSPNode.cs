@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.DirectX;
 
 namespace InteractingMeshes
@@ -44,18 +43,17 @@ namespace InteractingMeshes
         /// </summary>
         public static readonly int MinLeafSize = -1;
 
-        /// <summary>
-        /// Left BSP tree
-        /// </summary>
-        public BSPNode frontTree = null;
+        private readonly List<Polygon> Polygons = new List<Polygon>();
 
         /// <summary>
         /// Righ BSP tree
         /// </summary>
-        public BSPNode backTree = null;
+        public BSPNode backTree;
 
-        List<Polygon> Polygons = new List<Polygon>();
-
+        /// <summary>
+        /// Left BSP tree
+        /// </summary>
+        public BSPNode frontTree;
 
         #region --- Creating and destroying objects ---
 
@@ -65,7 +63,7 @@ namespace InteractingMeshes
         /// <param name="_polygons"></param>
         public BSPNode(List<Polygon> _polygons)
         {
-            this.Polygons.AddRange(_polygons);
+            Polygons.AddRange(_polygons);
         }
 
         /// <summary>
@@ -75,15 +73,15 @@ namespace InteractingMeshes
         /// <param name="_backTree"></param>
         public BSPNode(BSPNode _frontTree, BSPNode _backTree)
         {
-            this.frontTree = _frontTree;
-            this.backTree = _backTree;
-            if (this.frontTree != null)
+            frontTree = _frontTree;
+            backTree = _backTree;
+            if (frontTree != null)
             {
-                this.Polygons.AddRange(_frontTree.Polygons);
+                Polygons.AddRange(_frontTree.Polygons);
             }
-            if (this.backTree != null)
+            if (backTree != null)
             {
-                this.Polygons.AddRange(_backTree.Polygons);
+                Polygons.AddRange(_backTree.Polygons);
             }
         }
 
@@ -99,7 +97,7 @@ namespace InteractingMeshes
         /// <returns></returns>
         public static BSPNode BuildBSPTree(List<Polygon> _polygons, int _depth, int _ID)
         {
-            if (_polygons.Count == 0 || !BSPNode.DifferentObjectsExist(_polygons))
+            if (_polygons.Count == 0 || !DifferentObjectsExist(_polygons))
             {
                 return null;
             }
@@ -114,19 +112,19 @@ namespace InteractingMeshes
             //(List<Polygon>)(from polygon in _polygons where polygon.Points[0].ID == _ID select new { }); 
             var polygons = new List<Polygon>();
 
-            foreach (var polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
+            foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
             {
                 polygons.Add(polygon);
             }
 
-            Plane splitPlane = PickSplittingPlane(polygons,_polygons);
+            Plane splitPlane = PickSplittingPlane(polygons, _polygons);
 
             var frontList = new List<Polygon>();
             var backList = new List<Polygon>();
             var coplanarList = new List<Polygon>();
 
             //test each polygon against the dividing plane, adding them to the front list, back list, or both, as appropriate
-            for (var i = 0; i < numPolygons; ++i)
+            for (int i = 0; i < numPolygons; ++i)
             {
                 Polygon poly = _polygons[i];
                 switch (ClassifyPolygonToPlane(poly, splitPlane))
@@ -153,15 +151,15 @@ namespace InteractingMeshes
             }
 
             int frontIDs = 0;
-            var backIDs = 0;
-            for (var k = 0; k < frontList.Count; ++k )
+            int backIDs = 0;
+            for (int k = 0; k < frontList.Count; ++k)
             {
                 if (frontList[k].Points[0].ID == _ID)
                 {
                     frontIDs += 1;
                 }
             }
-            for (var k = 0; k < backList.Count; ++k)
+            for (int k = 0; k < backList.Count; ++k)
             {
                 if (backList[k].Points[0].ID == _ID)
                 {
@@ -188,13 +186,9 @@ namespace InteractingMeshes
             return new BSPNode(frontTree, backTree);
         }
 
-
-
         #endregion
 
         #region --- Private static methods ---
-
-
 
         /// <summary>
         /// Splitting polygons by a plane
@@ -203,10 +197,11 @@ namespace InteractingMeshes
         /// <param name="_splitPlane"></param>
         /// <param name="_frontPart"></param>
         /// <param name="_backPart"></param>
-        private static void SplitPolygon(Polygon poly, Plane _splitPlane, out List<Polygon> _frontPart, out List<Polygon> _backPart)
+        private static void SplitPolygon(Polygon poly, Plane _splitPlane, out List<Polygon> _frontPart,
+                                         out List<Polygon> _backPart)
         {
-            List<Vertex> frontVerts = new List<Vertex>();
-            List<Vertex> backVerts = new List<Vertex>();
+            var frontVerts = new List<Vertex>();
+            var backVerts = new List<Vertex>();
 
             // Test all edges (a, b) starting with edge from last to first vertex
             int numVerts = poly.Points.Count;
@@ -215,7 +210,7 @@ namespace InteractingMeshes
             // Loop over all edges given by vertex pair (n - 1, n)
             for (int n = 0; n < numVerts; n++)
             {
-                Vertex b = poly.Points[n];// .GetVertex(n);
+                Vertex b = poly.Points[n]; // .GetVertex(n);
                 PointOnPlanePosition bSide = ClassifyPointToPlane(b, _splitPlane);
                 if (bSide == PointOnPlanePosition.POINT_IN_FRONT_OF_PLANE)
                 {
@@ -224,21 +219,21 @@ namespace InteractingMeshes
                         // Edge (a, b) straddles, output intersection point to both sides
                         Vector3 i = IntersectEdgeAgainstPlane(a, b, _splitPlane);
                         /////////////////assert(ClassifyPointToPlane(i, _splitPlane) == POINT_ON_PLANE);
-                        frontVerts.Add(new Vertex(i,a.ID));
-                        backVerts.Add(new Vertex(i,a.ID));
+                        frontVerts.Add(new Vertex(i, a.ID));
+                        backVerts.Add(new Vertex(i, a.ID));
                     }
                     // In all three cases, output b to the front side
-                    frontVerts.Add(b);//new Vertex(b.Vector, a.ID));
+                    frontVerts.Add(b); //new Vertex(b.Vector, a.ID));
                 }
                 else if (bSide == PointOnPlanePosition.POINT_BEHIND_PLANE)
                 {
                     if (aSide == PointOnPlanePosition.POINT_IN_FRONT_OF_PLANE)
                     {
                         // Edge (a, b) straddles plane, output intersection point
-                        Microsoft.DirectX.Vector3 i = IntersectEdgeAgainstPlane(a, b, _splitPlane);
+                        Vector3 i = IntersectEdgeAgainstPlane(a, b, _splitPlane);
                         //assert(ClassifyPointToPlane(i, plane) == POINT_ON_PLANE);
                         frontVerts.Add(new Vertex(i, a.ID));
-                        backVerts.Add(new Vertex(i,a.ID));
+                        backVerts.Add(new Vertex(i, a.ID));
                     }
                     else if (aSide == PointOnPlanePosition.POINT_ON_PLANE)
                     {
@@ -263,8 +258,8 @@ namespace InteractingMeshes
                 aSide = bSide;
             }
             // Create (and return) two new polygons from the two vertex lists
-            Polygon frontPoly = new Polygon(frontVerts);
-            Polygon backPoly = new Polygon(backVerts);
+            var frontPoly = new Polygon(frontVerts);
+            var backPoly = new Polygon(backVerts);
             _frontPart = new List<Polygon>();
             _backPart = new List<Polygon>();
             _frontPart.Add(frontPoly);
@@ -280,12 +275,12 @@ namespace InteractingMeshes
         /// <returns></returns>
         private static Vector3 IntersectEdgeAgainstPlane(Vertex A, Vertex B, Plane _splitPlane)
         {
-            Microsoft.DirectX.Vector3 V = A.Vector - B.Vector;
-            Microsoft.DirectX.Vector3 N = GeometricUtils.GetNormal(_splitPlane);
+            Vector3 V = A.Vector - B.Vector;
+            Vector3 N = GeometricUtils.GetNormal(_splitPlane);
             double D = _splitPlane.D;
-            double W = (Vector3.Dot(N, B.Vector) + D) / Vector3.Dot(N, V);
+            double W = (Vector3.Dot(N, B.Vector) + D)/Vector3.Dot(N, V);
             //Wyznaczamy punkt przecięcia P’:
-            return (B.Vector - Vector3.Multiply(V, (float)W));
+            return (B.Vector - Vector3.Multiply(V, (float) W));
         }
 
         /// <summary>
@@ -361,7 +356,7 @@ namespace InteractingMeshes
                     switch (ClassifyPolygonToPlane(_polygons[j], plane))
                     {
                         case PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE:
-                        /* Coplanar polygons treated as being in front of plane */
+                            /* Coplanar polygons treated as being in front of plane */
                             numCoplanar++;
                             break;
                         case PolygonOnPlanePosition.POLYGON_IN_FRONT_OF_PLANE:
@@ -386,7 +381,7 @@ namespace InteractingMeshes
                     numBehind += numCoplanar;
                 }
 
-                float score = K * numStraddling + (1.0f - K) * System.Math.Abs(numInFront - numBehind);
+                float score = K*numStraddling + (1.0f - K)*Math.Abs(numInFront - numBehind);
                 if (score < bestScore)
                 {
                     bestScore = score;
@@ -403,14 +398,14 @@ namespace InteractingMeshes
         /// <returns></returns>
         private static Plane GetPlaneFromPolygon(Polygon polygon)
         {
-            Microsoft.DirectX.Vector3 v1 = polygon.Points[1].Vector - polygon.Points[0].Vector;
-            Microsoft.DirectX.Vector3 v2 = polygon.Points[2].Vector - polygon.Points[0].Vector;
-            Microsoft.DirectX.Vector3 normal = Microsoft.DirectX.Vector3.Cross(v1, v2);
+            Vector3 v1 = polygon.Points[1].Vector - polygon.Points[0].Vector;
+            Vector3 v2 = polygon.Points[2].Vector - polygon.Points[0].Vector;
+            Vector3 normal = Vector3.Cross(v1, v2);
             normal.Normalize();
             float D = Vector3.Dot(normal, polygon.Points[0].Vector);
             D *= -1;
 
-            Plane plane = new Plane(normal.X, normal.Y, normal.Z, D);
+            var plane = new Plane(normal.X, normal.Y, normal.Z, D);
             return plane;
         }
 
@@ -430,7 +425,7 @@ namespace InteractingMeshes
             }
             if (dist < -0.01)
             {
-                return PointOnPlanePosition.POINT_BEHIND_PLANE;//behind the plane
+                return PointOnPlanePosition.POINT_BEHIND_PLANE; //behind the plane
             }
             return PointOnPlanePosition.POINT_ON_PLANE;
         }

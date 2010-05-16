@@ -1,14 +1,10 @@
 ﻿//05-05-2010
 //Kamil Hawdziejuk
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.DirectX;
 using System.Drawing;
+using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Direct3D = Microsoft.DirectX.Direct3D;
 
 namespace InteractingMeshes
 {
@@ -20,14 +16,9 @@ namespace InteractingMeshes
         #region --- Private fields ---
 
         /// <summary>
-        /// Objects in scene
+        /// Device
         /// </summary>
-        private List<GeometricObject> objects = new List<GeometricObject>();
-
-        /// <summary>
-        /// Active object to manipulate
-        /// </summary>
-        private GeometricObject activeObject = null;
+        private readonly Device device;
 
         /// <summary>
         /// Movement of active object
@@ -40,12 +31,16 @@ namespace InteractingMeshes
         public Vector3 Rotate = new Vector3(0, 0, 0);
 
         /// <summary>
-        /// Device
+        /// Active object to manipulate
         /// </summary>
-        private readonly Device device = null;
+        private GeometricObject activeObject;
+
+        /// <summary>
+        /// Objects in scene
+        /// </summary>
+        private List<GeometricObject> objects = new List<GeometricObject>();
 
         #endregion
-
 
         #region --- Constructing and destroying objects ---
 
@@ -55,7 +50,7 @@ namespace InteractingMeshes
         /// <param name="_device"></param>
         public ObjectsManager(Device _device)
         {
-            this.device = _device;
+            device = _device;
         }
 
         #endregion
@@ -67,60 +62,66 @@ namespace InteractingMeshes
         /// </summary>
         public GeometricObject ActiveObject
         {
-            get
-            {
-                return this.activeObject;
-            }
+            get { return activeObject; }
             set
             {
-                if (this.activeObject != null)
+                if (activeObject != null)
                 {
-                    this.activeObject.Mesh = MeshUtils.ChangeMeshColor(this.activeObject.Mesh, Color.White, device);
+                    activeObject.Mesh = MeshUtils.ChangeMeshColor(activeObject.Mesh, Color.White, device);
                 }
                 if (value != null)
                 {
                     value.Mesh = MeshUtils.ChangeMeshColor(value.Mesh, Color.Green, device);
-                    this.activeObject = value;
+                    activeObject = value;
                 }
             }
         }
 
         public List<GeometricObject> Objects
         {
-            get
-            {
-                return this.objects;
-            }
-            set
-            {
-                this.objects = value;
-            }
+            get { return objects; }
+            set { objects = value; }
         }
 
         #endregion
 
         #region --- Public methods ---
 
+        public bool ResizeActiveObject(int res)
+        {
+            if (res > 0)
+            {
+                //if (this.ActiveObject.id.Equals("torus"))
+                {
+                    //     this.RemoveActiveObject();
+                }
+                // this.Mesh = Direct3D.Mesh.Torus(device, 1.0f, 1.5f, 8, 8);
+                // obj.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
+                /// if (this.ActiveObject.Mesh   Direct3D.Mesh.)
+            }
+            return true;
+        }
+
         public bool RemoveActiveObject()
         {
-            this.objects.Remove(this.ActiveObject);
-            this.ActiveObject = this.GetObject(0);
+            objects.Remove(ActiveObject);
+            ActiveObject = GetObject(0);
             return true;
         }
 
         public GeometricObject GetObject(int nr)
         {
-            if (this.Objects.Count == 0)
+            if (Objects.Count == 0)
             {
                 return null;
             }
-            else if (nr >= this.objects.Count)
+            else if (nr >= objects.Count)
             {
-                return this.Objects[0];
+                return Objects[0];
             }
             else
             {
-                return this.Objects[nr];
+                return Objects[nr];
             }
         }
 
@@ -135,30 +136,30 @@ namespace InteractingMeshes
 
             if (_name.Equals("torus"))
             {
-                obj.Mesh = Direct3D.Mesh.Torus(device, 2.0f, 5, 8, 8);
+                obj.Mesh = Mesh.Torus(device, 2.0f, 3.5f, 8, 8);
                 obj.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
             }
             else if (_name.Equals("sphere"))
             {
-                obj.Mesh = Direct3D.Mesh.Sphere(this.device, 5, 8, 8);
+                obj.Mesh = Mesh.Sphere(device, 5, 8, 8);
             }
             else if (_name.Equals("box"))
             {
-                obj.Mesh = Direct3D.Mesh.Box(this.device, 4, 3, 2); 
+                obj.Mesh = Mesh.Box(device, 4, 3, 2);
             }
             else if (_name.Equals("polygon"))
             {
-                obj.Mesh = Direct3D.Mesh.Polygon(this.device, 10, 4);
+                obj.Mesh = Mesh.Polygon(device, 10, 4);
             }
             else if (_name.Equals("teapot"))
             {
-                obj.Mesh = Direct3D.Mesh.Teapot(this.device);
+                obj.Mesh = Mesh.Teapot(device);
             }
 
             if (obj.Mesh != null)
             {
-                this.objects.Add(obj);
-                this.activeObject = obj;
+                objects.Add(obj);
+                activeObject = obj;
                 return true;
             }
             return false;
@@ -170,13 +171,13 @@ namespace InteractingMeshes
         /// </summary>
         public void Reset()
         {
-            this.Add("torus");
+            Add("torus");
             //this.Add("spehere");
             //this.Add("box");
             //this.Add("polygon");
             //this.Add("teapot");
 
-            this.ActiveObject = this.objects[0];
+            ActiveObject = objects[0];
         }
 
         #endregion

@@ -2,10 +2,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Direct3D = Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
-
+using Microsoft.DirectX.Direct3D;
 
 namespace InteractingMeshes
 {
@@ -17,48 +15,109 @@ namespace InteractingMeshes
         #region --- Fields ---
 
         /// <summary>
-        /// Mesh
+        /// Orientation
         /// </summary>
-        private Direct3D.Mesh mesh = null;
+        public Matrix GeometryMatrix = Matrix.Identity;
+
+        public Matrix ScaleMatrix = Matrix.Identity;
+
+        /// <summary>
+        /// Id
+        /// </summary>
+        public string id = String.Empty;
 
         /// <summary>
         /// Position
         /// </summary>
-        private Vector3 position = new Vector3(0,0,0);
+        private Vector3 position = new Vector3(0, 0, 0);
 
-        public Matrix ScaleMatrix = Matrix.Identity;
-
+        /// <summary>
+        /// Rotation
+        /// </summary>
         private Vector3 rotation = new Vector3(0, 0, 0);
 
         /// <summary>
-        /// Orientation
+        /// An AABox
         /// </summary>
-        //public Matrix orientation = Matrix.Identity;
-        //private Mogre.Mesh ogreMesh = null;
-        public Matrix GeometryMatrix = Matrix.Identity;
-
-        private string id = String.Empty;
+        private AABox boundingBox = AABox.UnitBox;
 
         #endregion
 
         #region --- Public properties ---
 
         /// <summary>
+        /// BoundingBox
+        /// </summary>
+        public AABox BoundingBox
+        {
+            get
+            {
+                if (this.boundingBox.Equals(AABox.UnitBox))
+                {
+                    Vector3 minPoint = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+                    Vector3 maxPoint = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+
+                    foreach (var point in this.Points)
+                    {
+                        if (point.X < minPoint.X)
+                        {
+                            minPoint.X = point.X;
+                        }
+                        if (point.Y < minPoint.Y)
+                        {
+                            minPoint.Y = point.Y;
+                        }
+                        if (point.Z < minPoint.Z)
+                        {
+                            minPoint.Z = point.Z;
+                        }
+
+                        if (point.X > maxPoint.X)
+                        {
+                            maxPoint.X = point.X;
+                        }
+                        if (point.Y > minPoint.Y)
+                        {
+                            maxPoint.Y = point.Y;
+                        }
+                        if (point.Z > minPoint.Z)
+                        {
+                            maxPoint.Z = point.Z;
+                        }
+                    }
+
+                    this.boundingBox = new AABox(minPoint, maxPoint);
+                }
+                return this.boundingBox;
+            }
+        }
+
+        /// <summary>
+        /// Transformacja obiektu względem sceny
+        /// </summary>
+        public Matrix GlobalTransformation
+        {
+            get
+            {
+                Matrix m = this.GeometryMatrix;
+                m.Translate(this.Position);
+                return m;
+            }
+        }
+
+        /// <summary>
         /// Position
         /// </summary>
         public Vector3 Position
         {
-            get
-            {
-                return this.position;
-            }
+            get { return position; }
             set
             {
-                if (this.position != value)
+                if (position != value)
                 {
-                    Vector3 translation = value - this.position;
-                    this.GeometryMatrix *= Matrix.Translation(translation);
-                    this.position = value;
+                    Vector3 translation = value - position;
+                    GeometryMatrix *= Matrix.Translation(translation);
+                    position = value;
                 }
             }
         }
@@ -68,18 +127,15 @@ namespace InteractingMeshes
         /// </summary>
         public Vector3 Rotation
         {
-            get
-            {
-                return this.rotation;
-            }
+            get { return rotation; }
             set
             {
-                if (this.rotation != value)
+                if (rotation != value)
                 {
-                    var rotat = value - this.rotation;
-                    var rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);// (value.Y, value.X, value.Z);
-                    this.GeometryMatrix *= rot;
-                    this.rotation = value;
+                    Vector3 rotat = value - rotation;
+                    Matrix rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);
+                    GeometryMatrix *= rot;
+                    rotation = value;
                 }
             }
         }
@@ -87,27 +143,14 @@ namespace InteractingMeshes
         /// <summary>
         /// Mesh
         /// </summary>
-        public Direct3D.Mesh Mesh
-        {
-            get
-            {
-                return this.mesh;
-            }
-            set
-            {
-                this.mesh = value;
-            }
-        }
+        public Mesh Mesh { get; set; }
 
         /// <summary>
         /// Points of a mesh
         /// </summary>
         public List<Vector3> Points
         {
-            get
-            {
-                return MeshUtils.GetPoints(this.Mesh, this.Position);
-            }
+            get { return MeshUtils.GetPoints(Mesh, Position); }
         }
 
         /// <summary>
@@ -115,13 +158,10 @@ namespace InteractingMeshes
         /// </summary>
         public List<Polygon> Polygons
         {
-            get
-            {
-                return MeshUtils.GetPolygons(this.Mesh, this.Position);
-            }
+            get { return MeshUtils.GetPolygons(Mesh, Position); }
         }
 
-        #endregion 
+        #endregion
 
         #region --- Constructing and destroying objects ---
 
@@ -131,13 +171,13 @@ namespace InteractingMeshes
         /// <param name="_id"></param>
         /// <param name="_position"></param>
         /// <param name="_scaleMatrix"></param>
-        /// <param name="_rotationMatrix"></param>
+        /// <param name="_rotation"></param>
         public GeometricObject(string _id, Vector3 _position, Matrix _scaleMatrix, Vector3 _rotation)
         {
-            this.id = _id;
-            this.Position = _position;
-            this.ScaleMatrix = _scaleMatrix;
-            this.Rotation = _rotation;
+            id = _id;
+            Position = _position;
+            ScaleMatrix = _scaleMatrix;
+            Rotation = _rotation;
         }
 
         #endregion
