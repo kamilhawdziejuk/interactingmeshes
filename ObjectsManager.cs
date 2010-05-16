@@ -137,7 +137,11 @@ namespace InteractingMeshes
             if (_name.Equals("torus"))
             {
                 obj.Mesh = Mesh.Torus(device, 2.0f, 3.5f, 8, 8);
-                obj.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
+                //obj.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
+            }
+            else if (_name.Equals("torus2"))
+            {
+                obj.Mesh = Mesh.Torus(device, 1.0f, 4.5f, 10, 10);
             }
             else if (_name.Equals("sphere"))
             {
@@ -154,6 +158,7 @@ namespace InteractingMeshes
             else if (_name.Equals("teapot"))
             {
                 obj.Mesh = Mesh.Teapot(device);
+                obj.ScaleMatrix.Scale(50.0f, 50.0f, 50.0f);
             }
 
             if (obj.Mesh != null)

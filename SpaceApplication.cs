@@ -173,6 +173,17 @@ namespace InteractingMeshes
                         Manager.Add("polygon");
                         break;
                     }
+                case 101:
+                    {
+                        Manager.Add("teapot");
+                        break;
+                    }
+
+                case 102:
+                    {
+                        Manager.Add("torus2");
+                        break;
+                    }
 
                     //'c' - camera move
                 case 67:
