@@ -97,7 +97,9 @@ Instytut Informatyki
 \chapter*{Wstêp}
 
 Detekcja kolizji jest jedn± z fundamentalnych czê¶ci wielu ró¿nych aplikacji. Nachodzenie na siebie obiektów jest czêsto niepo¿±danym stanem. System wykrywania i naprawiania kolizji odpowiadaæ ma w swoim zamierzeniu za zapewnienie poprawnego i stabilnego stanu symulowanego ¶rodowiska, wymuszaj±c odpowiednie zachowanie obiektów w momencie wzajemnej interakcji.
-I tak na przyk³ad w grach komputerowych uniemo¿liwia postaciom przechodzenie przez ¶ciany czy te¿ upadanie poni¿ej poziomu pod³ogi. Dostarcza mo¿liwo¶ci takich jak odpowied¼ na pytanie czy jeden u¿ytkownik mo¿e zobaczyæ drugiego, b±d¼ czy jest w zasiêgu strza³u wroga. W robotyce system wykrywania kolizji jest u¿ywany do planowania ruchu i wytyczania ¶cie¿ek poruszaj±cych siê robotów tak, aby nie napotyka³y na przeszkody. W aplikacjach do prototypowania uczestniczy w modelowaniu drogich i wa¿nych czê¶ci przed etapem ich produkcji, co ma ogromny wp³yw na oszczêdno¶æ. Jest tak¿e integraln± czê¶ci± wielu systemów CAD do projektowania przemys³owego, zapewniaj±c wymogi konstrukcyjne produktów firmy. Jest wreszcie u¿ywany w testach zderzeñ, wypadków i katastrof wewn±trz specjalnie do tego celu stworzonych ¶rodowisk symulacyjnych . 
+I tak na przyk³ad w grach komputerowych uniemo¿liwia postaciom przechodzenie przez ¶ciany czy te¿ upadanie poni¿ej poziomu pod³ogi. Dostarcza mo¿liwo¶ci takich jak odpowied¼ na pytanie czy jeden u¿ytkownik mo¿e zobaczyæ drugiego, b±d¼ czy jest w zasiêgu strza³u wroga. W robotyce system wykrywania kolizji jest u¿ywany do planowania ruchu i wytyczania ¶cie¿ek poruszaj±cych siê robotów tak, aby nie napotyka³y na przeszkody. W aplikacjach do prototypowania uczestniczy w modelowaniu drogich i wa¿nych czê¶ci przed etapem ich produkcji, co ma ogromny wp³yw na oszczêdno¶æ. Jest tak¿e integraln± czê¶ci± wielu systemów CAD do projektowania przemys³owego, zapewniaj±c wymogi konstrukcyjne produktów firmy. Jest wreszcie u¿ywany w testach zderzeñ, wypadków i katastrof wewn±trz specjalnie do tego celu stworzonych ¶rodowisk symulacyjnych.
+
+W niniejszej pracy przedstawiê systemy detekcji kolizji oraz opiszê najwa¿niejsze algorytmy wykorzystywane do ich wykrywania. Do³±czam wreszcie aplikacjê, która prezentuje wyniki w praktyce. Jest ona integraln± czê¶ci± pracy.
 \clearpage
 
 \chapter{Systemy detekcji kolizji}
@@ -186,8 +188,6 @@ Jak tylko o¶ odzielaj±ca zostanie znaleziona, test zwraca odpowied¼ przecz±c± (b
 
 Liczba operacji w te¶cie mo¿e byæ zredukowana przez przeniesienie obiektu B do uk³adu obiektu A.
 Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza macierz przej¶cia z B do A. Wszystkie testy do przeprowadzenia przedstawia poni¿sza tabela:
-
-
 \begin{figure}[htbp]
  \centering
     %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
@@ -195,10 +195,67 @@ Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza 
 \caption[Rozmiar 20]{Testy kolizji}
   \label{zrodlo}
 \end{figure}
+\clearpage
 
 \section{Testy oparte na wypuk³o¶ciach bry³ - algorytm GJK}
 
+Omówiê teraz jedn± z najbardziej efektywnych metod wykrywania kolizji pomiêdzy dwoma wielo¶cianami wypuk³ymi. Jest to algorytm Gilbert-Johnson-Keerthi (w skrócie GJK) opublikowany po raz pierwszy w 1988 roku w pracy " Robotics and Automation".  Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie. 
+
+Algorytm ten jest oparty na metodzie sympleksu. Istot±  algorytmu jest to, i¿ nie operuje on na dwóch obiektach explicite, ale na ich ró¿nicy Minkowskiego:
+
+\begin{df}[Ró¿nica Minkowskiego]
+$$A-B = \{a-b: a \in A, b \in B \}.$$
+\end{df}
+
+Transformacja taka redukuje problem znalezienia odleg³o¶ci pomiêdzy dwoma wypuk³ymi zbiorami do znalezienia odleg³o¶ci pomiêdzy zbiorem, a punktem. Algorytm opiera siê bowiem na fakcie, ¿e odleg³o¶æ pomiêdzy $A$ i $B$ jest równa odleg³o¶ci pomiêdzy zbiorem bêd±cym ich ró¿nic± Minkowskiego, a pocz±tkiem uk³adu wspó³rzêdnych:
+$$dist(A,B) = min \{ ||a - b|| : a \in A, b \in B \} = min \{ ||c|| : c \in A-B\}.$$
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{MinkowskiDifference.eps}
+\caption[Rozmiar 20]{Odleg³o¶æ pomiêdzy A i B jest równa odleg³o¶ci pomiêdzy ró¿nic± Minkowskiego, a pocz±tkiem uk³adu wspó³rzêdnych}
+  \label{zrodlo}
+\end{figure}
+
+Kluczowym punktem algorytmu jest to, ¿e ró¿nica Minkowskiego nie jest obliczana explicite. Próbkuje kolejne wyznaczane podzbiory ró¿nicy Minkowskiego, u¿ywaj±c pojêcia funkcji podpieraj±co-rzutuj±cej.
+
+\begin{df}[Funkcja podpieraj±co-rzutuj±ca]
+Dla danego obiektu wypuk³ego $A$ jest to funkcja $s_A(d)$, która rzutuje podany kierunek $d$ w kierunku podpieraj±cego punktu $A$ w tym kierunku
+\end{df}
+
+Poniewa¿ funkcja rzutuj±ca jest maksimum pewnej funkcj liniowej, to dla ró¿nicy Minkowskiego dostajemy
+$$s_(A-B)(d) = s_A(d) - s_B(-d).$$
+i zwi±zku z tym mo¿emy to obliczaæ z funkcji rzutuj±cej dla ka¿dego z obiektów $A$ i $B$ osobno.
+
+W celu znalezienia ró¿nicy Minkowskiego $C$ i pocz±tku uk³adu wspó³rzêdnych algorytm GJK wykorzystuje wyniki twierdzenia Caratheodory'ego. Zanim je przedstawiê, wprowadzê definicjê otoczki wypuk³ej:
+
+\clearpage
+
+\begin{df}[Otoczka wypuk³a]
+Otoczk± wypuk³± zbioru $A$, bêd±cego podzbiorem przestrzeni liniowej jest najmniejszy (w sensie inkluzji) zbiór wypuk³y zawieraj±cy A, oznaczany jako $convA$:
+$$convA = \cap \{ M : A \subset M \wedge M - wypuk³y \}.$$
+\end{df}
+
+\begin{tw}[Caratheodory'ego]
+Niech $P$ bêdzie podzbiorem przestrzeni $R^d$, a punkt $x \in convP$. Istnieje wtedy podzbiór $P' \subset P$, z³o¿ony z maksymalnie $d+1$ punktów taki, ¿e $x \in convP'$. 
+\end{tw}
+
+\begin{proof}
+Niech $x \in convP$. Zatem $x$ jest pewn± kombinacj± wypuk³± skoñczonej liczby punktów ze zbioru P:
+$$x = \sum\limits_{j=1}^k{\lambda_j x_j},$$
+gdzie $x_j \in P$, $\lambda_j > 0$, $\sum\limits_{j=1}^k{\lambda_j}=1$ dla ka¿dego $1 \leq j \leq k$.
+
+Niech $k > d+1$ (w przeciwnym razie teza jest spe³niona). Wtedy punkty $x_2 - x_1$, ..., $x_k - x_1$ s± liniowo zale¿ne. Istniej± wiêc skalary $\mu_2,..., \mu_k$, nie wszystkie zerowe, takie, ¿e:
+$$ \sum\limits_{j=2}^k {\mu_j(x_j-x_1)} = 0.$$
+\end{proof}
+
+\clearpage
+
 \section{Dok³adne testy - algorytmy BSP i kd-tree}
+
+\chapter{Metody poprawy wydajno¶ci systemów detekcji kolizji}
+
+Istnieje kilka bardzo istotnych kwestii, które nale¿y poruszyæ omawiaj±c tematykê systemów detekcji kolizji.
 
 \clearpage
 
@@ -206,7 +263,7 @@ Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza 
 
 \section{Opis dzia³ania i interfejs u¿ytkownika}
 
-\section{U¿yta technologia}
+\section{Opis wykorzystanej technologii}
 
  \addcontentsline{toc}{chapter}{\hspace{13pt} Spis
 literatury}
