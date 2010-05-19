@@ -184,10 +184,10 @@ Dla przypadków iterakcji ¶ciana-¶ciana i ¶ciana-krawêd¼ wystarczy sprawdziæ norm
 - osie równoleg³e do normalnych ¶cian obiektu B
 - osie równoleg³e do wektorów bêd±cych iloczynami wektorowymi wszystkich krawêdzi obiektu A z krawêdziami obiektu B
 
-Jak tylko o¶ odzielaj±ca zostanie znaleziona, test zwraca odpowied¼ przecz±c± (brak kolizji). W przypadku, gdy ¿adna z osi nie jest osi± rozdzielaj±c±, kolizja istnieje. Dla dwóch wielo¶cianów o odpowiedniej ilo¶ci ¶cian $F$ oraz ilo¶ci krawêdzi $E$ istnieje potencjalnie $2*F + E$ osi rozdzielaj±cych. W zwi±zku z tym, ¿e ¶ciany w obiektach OOB s± równoleg³e do siebie wystarczy tutaj sprawdziæ 15 kierunków, po których nale¿y przetestowaæ przeciêcia dwóch obiektów A i B w scenie 3D. Kierunki te to odpowiednio 3 osie wspó³rzêdnych obiektu A, 3 osie wspó³rzêdnych obiektu B oraz 9 prostopad³ych do ka¿dej kombinacji dwóch pozosta³ych. 
+Jak tylko o¶ odzielaj±ca zostanie znaleziona, test zwraca odpowied¼ przecz±c± (brak kolizji). W przypadku, gdy ¿adna z osi nie jest osi± rozdzielaj±c±, kolizja istnieje. Dla dwóch wielo¶cianów o odpowiedniej ilo¶ci ¶cian $F$ oraz ilo¶ci krawêdzi $E$ istnieje potencjalnie $2F + E$ osi rozdzielaj±cych. W zwi±zku z tym, ¿e ¶ciany w obiektach OOB s± równoleg³e do siebie wystarczy tutaj sprawdziæ 15 kierunków, po których nale¿y przetestowaæ przeciêcia dwóch obiektów A i B w scenie 3D. Kierunki te to odpowiednio 3 osie wspó³rzêdnych obiektu A, 3 osie wspó³rzêdnych obiektu B oraz 9 prostopad³ych do ka¿dej kombinacji dwóch pozosta³ych. 
 
 Liczba operacji w te¶cie mo¿e byæ zredukowana przez przeniesienie obiektu B do uk³adu obiektu A.
-Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza macierz przej¶cia z B do A. Wszystkie testy do przeprowadzenia przedstawia poni¿sza tabela:
+Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_{ij}]$ oznacza macierz przej¶cia z B do A. Wszystkie testy do przeprowadzenia przedstawia poni¿sza tabela:
 \begin{figure}[htbp]
  \centering
     %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
@@ -199,35 +199,44 @@ Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_ij]$ oznacza 
 
 \section{Testy oparte na wypuk³o¶ciach bry³ - algorytm GJK}
 
-Omówiê teraz jedn± z najbardziej efektywnych metod wykrywania kolizji pomiêdzy dwoma wielo¶cianami wypuk³ymi. Jest to algorytm Gilbert-Johnson-Keerthi (w skrócie GJK) opublikowany po raz pierwszy w 1988 roku w pracy " Robotics and Automation".  Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie. 
+Omówiê teraz jedn± z najbardziej efektywnych metod wykrywania kolizji pomiêdzy dwoma zbiorami wypuk³ymi. Jest to algorytm Gilbert-Johnson-Keerthi\footnote{Zosta³ opublikowany po raz pierwszy w 1988 roku w pracy Robotics and Automation".}(w skrócie GJK).  Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie.
 
-Algorytm ten jest oparty na metodzie sympleksu. Istot±  algorytmu jest to, i¿ nie operuje on na dwóch obiektach explicite, ale na ich ró¿nicy Minkowskiego:
+Jak ³atwo zauwa¿yæ
+$$dist(A,B) =  min \{ ||a - b|| : a \in A, b \in B \}.$$
 
+Wprowad¼my nastêpuj±c± definicjê:
 \begin{df}[Ró¿nica Minkowskiego]
-$$A-B = \{a-b: a \in A, b \in B \}.$$
+Ró¿nic± Minkowskiego dwóch zbiorów $A$ i $B$ nazywamy zbiór:
+$$A \ominus B = \{a-b: a \in A, b \in B \}.$$
 \end{df}
 
-Transformacja taka redukuje problem znalezienia odleg³o¶ci pomiêdzy dwoma wypuk³ymi zbiorami do znalezienia odleg³o¶ci pomiêdzy zbiorem, a punktem. Algorytm opiera siê bowiem na fakcie, ¿e odleg³o¶æ pomiêdzy $A$ i $B$ jest równa odleg³o¶ci pomiêdzy zbiorem bêd±cym ich ró¿nic± Minkowskiego, a pocz±tkiem uk³adu wspó³rzêdnych:
-$$dist(A,B) = min \{ ||a - b|| : a \in A, b \in B \} = min \{ ||c|| : c \in A-B\}.$$
+Istot±  algorytmu jest to, i¿ nie operuje on na dwóch obiektach explicite, ale na ich ró¿nicy Minkowskiego. Transformacja taka redukuje bowiem problem znalezienia odleg³o¶ci pomiêdzy dwoma wypuk³ymi zbiorami do znalezienia najmniejszej normy w zbiorze $A \ominus B$:
+$$dist(A,B) = min \{ ||c|| : c \in A \ominus B\}.$$
+
+Oznaczmy przez $v(A \ominus B)$ punkt taki, ¿e $||v(A \ominus B)|| = dist(A,B)$.
+
 \begin{figure}[htbp]
  \centering
     %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
   \includegraphics[width=1.0\textwidth]{MinkowskiDifference.eps}
-\caption[Rozmiar 20]{Odleg³o¶æ pomiêdzy A i B jest równa odleg³o¶ci pomiêdzy ró¿nic± Minkowskiego, a pocz±tkiem uk³adu wspó³rzêdnych}
+\caption[Rozmiar 20]{Odleg³o¶æ pomiêdzy A i B jest równa odleg³o¶ci pomiêdzy $A \ominus B$, a pocz±tkiem uk³adu wspó³rzêdnych}
   \label{zrodlo}
 \end{figure}
+Kluczow± cech± algorytmu jest to, ¿e ró¿nica Minkowskiego nie jest obliczana explicite. Mianowicie, bazuje on na metodzie sympleksu i wyznacza w ka¿dym kolejnym kroku iteracji sympleksy $W_k \subset A \ominus B$ tak, aby znajdowa³y siê one coraz bli¿ej pocz±tku uk³adu wspó³rzêdnych. Bazuje przy tym na nastêpuj±cym pojêciu:
 
-Kluczowym punktem algorytmu jest to, ¿e ró¿nica Minkowskiego nie jest obliczana explicite. Próbkuje kolejne wyznaczane podzbiory ró¿nicy Minkowskiego, u¿ywaj±c pojêcia funkcji podpieraj±co-rzutuj±cej.
-
-\begin{df}[Funkcja podpieraj±co-rzutuj±ca]
-Dla danego obiektu wypuk³ego $A$ jest to funkcja $s_A(d)$, która rzutuje podany kierunek $d$ w kierunku podpieraj±cego punktu $A$ w tym kierunku
+\begin{df}[Funkcja support-mapping]
+Dla zbioru wypuk³ego $A \subset R^d$ jest to funkcja $s_A : R^d \rightarrow A$, która rzutuje kierunek $v \in R^d$ w kierunku $A$ tak, ¿e:
+$$s_A(v) = max \{ v \cdot x : x \in A\}.$$
+Warto¶æ funkcji dla danego wektora, nazywamy support-pointem.
 \end{df}
 
-Poniewa¿ funkcja rzutuj±ca jest maksimum pewnej funkcj liniowej, to dla ró¿nicy Minkowskiego dostajemy
-$$s_(A-B)(d) = s_A(d) - s_B(-d).$$
-i zwi±zku z tym mo¿emy to obliczaæ z funkcji rzutuj±cej dla ka¿dego z obiektów $A$ i $B$ osobno.
 
-W celu znalezienia ró¿nicy Minkowskiego $C$ i pocz±tku uk³adu wspó³rzêdnych algorytm GJK wykorzystuje wyniki twierdzenia Caratheodory'ego. Zanim je przedstawiê, wprowadzê definicjê otoczki wypuk³ej:
+
+Poniewa¿ funkcja support-mapping jest maksimum pewnej funkcj liniowej, to dla ró¿nicy Minkowskiego dostajemy
+$$s_{A \ominus B}(v) = s_A(v) - s_B(-v).$$
+i zwi±zku z tym mo¿emy j± obliczaæ obliczaj±c najpierw warto¶æ dla ka¿dego z obiektów $A$ i $B$ osobno.
+
+W celu znalezienia odleg³o¶ci $A \ominus B$  od pocz±tku uk³adu wspó³rzêdnych algorytm GJK wykorzystuje wyniki twierdzenia Caratheodory'ego. Zanim je przedstawiê, wprowadzê definicjê otoczki wypuk³ej:
 
 \clearpage
 
@@ -249,7 +258,71 @@ Niech $k > d+1$ (w przeciwnym razie teza jest spe³niona). Wtedy punkty $x_2 - x_
 $$ \sum\limits_{j=2}^k {\mu_j(x_j-x_1)} = 0.$$
 \end{proof}
 
+
+Opieraj±c siê na powy¿szym twierdzeniu, w algorytmie GJK ogranicza siê przeszukiwania, przechowuj±c w ka¿dej iteracji $k$ zbiór $W_k$, z³o¿ony maksymalnie z $d+1$ punktów z $A \ominus B$. W kolejnej iteracji konstruowany jest sympleks po³o¿ony bli¿ej $O$ ni¿ ten z poprzedniej iteracji. Definiujemy $v_k := v(conv(W_k))$ oraz zbiór $W_k$ nastêpuj±co:
+$$W_{k} := W_k \cup v_k.$$
+
+
+Je¶li pocz±tek uk³adu wspó³rzêdnych zawiera siê w aktualnym sympleksie, to oznacza, ¿e obiekty $A$ i $B$ siê przecinaj± i algorytm siê zatrzymuje. W przeciwnym razie zbiór $W_k$ zostaje zaktualizowany tak, aby tworzy³ nowy sympleks, który zawiera punkt bli¿szy pocz±tku uk³adu wspó³rzêdnych ni¿ aktualny sympleks. 
+
+Poka¿emy obecnie, ¿e w ka¿dej iteracji $v_{k+1}$ musi znajdowaæ siê bli¿ej pocz±tku uk³adu wspó³rzêdnych, ni¿ poprzedni punkt $v_k$, poza przypadkami, gdy $v_k$ by³ najbli¿szym punktem.
+
+\begin{tw}[Zbie¿no¶æ metody sympleks]
+Niech $k \in N$ i niech $W_k$ bêdzie sympleksem. 
+
+Definiujemy:
+\begin{center}
+$v_k := v(conv(W_k))$ oraz $W_{k+1} := W_k \cup v_k.$
+\end{center}
+
+ Wtedy $||v_{k+1}|| \leq ||v_k||$, przy czym równo¶æ zachodzi jedynie wtedy, gdy $v_k = v(A \ominus B)$.
+\end{tw}
+
+\begin{proof}
+
+Zauwa¿my, ¿e
+$$||v_{k+1}|| = min \{||x||: x \in conv(W_k \cup \{w_k\}) \} \leq ||v_k||,$$ 
+gdy¿ $v_k \in conv(W_k)$ oraz $conv(W_k) \subset conv(W_k \cup \{w_k\}).$
+
+Za³ó¿my, ¿e $||v_{k+1}||=||v_k||$. 
+
+Wtedy 
+$$\forall x \in  conv(W_k \cup \{w_k\})  :  ||v_k|| \leq ||x||.$$
+Poniewa¿ $v_k \in conv(W_k)$, wiêc segment $v_kw_k$ zawiera siê w zbiorze $conv(W_k \cup \{w_k\})$. St±d, dla ka¿dego punktu $u$ na segmencie $v_kw_k$ mamy $ ||v_k|| \leq ||u||$. Zgodnie z lematem 4.1, dostajemy
+$$||v||^2 - v_k \cdot w_k \leq 0.$$
+Z Lematu 4.2 wiemy, ¿e 
+$$||v_k||^2 - v_k \cdot w_k \geq 0,$$
+zatem
+$$||v_k||^2 - v_k \cdot w_k = 0,$$
+co mo¿e byæ prawd± jedynie w przypadku $v_k = v(A \ominus B).$
+\end{proof}
+
+\textbf{Algorytm GJK}
+
+1. Zainicjuj sympleks $W_0$ wybieraj±c maksymalnie $d+1$ dowolnych punktów ze zbioru $A \ominus B$.
+
+2. Wybierz punkt $v_k \in convW_k$ o najmniejszej normie.
+
+3. Je¶li $v_k=O$ (tzn. $O \in A \ominus B$), zatrzymaj algorytm i zwróæ odpowied¼, ¿e $A$ i $B$ siê przecinaj±.
+
+4. Zredukuj $W_k$ do najmniejszego podzbioru $W' \subset W$ takiego, ¿e $v_k \in convW'$ poprzez usuniêcie ze zbioru $W_k$ punktów, które nie s± konieczne do reprezentacji podsympleksu $W$ zawieraj±cego $P$.
+
+5. Niech $V=s_{A \ominus B}(-P)=s_A(-P) - s_B(P)$ bêdzie punktem wspieraj±cym w kierunku $-P$.
+
+6. Je¶li $V$ jest najdalszym punktem wysuniêtym w kierunku $-P$, zatrzymaj algorytm i zwróæ odpowied¼, ¿e $A$ i $B$ nie przecinaj± siê. Wielko¶æ $dist(O,P)$ jest odleg³o¶ci± pomiêdzy nimi.
+
+7. Zdefiniuj $W:=W \cup \{P\}$ i przejd¼ do kroku 2.
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{GJK.eps}
+\caption[Rozmiar 20]{Cztery iteracje algorytmu GJK. Punkty zbioru $W_k$ s± zaznaczone na czarno.}
+  \label{zrodlo}
+\end{figure}
+
 \clearpage
+
 
 \section{Dok³adne testy - algorytmy BSP i kd-tree}
 
@@ -273,14 +346,16 @@ literatury}
 
 1. Christer Ericson, Real-Time Collision Detection", 2005  Elsevier Inc.
 
-2. Philip J.Schneider, David H.Eberly, "Geometric Tools for Computer Graphics", 2003 Elsevier Science
+2. Gino van den Bergen, "Collision Detection In Interactive 3D Environments", 2003 Elsevier Inc.
 
-3. Charles Petzold, "3D Programming for Windows"
+3. Philip J.Schneider, David H.Eberly, "Geometric Tools for Computer Graphics", 2003 Elsevier Science
 
-4. Ron Penton, "Beginning C\# Game Programming", 2003
+4. Charles Petzold, "3D Programming for Windows"
 
-5. www.geometrictools.com - zestaw u¿ytecznych kodów i algorytmów wykorzystywanych w grafice komputerowej, matematyce, fizyce, geometrii, analizie numerycznej
+5. Ron Penton, "Beginning C\# Game Programming", 2003
 
-6. www.microsoft.com/windows/directx - zestaw funkcji API wspomagaj±cych m.in. generowanie grafiki 
+6. www.geometrictools.com - zestaw u¿ytecznych kodów i algorytmów wykorzystywanych w grafice komputerowej, matematyce, fizyce, geometrii, analizie numerycznej
+
+7. www.microsoft.com/windows/directx - zestaw funkcji API wspomagaj±cych m.in. generowanie grafiki 
 
 \end{document}
