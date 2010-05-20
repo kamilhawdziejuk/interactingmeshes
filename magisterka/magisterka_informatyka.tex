@@ -146,7 +146,7 @@ W tym rozdziale przedstawimy szczegó³owo algorytmy odpowiadaj±ce na ró¿ne rodzaj
 
 Ka¿dy z poszczególnych testów, opisanych w tym rozdziale, odpowiada na pytanie czy istnieje kolizja przy pewnej reprezentacji danych obiektów. Je¶li obiekty s± bardzo z³o¿one, to czêsto wystarczaj±cym testem jest odpowied¼ na pytanie czy np. sfery (prostopad³o¶ciany) opisuj±ce bry³y ze sob± koliduj±. S± to tak zwane szybkie testy, opisane podrozdziale 2.1. Brak kolizji dla tych przybli¿onych reprezentacji oznacza oczywi¶cie brak kolizji dla owych obiektów. Istnienie jej nie oznacza oczywi¶cie, ¿e oba obiekty faktycznie s± ze sob± w kolizji i  mo¿emy wtedy przej¶æ do bardziej szczegó³owych testów. Testy, które mo¿emy przeprowadziæ w kolejnym etapie mog± odrzuciæ nam kolizje, przy za³o¿eniu, ¿e obiekty s± wypuk³e - opisane s± one w podrozdziale 2.2. Kolejne, szczególowe opisane s± w rozdziale 2.3.
 
-\section{Szybkie testy na sferach i prostopad³o¶cianach}
+\section{Szybki test na prostopad³o¶cianach}
 
 \begin{df}[Zorientowany prostopad³o¶cian otaczaj±cy (OOB)]
 Przez OOB (Object oriented box) oznaczaæ bêdziemy prostopad³o¶cian, który jest zorientowany zgodnie z pewn± macierz± orientacji w przestrzeni. 
@@ -155,7 +155,7 @@ Przez OOB (Object oriented box) oznaczaæ bêdziemy prostopad³o¶cian, który jest z
 Test kolizji dwóch obiektów OOB bazuje na nastêpuj±cym fundamentalnym twierdzeniu z analizy bry³ wypuk³ych: 
 
 \begin{tw}[O odzielaj±cej hiperp³aszczy¼nie]
-Niech $A$ i $B$ bêd± dwoma niepustymi, roz³±cznymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna $P$ oddzielaj±ca zbiory A i B, tzn. istnieje wektor $a \in R^n$ , $a = 0$, takie ¿e:
+Niech $A$ i $B$ bêd± dwoma niepustymi, roz³±cznymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna $P$ oddzielaj±ca zbiory A i B, tzn. istnieje wektor $a \in R^n$ , $a \neq 0$, takie ¿e:
 $$ \sup {a^Tx} <\sup a^Tz$$
 \end{tw}
 
@@ -197,10 +197,10 @@ Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_{ij}]$ oznacz
 \end{figure}
 \clearpage
 
-\section{Testy oparte na wypuk³o¶ciach bry³ - algorytm GJK}
+\section{Test oparty na wypuk³o¶ciach bry³ - algorytm GJK}
 
-Omówiê teraz jedn± z najbardziej efektywnych metod wykrywania kolizji pomiêdzy dwoma zbiorami wypuk³ymi. Jest to algorytm Gilbert-Johnson-Keerthi\footnote{Zosta³ opublikowany po raz pierwszy w 1988 roku w pracy Robotics and Automation".}(w skrócie GJK).  Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie.
-
+W niniejszym rozdziale omówiê szczegó³owo jedn± z najefektywniejszych metod rozwi±zywania kolizji dla zbiorów wypuk³ych -  \textbf{algorytm Gilbert-Johnson-Keerthi}\footnote{Zosta³ opublikowany po raz pierwszy w 1988 roku w pracy Robotics and Automation".}(w skrócie GJK), któr± te¿ zaimplementowa³em w swojej aplikacji. Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie.
+\clearpage
 Jak ³atwo zauwa¿yæ
 $$dist(A,B) =  min \{ ||a - b|| : a \in A, b \in B \}.$$
 
@@ -222,7 +222,12 @@ Oznaczmy przez $v(A \ominus B)$ punkt taki, ¿e $||v(A \ominus B)|| = dist(A,B)$.
 \caption[Rozmiar 20]{Odleg³o¶æ pomiêdzy A i B jest równa odleg³o¶ci pomiêdzy $A \ominus B$, a pocz±tkiem uk³adu wspó³rzêdnych}
   \label{zrodlo}
 \end{figure}
-Kluczow± cech± algorytmu jest to, ¿e ró¿nica Minkowskiego nie jest obliczana explicite. Mianowicie, bazuje on na metodzie sympleksu i wyznacza w ka¿dym kolejnym kroku iteracji sympleksy $W_k \subset A \ominus B$ tak, aby znajdowa³y siê one coraz bli¿ej pocz±tku uk³adu wspó³rzêdnych. Bazuje przy tym na nastêpuj±cym pojêciu:
+Kluczow± cech± algorytmu jest to, ¿e ró¿nica Minkowskiego nie jest obliczana explicite. Mianowicie, bazuje on na metodzie sympleksu i wyznacza w ka¿dym kolejnym kroku iteracji sympleksy $W_k \subset A \ominus B$ tak, aby znajdowa³y siê one coraz bli¿ej pocz±tku uk³adu wspó³rzêdnych. Konstrukcja kolejnego sympleksu opiera siê na nastêpuj±cym pojêciach:
+
+\begin{df}[Otoczka wypuk³a]
+Otoczk± wypuk³± zbioru $A$, bêd±cego podzbiorem przestrzeni liniowej jest najmniejszy (w sensie inkluzji) zbiór wypuk³y zawieraj±cy A, oznaczany jako $convA$:
+$$convA = \cap \{ M : A \subset M \wedge M - wypuk³y \}.$$
+\end{df}
 
 \begin{df}[Funkcja support-mapping]
 Dla zbioru wypuk³ego $A \subset R^d$ jest to funkcja $s_A : R^d \rightarrow A$, która rzutuje kierunek $v \in R^d$ w kierunku $A$ tak, ¿e:
@@ -230,20 +235,11 @@ $$s_A(v) = max \{ v \cdot x : x \in A\}.$$
 Warto¶æ funkcji dla danego wektora, nazywamy support-pointem.
 \end{df}
 
-
-
-Poniewa¿ funkcja support-mapping jest maksimum pewnej funkcj liniowej, to dla ró¿nicy Minkowskiego dostajemy
+Poniewa¿ funkcja support-mapping jest maksimum pewnej funkcji liniowej, to dla ró¿nicy Minkowskiego dostajemy
 $$s_{A \ominus B}(v) = s_A(v) - s_B(-v).$$
 i zwi±zku z tym mo¿emy j± obliczaæ obliczaj±c najpierw warto¶æ dla ka¿dego z obiektów $A$ i $B$ osobno.
 
-W celu znalezienia odleg³o¶ci $A \ominus B$  od pocz±tku uk³adu wspó³rzêdnych algorytm GJK wykorzystuje wyniki twierdzenia Caratheodory'ego. Zanim je przedstawiê, wprowadzê definicjê otoczki wypuk³ej:
-
-\clearpage
-
-\begin{df}[Otoczka wypuk³a]
-Otoczk± wypuk³± zbioru $A$, bêd±cego podzbiorem przestrzeni liniowej jest najmniejszy (w sensie inkluzji) zbiór wypuk³y zawieraj±cy A, oznaczany jako $convA$:
-$$convA = \cap \{ M : A \subset M \wedge M - wypuk³y \}.$$
-\end{df}
+W algorytmie GJK w ka¿dym kroku iteracji $k$ tworzymy support-point $w_k = s_{A \ominus B}(-v_k)$. Nastêpnie definiujemy $v_{k+1} := v(conv(W_k \cup {w_k}))$ jako punkt po³o¿ony najbli¿ej pocz±tku uk³adu wspó³rzêdnych. Przez $W_{k+1}$ definiujemy najmniejszy zbiór $X \subset W_k \cup{w_k}$ tak, ¿e $v_{k+1}$ nale¿y do $convX$. Wykorzystuje siê tutaj wyniki twierdzenia Caratheodory'ego. Okazuje siê bowiem, ¿e po dodaniu nowych wierzcho³ków do sympleksu, wcze¶niejsze wierzcho³ki nie s± ju¿ wiêcej potrzebne, a za ka¿dym razem $card(W_k) \leq d+1$. 
 
 \begin{tw}[Caratheodory'ego]
 Niech $P$ bêdzie podzbiorem przestrzeni $R^d$, a punkt $x \in convP$. Istnieje wtedy podzbiór $P' \subset P$, z³o¿ony z maksymalnie $d+1$ punktów taki, ¿e $x \in convP'$. 
@@ -259,11 +255,7 @@ $$ \sum\limits_{j=2}^k {\mu_j(x_j-x_1)} = 0.$$
 \end{proof}
 
 
-Opieraj±c siê na powy¿szym twierdzeniu, w algorytmie GJK ogranicza siê przeszukiwania, przechowuj±c w ka¿dej iteracji $k$ zbiór $W_k$, z³o¿ony maksymalnie z $d+1$ punktów z $A \ominus B$. W kolejnej iteracji konstruowany jest sympleks po³o¿ony bli¿ej $O$ ni¿ ten z poprzedniej iteracji. Definiujemy $v_k := v(conv(W_k))$ oraz zbiór $W_k$ nastêpuj±co:
-$$W_{k} := W_k \cup v_k.$$
-
-
-Je¶li pocz±tek uk³adu wspó³rzêdnych zawiera siê w aktualnym sympleksie, to oznacza, ¿e obiekty $A$ i $B$ siê przecinaj± i algorytm siê zatrzymuje. W przeciwnym razie zbiór $W_k$ zostaje zaktualizowany tak, aby tworzy³ nowy sympleks, który zawiera punkt bli¿szy pocz±tku uk³adu wspó³rzêdnych ni¿ aktualny sympleks. 
+Opieraj±c siê na powy¿szym twierdzeniu, w algorytmie GJK ogranicza siê przeszukiwania, przechowuj±c w ka¿dej iteracji $k$ zbiór $W_k$, z³o¿ony maksymalnie z $d+1$ punktów z $A \ominus B$  i po³o¿ony coraz bli¿ej pocz±tku uk³adu wspó³rzêdnych. Je¶li pocz±tek uk³adu wspó³rzêdnych zawiera siê w aktualnym sympleksie, to oznacza, ¿e obiekty $A$ i $B$ siê przecinaj± i algorytm siê zatrzymuje. W przeciwnym razie zbiór $W_k$ zostaje zaktualizowany tak, aby tworzy³ nowy sympleks, który zawiera punkt bli¿szy pocz±tku uk³adu wspó³rzêdnych ni¿ aktualny sympleks. 
 
 Poka¿emy obecnie, ¿e w ka¿dej iteracji $v_{k+1}$ musi znajdowaæ siê bli¿ej pocz±tku uk³adu wspó³rzêdnych, ni¿ poprzedni punkt $v_k$, poza przypadkami, gdy $v_k$ by³ najbli¿szym punktem.
 
@@ -272,7 +264,8 @@ Niech $k \in N$ i niech $W_k$ bêdzie sympleksem.
 
 Definiujemy:
 \begin{center}
-$v_k := v(conv(W_k))$ oraz $W_{k+1} := W_k \cup v_k.$
+$w_k := s_{A \ominus B}(-v_k)$, 
+$v_{k+1} := v(conv(W_k \cup w_k))$ oraz $W_{k+1} := conv(W_k \cup w_k) : v_{k+1} \in conv(W_{k+1}).$
 \end{center}
 
  Wtedy $||v_{k+1}|| \leq ||v_k||$, przy czym równo¶æ zachodzi jedynie wtedy, gdy $v_k = v(A \ominus B)$.
@@ -288,13 +281,64 @@ Za³ó¿my, ¿e $||v_{k+1}||=||v_k||$.
 
 Wtedy 
 $$\forall x \in  conv(W_k \cup \{w_k\})  :  ||v_k|| \leq ||x||.$$
-Poniewa¿ $v_k \in conv(W_k)$, wiêc segment $v_kw_k$ zawiera siê w zbiorze $conv(W_k \cup \{w_k\})$. St±d, dla ka¿dego punktu $u$ na segmencie $v_kw_k$ mamy $ ||v_k|| \leq ||u||$. Zgodnie z lematem 4.1, dostajemy
-$$||v||^2 - v_k \cdot w_k \leq 0.$$
-Z Lematu 4.2 wiemy, ¿e 
+Poniewa¿ $v_k \in conv(W_k)$, wiêc segment $v_kw_k$ zawiera siê w zbiorze $conv(W_k \cup \{w_k\})$. St±d, dla ka¿dego punktu $u$ na segmencie $v_kw_k$ mamy $ ||v_k|| \leq ||u||$. Zgodnie z lematem 2.9, dostajemy
+$$||v_k||^2 - v_k \cdot w_k \leq 0.$$
+Z Lematu 2.10 wiemy, ¿e 
 $$||v_k||^2 - v_k \cdot w_k \geq 0,$$
 zatem
 $$||v_k||^2 - v_k \cdot w_k = 0,$$
 co mo¿e byæ prawd± jedynie w przypadku $v_k = v(A \ominus B).$
+\end{proof}
+
+\begin{lm}
+Niech $v$ i $w$ bêd± wektorami z tej samej przestrzeni liniowej. Odcinek o pocz±tku i koñcu w tych punktach zawiera wektor $u$ taki, ¿e $||u|| \leq ||v||$ wtedy i tylko wtedy, gdy $||v||^2 - v \cdot w > 0.$
+\end{lm}
+
+\begin{proof}
+Niech $u$ nale¿y do segmentu $vw$. Wtedy $u = v + \lambda(w - v)$ dla pewnego $0 \leq \lambda \leq 1$.  Niech $||u|| < ||v||$.
+
+Wtedy
+$$||u|| < ||v|| => ||u||^2 - ||v||^2 < 0.$$
+Poniewa¿
+$$||u||^2 - ||v||^2 = 2\lambda v \cdot (w - v) + \lambda^2||w-v||^2,$$
+wiêc
+$$2\lambda v \cdot (w - v) + \lambda^2||w-v||^2 < 0.$$
+Dla $||w-v||^2 > 0$ rozwi±zania powy¿szej nierówno¶ci, to 
+$$\lambda_1 = 0,$$
+$$\lambda_2 = -2v \cdot (w-v) / ||w - v||^2,$$
+przy czym $$\lambda_2 > 0 <=> -2(vw - ||v||^2) > 0 <=> ||v||^2 - vw > 0.$$
+
+Za³ó¿my teraz, ¿e $||v||^2 - vw > 0$. Wtedy $\lambda_2 > 0$ oraz $||u||^2 - ||v||^2 < 0$ dla ka¿dego $\lambda : 0 = \lambda_1 < \lambda < \lambda_2$. Poniewa¿ $[\lambda_1, \lambda_2] \cap [0,1] \neq \emptyset$, to musi istnieæ punkt $u$ na odcinku $uw$ taki, ¿e $||u|| < ||v||.$
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{uv.eps}
+\caption[Rozmiar 20]{Segment $uv$ zawiera wektor $u$, dla którego $||u|| < ||v||$ tylko wtedy, gdy $||v||^2 - v \cdot w > 0$.}
+  \label{zrodlo}
+\end{figure}
+
+
+\end{proof}
+
+\begin{lm}
+$||v_k||^2 - v_k \cdot w_k \geq 0$, przy czym równo¶æ zachodzi jedynie, gdy $v_k = v(A \ominus B).$
+\end{lm}
+
+\begin{proof}
+Mamy
+$$\forall x \in A \ominus B: -v_k \cdot w_k = -v_k \cdot s_{A \ominus B}(-v_k) \geq -v_k \cdot x.$$
+Dlatego
+$$\forall x \in A \ominus B: (-v_k \cdot x - v_k \cdot w_k ) \geq 0.$$
+W szczególno¶ci
+$$||v_k||^2 - v_k \cdot w_k  \geq 0.$$
+Za³ó¿my, ¿e w powy¿szej nierówno¶ci zachodzi równo¶æ. Wtedy, dla ka¿dego $x \in A \ominus B$:
+
+
+$||v_k||^2 \leq ||x-v_k||^2 + ||v_k||^2 =  ||x||^2 - 2(v_k \cdot x) + 2||v_k||^2 = ||x||^2 - 2(v_k \cdot x - ||v_k||^2) = ||x||^2 - 2(v_k \cdot x - v_k \cdot w_k) \leq ||x||^2.$
+
+Wobec tego $v_k = v(A \ominus B).$
+
 \end{proof}
 
 \textbf{Algorytm GJK}
@@ -324,7 +368,27 @@ co mo¿e byæ prawd± jedynie w przypadku $v_k = v(A \ominus B).$
 \clearpage
 
 
-\section{Dok³adne testy - algorytmy BSP i kd-tree}
+\section{Dok³adny test dla zbiorów - algorytm BSP tree}
+
+Jedn± z najbardziej wszechstronnych metod dok³adnego rozwi±zywania kolizji jest \textbf{Binary Space-Partitioning tree} (w skrócie BSP tree), któr± te¿ zaimplementowana w aplikacji.
+
+\section{Inne rozwi±zania z literatury}
+
+Istnieje wiele podej¶æ do wykrywania i rozwi±zywania kolizji w scenie. W poprzednich podrozdzia³ach $2.1 - 2.3$ opisa³em szczegó³owo jedynie po jednym z ka¿dego etapu testowania (wszystkie zaimplementowane s± w do³±czanej aplikacji). Wybra³em je, gdy¿ w pewnym sensie s± najbardziej wszechstronne spo¶ród pozosta³ych, przez co wybierane s± te¿ prawdopodobnie jako jedne z najczêstszych.
+
+Chcia³bym obecnie przedstawiæ pokrótce jeszcze kilka innych algorytmów dostêpnych w do³±czanej przeze mnie literaturze.
+
+\underline{Grupa testów, zak³adaj±cych wypuk³o¶æ obiektów}:
+
+Jednym z nich jest \textbf{algorytm V-Clip}, wykorzystuj±cy technikê wspinania na szczyty i tzw. hierarchiczn± reprezentacjê Dobkina-Kirkpatricka.
+
+Kolejnym podej¶ciem jest rozwi±zanie kolizji metodami programowania liniowego, przez zastosowaniu algorytmu \textbf{eliminacji Fourier'a-Motzkin'a}, o z³o¿ono¶ci wyk³adniczej czy te¿ \textbf{algorytmu Seidel'a}, o z³o¿ono¶ci $O(d!m)$.
+
+Istnieje wreszcie \textbf{algorytm Chunk-Wang}, który w wydajny sposób znajduje o¶ rozdzielaj±c± dwa nieprzecinaj±ce siê obiekty.
+
+\underline{Grupa szczegó³owych testów na kolizje}:
+
+Wiêkszo¶æ z nich polega na szczególnym podziale zbioru b±d¼ przestrzenii na mniejsze (tzw. "spatial partitioning"). Przyk³adami hierarchii takiego podzia³u s±: \textbf{k-d tree}, \textbf{quadtree} czy \textbf{octree}. 
 
 \chapter{Metody poprawy wydajno¶ci systemów detekcji kolizji}
 
@@ -334,9 +398,13 @@ Istnieje kilka bardzo istotnych kwestii, które nale¿y poruszyæ omawiaj±c tematyk
 
 \chapter{Aplikacja}
 
+Na potrzeby przetestowania powy¿szych algorytmów napisa³em aplikacjê, dziêki której mo¿na symulowaæ kolizje. Aplikacja znajduje siê pod adresem:
+http://code.google.com/p/interactingmeshes/
+
+
 \section{Opis dzia³ania i interfejs u¿ytkownika}
 
-\section{Opis wykorzystanej technologii}
+\section{Wykorzystana technologia i szczegó³y implementacyjne}
 
  \addcontentsline{toc}{chapter}{\hspace{13pt} Spis
 literatury}
