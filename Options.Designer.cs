@@ -57,9 +57,9 @@
             this.checkBoxTest.AutoSize = true;
             this.checkBoxTest.Location = new System.Drawing.Point(16, 33);
             this.checkBoxTest.Name = "checkBoxTest";
-            this.checkBoxTest.Size = new System.Drawing.Size(105, 17);
+            this.checkBoxTest.Size = new System.Drawing.Size(79, 17);
             this.checkBoxTest.TabIndex = 1;
-            this.checkBoxTest.Text = "Testy na boxach";
+            this.checkBoxTest.Text = "Test Boxes";
             this.checkBoxTest.UseVisualStyleBackColor = true;
             this.checkBoxTest.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
@@ -109,11 +109,11 @@
             // 
             // boxAdd
             // 
-            this.boxAdd.Location = new System.Drawing.Point(19, 16);
+            this.boxAdd.Location = new System.Drawing.Point(63, 16);
             this.boxAdd.Name = "boxAdd";
             this.boxAdd.Size = new System.Drawing.Size(75, 23);
             this.boxAdd.TabIndex = 0;
-            this.boxAdd.Text = "Dodaj";
+            this.boxAdd.Text = "Insert";
             this.boxAdd.UseVisualStyleBackColor = true;
             this.boxAdd.Click += new System.EventHandler(this.boxAdd_Click);
             // 
@@ -123,7 +123,7 @@
             this.torusPage.Location = new System.Drawing.Point(4, 22);
             this.torusPage.Name = "torusPage";
             this.torusPage.Padding = new System.Windows.Forms.Padding(3);
-            this.torusPage.Size = new System.Drawing.Size(111, 137);
+            this.torusPage.Size = new System.Drawing.Size(201, 84);
             this.torusPage.TabIndex = 1;
             this.torusPage.Text = "Torus";
             this.torusPage.UseVisualStyleBackColor = true;
@@ -134,7 +134,7 @@
             this.torusAdd.Name = "torusAdd";
             this.torusAdd.Size = new System.Drawing.Size(78, 24);
             this.torusAdd.TabIndex = 1;
-            this.torusAdd.Text = "Dodaj";
+            this.torusAdd.Text = "Insert";
             this.torusAdd.UseVisualStyleBackColor = true;
             this.torusAdd.Click += new System.EventHandler(this.torusAdd_Click);
             // 
@@ -143,18 +143,18 @@
             this.spherePage.Controls.Add(this.sphereAdd);
             this.spherePage.Location = new System.Drawing.Point(4, 22);
             this.spherePage.Name = "spherePage";
-            this.spherePage.Size = new System.Drawing.Size(111, 137);
+            this.spherePage.Size = new System.Drawing.Size(201, 84);
             this.spherePage.TabIndex = 2;
-            this.spherePage.Text = "Sfera";
+            this.spherePage.Text = "Sphere";
             this.spherePage.UseVisualStyleBackColor = true;
             // 
             // sphereAdd
             // 
-            this.sphereAdd.Location = new System.Drawing.Point(58, 28);
+            this.sphereAdd.Location = new System.Drawing.Point(64, 19);
             this.sphereAdd.Name = "sphereAdd";
             this.sphereAdd.Size = new System.Drawing.Size(75, 23);
             this.sphereAdd.TabIndex = 0;
-            this.sphereAdd.Text = "Dodaj";
+            this.sphereAdd.Text = "Insert";
             this.sphereAdd.UseVisualStyleBackColor = true;
             this.sphereAdd.Click += new System.EventHandler(this.sphereAdd_Click);
             // 
@@ -169,7 +169,7 @@
             this.groupBox1.Size = new System.Drawing.Size(225, 109);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Testy kolizji";
+            this.groupBox1.Text = "Collision tests:";
             // 
             // groupBox2
             // 
@@ -184,25 +184,25 @@
             this.groupBox2.Size = new System.Drawing.Size(242, 264);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Obiekty";
+            this.groupBox2.Text = "Objects";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 30);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
+            this.label2.Size = new System.Drawing.Size(43, 13);
             this.label2.TabIndex = 8;
-            this.label2.Text = "Dodawanie:";
+            this.label2.Text = "Adding:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(20, 159);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Istniejące:";
+            this.label1.Text = "Existing:";
             // 
             // list
             // 
@@ -220,7 +220,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(62, 29);
             this.button1.TabIndex = 9;
-            this.button1.Text = "Usuń";
+            this.button1.Text = "Delete";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -233,7 +233,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Options";
-            this.Text = "Opcje";
+            this.Text = "Options";
             this.Load += new System.EventHandler(this.Options_Load);
             this.tabControl.ResumeLayout(false);
             this.boxPage.ResumeLayout(false);
