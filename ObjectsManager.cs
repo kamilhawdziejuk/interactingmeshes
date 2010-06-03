@@ -137,6 +137,27 @@ namespace InteractingMeshes
         /// </summary>
         /// <param name="_name"></param>
         /// <returns></returns>
+        public bool AddSphere(double radius, int slices, int stacks)
+        {
+            var obj = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
+            obj.Mesh = Mesh.Sphere(device, (float)radius, slices, stacks);
+
+            if (obj.Mesh != null)
+            {
+
+                objects.Add(obj);
+                SpaceApplication.Options.ListObjects.Items.Add(obj);
+                activeObject = obj;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Adding the mesh
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <returns></returns>
         public bool Add(string _name)
         {
             var obj = new GeometricObject(_name, new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));

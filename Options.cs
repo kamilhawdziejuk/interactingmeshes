@@ -98,12 +98,14 @@ namespace InteractingMeshes
                 if (this.checkBSPTest.Checked)
                 {
                     CollisionLevel |= CollisionStage.BSP;
+                    this.autopartitioningBtn.Checked = true;
                 }
                 else
                 {
                     CollisionLevel -= CollisionStage.BSP;
                 }
             }
+
             SpaceApplication.Instance.Focus();
         }
 
@@ -132,7 +134,8 @@ namespace InteractingMeshes
 
         private void sphereAdd_Click(object sender, EventArgs e)
         {
-            SpaceApplication.Manager.Add("sphere");
+            SpaceApplication.Manager.AddSphere(Double.Parse(radiusBox.Text),
+                Int32.Parse(slicesBox.Text), Int32.Parse(stacksBox.Text));
             SpaceApplication.Instance.Focus();
         }
 
@@ -166,6 +169,16 @@ namespace InteractingMeshes
                 this.ListObjects.Items.Remove(sel);
             }
             SpaceApplication.Instance.Focus();
+        }
+
+        private void autopartitioningBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            BSPNode.Autopartitioning = true;
+        }
+
+        private void parallelPlaneBtn_CheckedChanged(object sender, EventArgs e)
+        {
+            BSPNode.Autopartitioning = false;
         }
     }
 }

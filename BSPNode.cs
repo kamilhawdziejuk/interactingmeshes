@@ -36,7 +36,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Max depth
         /// </summary>
-        public static readonly int MaxDepth = 128;
+        public static readonly int MaxDepth = 64;
 
         /// <summary>
         /// Min leaf size
@@ -54,6 +54,8 @@ namespace InteractingMeshes
         /// Left BSP tree
         /// </summary>
         public BSPNode frontTree;
+
+        public static bool Autopartitioning = true;
 
         #region --- Creating and destroying objects ---
 
@@ -117,8 +119,15 @@ namespace InteractingMeshes
                 polygons.Add(polygon);
             }
 
-            Plane splitPlane = PickSplittingPlane(polygons, _polygons);
-
+            Plane splitPlane = Plane.Empty;
+            if (Autopartitioning)
+            {
+                splitPlane = PickSplittingPlane(polygons, _polygons);
+            }
+            else
+            {
+                splitPlane = PickSplittingPlane2(_polygons, _depth);
+            }
             var frontList = new List<Polygon>();
             var backList = new List<Polygon>();
             var coplanarList = new List<Polygon>();
@@ -327,6 +336,81 @@ namespace InteractingMeshes
             }
             // All vertices lie on the plane so the polygon is coplanar with the plane
             return PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE;
+        }
+
+        /// <summary>
+        /// Pick spliting plane parallel to axis
+        /// </summary>
+        /// <param name="_polygons"></param>
+        /// <param name="_depth"></param>
+        /// <returns></returns>
+        private static Plane PickSplittingPlane2(List<Polygon> _polygons, int _depth)
+        {
+            Plane result = Plane.Empty;
+            if (_polygons.Count > 0)
+            {
+                Vector3 v = _polygons[0].Points[0].Vector;
+
+                Vector3 min = new Vector3(v.X, v.Y, v.Z);
+                Vector3 max = new Vector3(v.X, v.Y, v.Z);
+
+                foreach (Polygon poly in _polygons)
+                {
+                    foreach (Vertex vert in poly.Points)
+                    {
+                        Vector3 point = vert.Vector;
+                        min.X = Math.Min(min.X, point.X);
+                        min.Y = Math.Min(min.Y, point.Y);
+                        min.Z = Math.Min(min.Z, point.Z);
+
+                        max.X = Math.Max(max.X, point.X);
+                        max.Y = Math.Max(max.Y, point.Y);
+                        max.Z = Math.Max(max.Z, point.Z);
+                    }
+                }
+
+                if (_depth % 3 == 0)
+                {
+                    double H = (max.Y + min.Y) / 2;
+                    Vertex v1 = new Vertex(new Vector3((float)min.X, (float)H, (float)min.Z), 0);
+                    Vertex v2 = new Vertex(new Vector3((float)max.X, (float)H, (float)max.Z), 0);
+                    Vertex v3 = new Vertex(new Vector3((float)max.X, (float)H, (float)min.Z), 0);
+                    List<Vertex> lst = new List<Vertex>();
+                    lst.Add(v1);
+                    lst.Add(v2);
+                    lst.Add(v3);
+                    Polygon polygonCenter = new Polygon(lst);
+                    result = GetPlaneFromPolygon(polygonCenter);
+                }
+                else if (_depth % 3 == 1)
+                {
+                    double W = (max.X + min.X) / 2;
+                    Vertex v1 = new Vertex(new Vector3((float)W, (float)min.Y, (float)min.Z), 0);
+                    Vertex v2 = new Vertex(new Vector3((float)W, (float)min.Y, (float)max.Z), 0);
+                    Vertex v3 = new Vertex(new Vector3((float)W, (float)max.Y, (float)min.Z), 0);
+                    List<Vertex> lst = new List<Vertex>();
+                    lst.Add(v1);
+                    lst.Add(v2);
+                    lst.Add(v3);
+                    Polygon polygonCenter = new Polygon(lst);
+                    result = GetPlaneFromPolygon(polygonCenter);
+                }
+                else
+                {
+                    double D = (max.Z + min.Z) / 2;
+                    Vertex v1 = new Vertex(new Vector3((float)min.X, (float)min.Y, (float)D), 0);
+                    Vertex v2 = new Vertex(new Vector3((float)max.X, (float)min.Y, (float)D), 0);
+                    Vertex v3 = new Vertex(new Vector3((float)max.X, (float)max.Y, (float)D), 0);
+                    List<Vertex> lst = new List<Vertex>();
+                    lst.Add(v1);
+                    lst.Add(v2);
+                    lst.Add(v3);
+                    Polygon polygonCenter = new Polygon(lst);
+                    result = GetPlaneFromPolygon(polygonCenter);
+                }
+
+            }
+            return result;
         }
 
         /// <summary>

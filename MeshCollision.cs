@@ -6,6 +6,7 @@ namespace InteractingMeshes
 {
     public class MeshCollision
     {
+
         /// <summary>
         /// Main function for testing mesh-mesh collision
         /// </summary>
