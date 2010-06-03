@@ -27,12 +27,12 @@ namespace InteractingMeshes
         /// <summary>
         /// Szerokoœæ ekranu
         /// </summary>
-        private static int screenwidth = 800;
+        private static int screenwidth = 1024;
 
         /// <summary>
         /// Wysokoœæ ekranu
         /// </summary>
-        private static int screenheight = 600;
+        private static int screenheight = 700;
 
         private static Timer gametimer;
         private static bool paused;

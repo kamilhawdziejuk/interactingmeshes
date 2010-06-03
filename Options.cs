@@ -128,7 +128,8 @@ namespace InteractingMeshes
 
         private void torusAdd_Click(object sender, EventArgs e)
         {
-            SpaceApplication.Manager.Add("torus");
+            SpaceApplication.Manager.AddTorus(Double.Parse(innerRadiusBox.Text), Double.Parse(outerRadiusBox.Text),
+                Int32.Parse(sidesBox.Text), Int32.Parse(ringsBox.Text));
             SpaceApplication.Instance.Focus();
         }
 
@@ -179,6 +180,12 @@ namespace InteractingMeshes
         private void parallelPlaneBtn_CheckedChanged(object sender, EventArgs e)
         {
             BSPNode.Autopartitioning = false;
+        }
+
+        private void teapotAddBtn_Click(object sender, EventArgs e)
+        {
+            SpaceApplication.Manager.Add("teapot");
+            SpaceApplication.Instance.Focus();
         }
     }
 }

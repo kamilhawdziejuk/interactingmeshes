@@ -47,13 +47,13 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="AABox.cs" />
-    <Compile Include="BoxCollision.cs" />
-    <Compile Include="BSPNode.cs" />
+    <Compile Include="Geometry\AABox.cs" />
+    <Compile Include="ColissionAlgorithms\BoxCollision.cs" />
+    <Compile Include="ColissionAlgorithms\BSPNode.cs" />
     <Compile Include="CollisionManager.cs" />
-    <Compile Include="Face.cs" />
-    <Compile Include="GeometricUtils.cs" />
-    <Compile Include="MeshCollision.cs" />
+    <Compile Include="Geometry\Face.cs" />
+    <Compile Include="Utils\GeometricUtils.cs" />
+    <Compile Include="ColissionAlgorithms\MeshCollision.cs" />
     <Compile Include="ObjectsManager.cs" />
     <Compile Include="Options.cs">
       <SubType>Form</SubType>
@@ -61,16 +61,16 @@
     <Compile Include="Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
     </Compile>
-    <Compile Include="Polygon.cs" />
-    <Compile Include="Region.cs" />
+    <Compile Include="Geometry\Polygon.cs" />
+    <Compile Include="Geometry\Region.cs" />
     <Compile Include="Camera.cs" />
-    <Compile Include="GeometricObject.cs" />
-    <Compile Include="GilbertJohnsonKeerthi.cs" />
-    <Compile Include="MeshUtils.cs" />
+    <Compile Include="Geometry\GeometricObject.cs" />
+    <Compile Include="ColissionAlgorithms\GilbertJohnsonKeerthi.cs" />
+    <Compile Include="Utils\MeshUtils.cs" />
     <Compile Include="SpaceApplication.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Vertex.cs" />
+    <Compile Include="Geometry\Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">

@@ -141,13 +141,29 @@ namespace InteractingMeshes
         {
             var obj = new GeometricObject("sphere", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
             obj.Mesh = Mesh.Sphere(device, (float)radius, slices, stacks);
+            return this.AddObject(obj);
+        }
 
-            if (obj.Mesh != null)
+        /// <summary>
+        /// Adding the mesh
+        /// </summary>
+        /// <param name="_name"></param>
+        /// <returns></returns>
+        public bool AddTorus(double innerRadius, double outerRadius, int sides, int rings)
+        {
+            var obj = new GeometricObject("torus", new Vector3(0, 0, 0), Matrix.Identity, new Vector3(0, 0, 0));
+            obj.Mesh = Mesh.Torus(device, (float)innerRadius, (float) outerRadius, sides, rings);
+            return this.AddObject(obj);
+        }
+
+        public bool AddObject(GeometricObject _obj)
+        {
+            if (_obj.Mesh != null)
             {
 
-                objects.Add(obj);
-                SpaceApplication.Options.ListObjects.Items.Add(obj);
-                activeObject = obj;
+                objects.Add(_obj);
+                SpaceApplication.Options.ListObjects.Items.Add(_obj);
+                activeObject = _obj;
                 return true;
             }
             return false;

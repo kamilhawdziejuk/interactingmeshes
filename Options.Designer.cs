@@ -35,29 +35,40 @@
             this.boxPage = new System.Windows.Forms.TabPage();
             this.boxAdd = new System.Windows.Forms.Button();
             this.torusPage = new System.Windows.Forms.TabPage();
+            this.outerRadiusBox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.ringsBox = new System.Windows.Forms.TextBox();
+            this.sidesBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.innerRadiusBox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.torusAdd = new System.Windows.Forms.Button();
             this.spherePage = new System.Windows.Forms.TabPage();
+            this.stacksBox = new System.Windows.Forms.TextBox();
+            this.slicesBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.radiusBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.sphereAdd = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.parallelPlaneBtn = new System.Windows.Forms.RadioButton();
+            this.autopartitioningBtn = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.list = new System.Windows.Forms.ListBox();
-            this.autopartitioningBtn = new System.Windows.Forms.RadioButton();
-            this.parallelPlaneBtn = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.radiusBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.slicesBox = new System.Windows.Forms.TextBox();
-            this.stacksBox = new System.Windows.Forms.TextBox();
+            this.teapotPage = new System.Windows.Forms.TabPage();
+            this.teapotAddBtn = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.boxPage.SuspendLayout();
             this.torusPage.SuspendLayout();
             this.spherePage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.teapotPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkBoxTest
@@ -98,10 +109,11 @@
             this.tabControl.Controls.Add(this.boxPage);
             this.tabControl.Controls.Add(this.torusPage);
             this.tabControl.Controls.Add(this.spherePage);
+            this.tabControl.Controls.Add(this.teapotPage);
             this.tabControl.Location = new System.Drawing.Point(16, 46);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(209, 152);
+            this.tabControl.Size = new System.Drawing.Size(209, 179);
             this.tabControl.TabIndex = 4;
             // 
             // boxPage
@@ -110,7 +122,7 @@
             this.boxPage.Location = new System.Drawing.Point(4, 22);
             this.boxPage.Name = "boxPage";
             this.boxPage.Padding = new System.Windows.Forms.Padding(3);
-            this.boxPage.Size = new System.Drawing.Size(201, 84);
+            this.boxPage.Size = new System.Drawing.Size(201, 153);
             this.boxPage.TabIndex = 0;
             this.boxPage.Text = "Box";
             this.boxPage.UseVisualStyleBackColor = true;
@@ -127,18 +139,94 @@
             // 
             // torusPage
             // 
+            this.torusPage.Controls.Add(this.outerRadiusBox);
+            this.torusPage.Controls.Add(this.label9);
+            this.torusPage.Controls.Add(this.ringsBox);
+            this.torusPage.Controls.Add(this.sidesBox);
+            this.torusPage.Controls.Add(this.label6);
+            this.torusPage.Controls.Add(this.label7);
+            this.torusPage.Controls.Add(this.innerRadiusBox);
+            this.torusPage.Controls.Add(this.label8);
             this.torusPage.Controls.Add(this.torusAdd);
             this.torusPage.Location = new System.Drawing.Point(4, 22);
             this.torusPage.Name = "torusPage";
             this.torusPage.Padding = new System.Windows.Forms.Padding(3);
-            this.torusPage.Size = new System.Drawing.Size(201, 84);
+            this.torusPage.Size = new System.Drawing.Size(201, 153);
             this.torusPage.TabIndex = 1;
             this.torusPage.Text = "Torus";
             this.torusPage.UseVisualStyleBackColor = true;
             // 
+            // outerRadiusBox
+            // 
+            this.outerRadiusBox.Location = new System.Drawing.Point(92, 67);
+            this.outerRadiusBox.Name = "outerRadiusBox";
+            this.outerRadiusBox.Size = new System.Drawing.Size(48, 20);
+            this.outerRadiusBox.TabIndex = 14;
+            this.outerRadiusBox.Text = "5";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(21, 70);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(67, 13);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Outer radius:";
+            // 
+            // ringsBox
+            // 
+            this.ringsBox.Location = new System.Drawing.Point(70, 117);
+            this.ringsBox.Name = "ringsBox";
+            this.ringsBox.Size = new System.Drawing.Size(49, 20);
+            this.ringsBox.TabIndex = 12;
+            this.ringsBox.Text = "12";
+            // 
+            // sidesBox
+            // 
+            this.sidesBox.Location = new System.Drawing.Point(70, 93);
+            this.sidesBox.Name = "sidesBox";
+            this.sidesBox.Size = new System.Drawing.Size(49, 20);
+            this.sidesBox.TabIndex = 11;
+            this.sidesBox.Text = "10";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(21, 120);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(37, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Rings:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(21, 96);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(36, 13);
+            this.label7.TabIndex = 9;
+            this.label7.Text = "Sides:";
+            // 
+            // innerRadiusBox
+            // 
+            this.innerRadiusBox.Location = new System.Drawing.Point(92, 43);
+            this.innerRadiusBox.Name = "innerRadiusBox";
+            this.innerRadiusBox.Size = new System.Drawing.Size(48, 20);
+            this.innerRadiusBox.TabIndex = 8;
+            this.innerRadiusBox.Text = "1";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(21, 46);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(65, 13);
+            this.label8.TabIndex = 7;
+            this.label8.Text = "Inner radius:";
+            // 
             // torusAdd
             // 
-            this.torusAdd.Location = new System.Drawing.Point(56, 18);
+            this.torusAdd.Location = new System.Drawing.Point(58, 6);
             this.torusAdd.Name = "torusAdd";
             this.torusAdd.Size = new System.Drawing.Size(78, 24);
             this.torusAdd.TabIndex = 1;
@@ -157,10 +245,61 @@
             this.spherePage.Controls.Add(this.sphereAdd);
             this.spherePage.Location = new System.Drawing.Point(4, 22);
             this.spherePage.Name = "spherePage";
-            this.spherePage.Size = new System.Drawing.Size(201, 126);
+            this.spherePage.Size = new System.Drawing.Size(201, 153);
             this.spherePage.TabIndex = 2;
             this.spherePage.Text = "Sphere";
             this.spherePage.UseVisualStyleBackColor = true;
+            // 
+            // stacksBox
+            // 
+            this.stacksBox.Location = new System.Drawing.Point(60, 95);
+            this.stacksBox.Name = "stacksBox";
+            this.stacksBox.Size = new System.Drawing.Size(49, 20);
+            this.stacksBox.TabIndex = 6;
+            this.stacksBox.Text = "8";
+            // 
+            // slicesBox
+            // 
+            this.slicesBox.Location = new System.Drawing.Point(60, 71);
+            this.slicesBox.Name = "slicesBox";
+            this.slicesBox.Size = new System.Drawing.Size(49, 20);
+            this.slicesBox.TabIndex = 5;
+            this.slicesBox.Text = "8";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(11, 98);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 13);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Stacks:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 74);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Slices:";
+            // 
+            // radiusBox
+            // 
+            this.radiusBox.Location = new System.Drawing.Point(60, 45);
+            this.radiusBox.Name = "radiusBox";
+            this.radiusBox.Size = new System.Drawing.Size(48, 20);
+            this.radiusBox.TabIndex = 2;
+            this.radiusBox.Text = "5";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 48);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Radius:";
             // 
             // sphereAdd
             // 
@@ -186,6 +325,30 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Collision tests:";
+            // 
+            // parallelPlaneBtn
+            // 
+            this.parallelPlaneBtn.AutoSize = true;
+            this.parallelPlaneBtn.Location = new System.Drawing.Point(30, 125);
+            this.parallelPlaneBtn.Name = "parallelPlaneBtn";
+            this.parallelPlaneBtn.Size = new System.Drawing.Size(152, 17);
+            this.parallelPlaneBtn.TabIndex = 5;
+            this.parallelPlaneBtn.Text = "Split plane parallel to X,Y,Z";
+            this.parallelPlaneBtn.UseVisualStyleBackColor = true;
+            this.parallelPlaneBtn.CheckedChanged += new System.EventHandler(this.parallelPlaneBtn_CheckedChanged);
+            // 
+            // autopartitioningBtn
+            // 
+            this.autopartitioningBtn.AutoSize = true;
+            this.autopartitioningBtn.Checked = true;
+            this.autopartitioningBtn.Location = new System.Drawing.Point(30, 102);
+            this.autopartitioningBtn.Name = "autopartitioningBtn";
+            this.autopartitioningBtn.Size = new System.Drawing.Size(98, 17);
+            this.autopartitioningBtn.TabIndex = 4;
+            this.autopartitioningBtn.TabStop = true;
+            this.autopartitioningBtn.Text = "Autopartitioning";
+            this.autopartitioningBtn.UseVisualStyleBackColor = true;
+            this.autopartitioningBtn.CheckedChanged += new System.EventHandler(this.autopartitioningBtn_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -240,80 +403,25 @@
             this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
             this.list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.list_KeyPress);
             // 
-            // autopartitioningBtn
+            // teapotPage
             // 
-            this.autopartitioningBtn.AutoSize = true;
-            this.autopartitioningBtn.Checked = true;
-            this.autopartitioningBtn.Location = new System.Drawing.Point(30, 102);
-            this.autopartitioningBtn.Name = "autopartitioningBtn";
-            this.autopartitioningBtn.Size = new System.Drawing.Size(98, 17);
-            this.autopartitioningBtn.TabIndex = 4;
-            this.autopartitioningBtn.TabStop = true;
-            this.autopartitioningBtn.Text = "Autopartitioning";
-            this.autopartitioningBtn.UseVisualStyleBackColor = true;
-            this.autopartitioningBtn.CheckedChanged += new System.EventHandler(this.autopartitioningBtn_CheckedChanged);
+            this.teapotPage.Controls.Add(this.teapotAddBtn);
+            this.teapotPage.Location = new System.Drawing.Point(4, 22);
+            this.teapotPage.Name = "teapotPage";
+            this.teapotPage.Size = new System.Drawing.Size(201, 153);
+            this.teapotPage.TabIndex = 3;
+            this.teapotPage.Text = "Teapot";
+            this.teapotPage.UseVisualStyleBackColor = true;
             // 
-            // parallelPlaneBtn
+            // teapotAddBtn
             // 
-            this.parallelPlaneBtn.AutoSize = true;
-            this.parallelPlaneBtn.Location = new System.Drawing.Point(30, 125);
-            this.parallelPlaneBtn.Name = "parallelPlaneBtn";
-            this.parallelPlaneBtn.Size = new System.Drawing.Size(152, 17);
-            this.parallelPlaneBtn.TabIndex = 5;
-            this.parallelPlaneBtn.Text = "Split plane parallel to X,Y,Z";
-            this.parallelPlaneBtn.UseVisualStyleBackColor = true;
-            this.parallelPlaneBtn.CheckedChanged += new System.EventHandler(this.parallelPlaneBtn_CheckedChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 48);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Radius:";
-            // 
-            // radiusBox
-            // 
-            this.radiusBox.Location = new System.Drawing.Point(60, 45);
-            this.radiusBox.Name = "radiusBox";
-            this.radiusBox.Size = new System.Drawing.Size(48, 20);
-            this.radiusBox.TabIndex = 2;
-            this.radiusBox.Text = "5";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 74);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Slices:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 98);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Stacks:";
-            // 
-            // slicesBox
-            // 
-            this.slicesBox.Location = new System.Drawing.Point(60, 71);
-            this.slicesBox.Name = "slicesBox";
-            this.slicesBox.Size = new System.Drawing.Size(49, 20);
-            this.slicesBox.TabIndex = 5;
-            this.slicesBox.Text = "8";
-            // 
-            // stacksBox
-            // 
-            this.stacksBox.Location = new System.Drawing.Point(60, 95);
-            this.stacksBox.Name = "stacksBox";
-            this.stacksBox.Size = new System.Drawing.Size(49, 20);
-            this.stacksBox.TabIndex = 6;
-            this.stacksBox.Text = "8";
+            this.teapotAddBtn.Location = new System.Drawing.Point(61, 29);
+            this.teapotAddBtn.Name = "teapotAddBtn";
+            this.teapotAddBtn.Size = new System.Drawing.Size(75, 23);
+            this.teapotAddBtn.TabIndex = 0;
+            this.teapotAddBtn.Text = "Insert";
+            this.teapotAddBtn.UseVisualStyleBackColor = true;
+            this.teapotAddBtn.Click += new System.EventHandler(this.teapotAddBtn_Click);
             // 
             // Options
             // 
@@ -329,12 +437,14 @@
             this.tabControl.ResumeLayout(false);
             this.boxPage.ResumeLayout(false);
             this.torusPage.ResumeLayout(false);
+            this.torusPage.PerformLayout();
             this.spherePage.ResumeLayout(false);
             this.spherePage.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.teapotPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -365,6 +475,16 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox radiusBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox outerRadiusBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox ringsBox;
+        private System.Windows.Forms.TextBox sidesBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox innerRadiusBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TabPage teapotPage;
+        private System.Windows.Forms.Button teapotAddBtn;
 
     }
 }
