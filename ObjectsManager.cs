@@ -109,6 +109,13 @@ namespace InteractingMeshes
             return true;
         }
 
+        public bool RemoveObject(GeometricObject _obj)
+        {
+            objects.Remove(_obj);
+            ActiveObject = GetObject(0);
+            return true;
+        }
+
         public GeometricObject GetObject(int nr)
         {
             if (Objects.Count == 0)
@@ -163,7 +170,9 @@ namespace InteractingMeshes
 
             if (obj.Mesh != null)
             {
+                
                 objects.Add(obj);
+                SpaceApplication.Options.ListObjects.Items.Add(obj);
                 activeObject = obj;
                 return true;
             }
@@ -176,13 +185,13 @@ namespace InteractingMeshes
         /// </summary>
         public void Reset()
         {
-            Add("torus");
+            //Add("torus");
             //this.Add("spehere");
             //this.Add("box");
             //this.Add("polygon");
             //this.Add("teapot");
 
-            ActiveObject = objects[0];
+            //ActiveObject = objects[0];
         }
 
         #endregion

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="InteractingMeshes.BoxCollision" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAACQAAAA=</HashCode>
+      <FileName>BoxCollision.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.BSPNode" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAACAgABAACQIAAAAACAAAAAAABABDAAIAAAAAgA=</HashCode>
+      <FileName>BSPNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.Camera" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Camera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.GeometricObject" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgIAgAACAIAAAACABAAAhAQAAACAAAgA=</HashCode>
+      <FileName>GeometricObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.GeometricUtils" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAAAAAAAAAAgAAAAAAAAAoAAABgAIAABQAAEAA=</HashCode>
+      <FileName>GeometricUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.GilbertJohnsonKeerthi" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAgAAAAACAAAAAAAAACIAAAAAAAA=</HashCode>
+      <FileName>GilbertJohnsonKeerthi.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.MeshCollision" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>MeshCollision.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.MeshUtils" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAEAAQAAQAAAABAAAAAAA=</HashCode>
+      <FileName>MeshUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.ObjectsManager" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAACAIAQJAAAAAAAABQAEQAAAAEAAAAAABAAAAA=</HashCode>
+      <FileName>ObjectsManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.Polygon" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Polygon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.Region" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAQAQA=</HashCode>
+      <FileName>Region.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InteractingMeshes.SpaceApplication" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAgAACAgAAqACAQAAAAgEGEAIBDACAAhAABJAgIEA=</HashCode>
+      <FileName>SpaceApplication.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="InteractingMeshes.AABox" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAQgAAAwAAAAAQAAAAAAIAEEABABAAaBqA=</HashCode>
+      <FileName>AABox.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="InteractingMeshes.Face" Collapsed="true">
+    <Position X="2.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Face.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="InteractingMeshes.Vertex" Collapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAgAAAAAAAAAAAAAAAAACAAEBgAQAAAAA=</HashCode>
+      <FileName>Vertex.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="InteractingMeshes.PolygonOnPlanePosition" Collapsed="true">
+    <Position X="2.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAACAAAAQAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>BSPNode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InteractingMeshes.PointOnPlanePosition" Collapsed="true">
+    <Position X="0.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAACAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>BSPNode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -368,12 +368,82 @@ Wobec tego $v_k = v(A \ominus B).$
 \clearpage
 
 
-\section{Dok³adny test dla zbiorów - algorytm BSP tree}
+\section{Struktury podzia³u przestrzeni i test na zbiorach wklês³ych - algorytm BSP}
 
-Jedn± z najbardziej wszechstronnych metod dok³adnego rozwi±zywania kolizji jest \textbf{Binary Space-Partitioning tree} (w skrócie BSP tree), któr± te¿ zaimplementowana w aplikacji.
+W¶ród wszystkich problemów wystêpuj±cych w ¶rodowiskach 3D, te odnosz±ce siê do kolizji obarczone s± najbardziej krytycznymi ograniczeniami czasowymi. Wiêkszo¶æ ¶rodowisk z³o¿ona jest z du¿ej liczby (nierzadko skomplikowanych) obiektów, a oczekuje siê, ¿e ca³o¶æ dzia³aæ bêdzie w miarê p³ynny sposób. W zwi±zku z tym wprowadza siê pewne usprawnienia przyspieszaj±ce wykrywanie kolizji, które omówione zostan± w tym rozdziale - podzia³y przestrzeni.
 
+S± to struktury, które dziel±  przestrzeñ $d$-wymiarow± na pary podprzestrzeni (obiekty dziel±ce s± wtedy $(d-1)$-wymiarowymi hiperp³aszczyznami). W szczególno¶ci, scenê 3D przecinaæ mo¿emy p³aszczyznami.
+
+Struktury te zasadniczo wykorzystywane s± na dwa sposoby. Z jednej strony (na poziomie makro) mo¿emy dziêki nim zredukowaæ ilo¶æ koniecznych do przeprowadzenia testów kolizji pomiêdzy wszystkimi obiektami. Zauwa¿my, ¿e dla $n$ obiektów istnieje $1/2 n (n-1)$ par obiektów, które mog± ze sob± kolidowaæ. Wprowadziwszy sensowny podzia³ przestrzeni, mo¿emy liczbê tych par zmniejszyæ do minimum i testowaæ jedynie te, które znajduj± siê w tej samej czê¶ci wydzielonej przestrzeni. Z drugiej strony (na poziomie mikro) wykorzystywane s± do zredukowania liczby koniecznych sprawdzeñ w poszczególnych testach kolizji. W przypadku bowiem, gdy mamy zweryfikowaæ czy dwie skomplikowane siatki ze sob± koliduj±, mo¿emy ograniczyæ testy do tych czê¶ci podzielonej przestrzeni, w której faktycznie kolizja mo¿e dla nich wystêpowaæ\footnote{Drzewa BSP wynalezione zosta³y na pocz±tku jako struktury rozwi±zuj±ce problem reprezentowania niewidocznych miejsc w przestrzeni. Maj± ponadto du¿e zastosowanie w ray traycing'u, kontrukcji obiektów CSG czy planowaniu ¶cie¿ek robotów.}. 
+
+\clearpage
+\subsection{Kolizje na zbiorach wklês³ych}
+
+Zauwa¿my, ¿e przedstawionymi wy¿ej podzia³ami mogliby¶my zdekomponowaæ zbiór wklês³y na zbiory wypuk³e i zastosowaæ do wykrycia kolizji ka¿dego z nich algorytm GJK, opisany w poprzednim rozdziale. Niestety, takie podej¶cie, z dwóch powodów, nie jest najw³a¶ciwsze z mo¿liwych. Przede wszystkim zagadnienie znalezienia minimalnego podzia³u zbioru wypuk³ego na zbiory wklês³e jest problemem $NP$-trudnym. Poza tym istnieje obiekt wklês³y z³o¿ony z siatki $n$ trójk±tów, który z³o¿ony jest z $\Omega(n^2)$ zbiorów wypuk³ych. To wszystko doprowadza najczê¶ciej do decyzji postêpowania z zagadnieniem w sposób polegaj±cy na dekompozycji obiektu na mniejsze obiekty, które mog± byæ szybciej przetestowane i niekoniecznie s± zbiorami wypuk³ymi\footnote{Ostatnimi czasy powstaje wiele innych ciekawych podej¶æ, jak np. wyniki naukowców z Texas A\&M University, dotycz±ce algorytmów przybli¿onej dekompozycji zbioru wklês³ego na zbiory wypuk³e, publikowywane na stronie: http://parasol.tamu.edu/groups/amatogroup/research/app-cd/}.
+
+\subsection{Konstrukcja struktury}
+Jedn± z najbardziej wszechstronnych metod podzia³u jest tworzenie struktury \textbf{Binary Space-Partitioning tree} (w skrócie BSP tree), któr± te¿ zaimplementowa³em w do³±czanej aplikacji. Polega ona na ko¿dorazowym rekurencyjnym podziale danej przestrzeni hiperp³aszczyzn± na dwie mniejsze wypuk³e czê¶ci (zwane komórkami) i nastêpnie weryfikowanie jedynie kolizji punktów (trójk±tów siatek) nale¿±cych do danych czê¶ci. 
+
+\begin{df}[Drzewo BSP]
+Dla danej przestrzeni $R^d$ i hiperp³aszczyzny $h:a_1 x_1 + a_2 x_2 + ... + a_d x_d + a_{d+1} = 0$ niech $h^{+}$ bêdzie otwart± dodatni± pó³przestrzeni± ograniczon± przez $h$, a $h^{-}$ bêdzie otwart± ujemn± pó³przestrzeni± ograniczon± przez $h$:
+$$h^{+} :=a_1 x_1 + a_2 x_2 + ... + a_d x_d + a_{d+1} > 0,$$
+$$h^{-} :=a_1 x_1 + a_2 x_2 + ... + a_d x_d + a_{d+1} < 0.$$
+
+Drzewo binarnego podzia³u przestrzeni, tzw. drzewo BSP, dla zbioru $S$ obiektów w $d$-wymiarowej przestrzeni definiujemy jako binarne drzewo $T$, z wêz³ami oznaczanymi przez $v$, o nastêpuj±cych w³asno¶ciach:
+
+- je¶li $card(S) \leq 1$, to $T$ jest li¶ciem. Fragment obiektu (je¶li taki istnieje) jest pamiêtany dok³adnie w li¶ciu,
+
+- je¶li $card(S) > 1$, to korzeñ drzewa $T$ pamiêta hiperp³aszczyznê $h$ wraz ze zbiorem obiektów, które s± ca³kowicie w niej zawarte. Lewym dzieckiem wêz³a $v$ jest korzeñ drzewa  BSP $T^{-}$ zawieraj±cy zbiór $S^{-} :=\{h_{v}^{-} \cap s : s \in S\}$, a prawym dzieckiem wêz³a $v$ jest korzeñ drzewa BSP $T^{+}$ zawieraj±cy zbiór $S^{+} := \{h_{v}^{+} \cap s : s \in S\}$
+\end{df}
+
+
+Istnieje kilka mo¿liwych metod konstrukcji struktury drzewa BSP,  w zale¿no¶ci od wyboru hiperp³aszczyzny podzia³u. Wybór "najlepszej" takiej p³aszczyzny wp³ywa rzecza jasna na rozmiar drzewa oraz na wydajno¶æ jego przeszukiwania. Jedn± z mo¿liwych konstrukcji jest tzw. "solid-leaf BSP", polegaj±ca na wyborze jej spo¶ród p³aszczyzn zawieraj±cych ¶ciany wielo¶cianu. Metoda takiego wyboru to tzw. "autopodzia³". 
+\begin{figure}[hb]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=0.75\textwidth]{BSP.eps}
+\caption[Rozmiar 20]{Podzia³ przestrzeni na cztery wypuk³e podprzestrzenie razem z odpowiadaj±cym podzia³owi drzewu BSP. (a) pocz±tkowy podzia³. (b) Pierwszy podzia³ drugiego poziomu. (c) Drugi podzia³ drugiego poziomu.}
+  \label{zrodlo}
+\end{figure}
+
+\clearpage
+
+\subsection{Czas przetwarzania}
+
+Jednym z wa¿niejszych zadañ hierarchi budowanego podzia³u jest utrzymywanie jak najmniejszej liczby wêz³ów w drzewie BSP. Dla wielo¶cianów zbudowanych z siatek metoda autopodzia³u tworzy najczê¶ciej BSP z liczb± wêz³ów zbli¿on± do $O(nlogn)$, gdzie $n$ jest liczb± elementów w drzewie. Tak samo wysoko¶æ zbudowanego drzewa to $O(logn)$, wiêc przeszukiwanie go jest szybkie.
+\begin{figure}[h]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=0.8\textwidth]{BSP_alg.eps}
+\caption[Rozmiar 20]{Algorytm konstrukcji drzewa BSP.}
+  \label{zrodlo}
+\end{figure}
+
+\clearpage
+
+\subsection{Typy}
+
+Drzewa BSP mog± byæ podzielone na wiele sposobów: g³ównie ze wzglêdu na sposób wybierania hiperp³aszczyzny dziel±cej, ale te¿ na sposób przechowywania geometrii (w wierzcho³kach, w li¶ciach), czy obiekt podzia³u (ca³a przestrzeñ czy jeden obiektu). W szczególno¶ci wyró¿niono trzy ich typy: $node-storing$ (przechowywanie w wêz³ach), $leaf-storing$ (przechowywanie w li¶ciach) i $solid-leaf$ (wype³nione li¶æmi). 
+
+
+\textbf{Przechowywane w wêz³ach}
+ W takim przypadku wszystkie ¶ciany, które nale¿± do danej p³aszczyzny podzia³u $h$ l±duj± w wê¼le drzewa, a pozosta³e s± przekazywane rekurencyjnie do poddrzew zgodnie z ich przynale¿no¶ci± do odpowiednich podprzestrzeni $h^{-}$ oraz $h^{+}$ (¶ciany, które przecinaj± siê z $h$ zostaj± podzielona na dwie czê¶ci i równie¿ przekazane do odpowiednich podrzew). Oczywi¶cie li¶cie mog± byæ puste lub zawieraæ tylko jedn± ¶cianê.
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.0\textwidth]{BSP_1.eps}
+\caption[Rozmiar 20]{Konstrukcja drzewa BSP przechowuj±cego w wêz³ach: (a) oryginalny 12-k±t. (b) Prosta podzia³u przechodzi przez ¶ciany A i G. (c) Nastêpne proste podzia³u przechodz± odpowiednio przez B i H.}
+  \label{zrodlo}
+\end{figure}
+
+\textbf{Przechowywane w li¶ciach}
+W tym przypadku wierzcho³ki drzewa przechowuj± jedynie p³aszczyznê podzia³u, a ca³a geometria jest przechowywana w li¶ciach. Testy kolizji, wykorzystuj±cych te struktury sprawdzaj± przeciêcia we wszystkich li¶ciach, które zawieraj± w sobie dane obiekty.
+
+\textbf{Wype³nione li¶æmi}
+
+
+\clearpage
 \section{Inne rozwi±zania z literatury}
-
 Istnieje wiele podej¶æ do wykrywania i rozwi±zywania kolizji w scenie. W poprzednich podrozdzia³ach $2.1 - 2.3$ opisa³em szczegó³owo jedynie po jednym z ka¿dego etapu testowania (wszystkie zaimplementowane s± w do³±czanej aplikacji). Wybra³em je, gdy¿ w pewnym sensie s± najbardziej wszechstronne spo¶ród pozosta³ych, przez co wybierane s± te¿ prawdopodobnie jako jedne z najczêstszych.
 
 Chcia³bym obecnie przedstawiæ pokrótce jeszcze kilka innych algorytmów dostêpnych w do³±czanej przeze mnie literaturze.

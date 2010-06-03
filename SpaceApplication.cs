@@ -37,6 +37,8 @@ namespace InteractingMeshes
         private static Timer gametimer;
         private static bool paused;
 
+        public static Options Options;
+
         #endregion
 
         #region --- Private fields ---
@@ -69,7 +71,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Manager for objects
         /// </summary>
-        private ObjectsManager manager;
+        private static ObjectsManager manager;
 
         /// <summary>
         /// Current mouse position
@@ -85,6 +87,8 @@ namespace InteractingMeshes
         /// Speed modifier
         /// </summary>
         private float speedmodifier = 1.0f;
+
+        public static SpaceApplication Instance;
 
         #endregion
 
@@ -286,7 +290,7 @@ namespace InteractingMeshes
             get { return viewRegion; }
         }
 
-        public ObjectsManager Manager
+        public static ObjectsManager Manager
         {
             get { return manager; }
         }
@@ -332,14 +336,15 @@ namespace InteractingMeshes
         /// </summary>
         private void InitializeComponent()
         {
-            SuspendLayout();
+            this.SuspendLayout();
             // 
-            // UsingDirectX
+            // SpaceApplication
             // 
-            ClientSize = new Size(284, 262);
-            Name = "Mesh intersecting";
-            //this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.UsingDirectX_MouseMove);
-            ResumeLayout(false);
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "SpaceApplication";
+            this.Text = "Symulacja kolizji";
+            this.ResumeLayout(false);
+
         }
 
         #region --- Creating and destroying objects ---
@@ -348,6 +353,8 @@ namespace InteractingMeshes
         {
             ClientSize = new Size(screenwidth, screenheight); // Specify the client size
             Text = "Intersacting meshes"; // Specify the title
+            Options = new Options();
+            Instance = this;
         }
 
         #endregion
@@ -427,16 +434,10 @@ namespace InteractingMeshes
                 {
                     if (obj != ActiveObject)
                     {
-                        if (BoxCollision.TestOverlap(obj, this.ActiveObject, 0.01))
+                        isCollision = CollisionManager.CollisionTest(obj, ActiveObject);
+                        if (isCollision)
                         {
-                            if (GilbertJohnsonKeerthi.BodiesIntersect(obj.Points, ActiveObject.Points))
-                            {
-                                if (MeshCollision.TestBspCollision(obj, ActiveObject))
-                                {
-                                    isCollision = true;
-                                    obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
-                                }
-                            }
+                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
                         }
                         if (!isCollision)
                         {
@@ -489,18 +490,18 @@ namespace InteractingMeshes
         /// </summary>
         private static void Main()
         {
-            var form = new SpaceApplication(); // Create the form
+            var mainForm = new SpaceApplication(); // Create the form
 
-            if (form.InitializeDirect3D() == false) // Check if D3D could be initialized
+            if (mainForm.InitializeDirect3D() == false) // Check if D3D could be initialized
             {
                 MessageBox.Show("Could not initialize Direct3D.", "Error");
                 return;
             }
-            form.Show(); // When everything is initialized, show the form
-
-            while (form.Created) // This is our message loop
+            mainForm.Show(); // When everything is initialized, show the form
+            Options.Show();
+            while (mainForm.Created) // This is our message loop
             {
-                form.Render(); // Keep rendering until the program terminates
+                mainForm.Render(); // Keep rendering until the program terminates
                 Application.DoEvents(); // Process the events, like keyboard and mouse input 
             }
         }

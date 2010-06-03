@@ -41,9 +41,22 @@ namespace InteractingMeshes
         /// </summary>
         private AABox boundingBox = AABox.UnitBox;
 
+        private string name = String.Empty;
+
+        //private bool isChanged
+
         #endregion
 
         #region --- Public properties ---
+
+
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+        }
 
         /// <summary>
         /// BoundingBox
@@ -178,6 +191,15 @@ namespace InteractingMeshes
             Position = _position;
             ScaleMatrix = _scaleMatrix;
             Rotation = _rotation;
+        }
+
+        #endregion
+
+        #region --- Overloading methods ---
+
+        public override string ToString()
+        {
+            return this.id.ToString();
         }
 
         #endregion
