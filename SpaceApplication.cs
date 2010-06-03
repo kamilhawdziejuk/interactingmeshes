@@ -342,7 +342,7 @@ namespace InteractingMeshes
             // 
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Name = "SpaceApplication";
-            this.Text = "Symulacja kolizji";
+            this.Text = "Collisions symulation";
             this.ResumeLayout(false);
 
         }
@@ -421,48 +421,16 @@ namespace InteractingMeshes
 
             try
             {
-                // Mogre.Root root = new Mogre.Root("../../plugins.cfg", "../ogre.cfg", "ogre.log");
-                //Mogre.SceneManager sceneManager = 
-
                 device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0); // Clear the window to black
                 device.BeginScene();
                 device.VertexFormat = CustomVertex.TransformedColored.Format;
                 speedmodifier += 0.01f;
-                // Vertex[] vertData = MeshUtils.GetVertexes(this.activeObject.Mesh);
-                bool isCollision = false;
-                foreach (GeometricObject obj in Manager.Objects)
+
+                if (ActiveObject != null)
                 {
-                    if (obj != ActiveObject)
-                    {
-                        isCollision = CollisionManager.CollisionTest(obj, ActiveObject);
-                        if (isCollision)
-                        {
-                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
-                        }
-                        if (!isCollision)
-                        {
-                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
-                            //obj.GeometryMatrix.RotateAxis(new Vector3(1, 1, 1), this.speedmodifier);
-                        }
-                    }
-                    else
-                    {
-                        obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
-
-                        obj.Rotation += Manager.Rotate;
-                        Manager.Rotate = new Vector3(0, 0, 0);
-
-                        obj.Position += Manager.Move;
-
-                        if (!ViewRegion.Contains(obj.Position))
-                        {
-                            //MessageBox.Show("Out of the screen");
-                            obj.Position -= Manager.Move;
-                        }
-                        Manager.Move = new Vector3(0, 0, 0);
-                    }
-                    device.Transform.World = obj.GeometryMatrix;
-                    obj.Mesh.DrawSubset(0);
+                    this.DoTransformations();
+                    this.DoCollisions();
+                    ActiveObject.IsChanged = false;
                 }
                 //  this.TestDrawingTriangle();
                 device.Transform.World = Matrix.Identity;
@@ -478,6 +446,66 @@ namespace InteractingMeshes
             catch (DeviceLostException)
             {
                 graphicslost = true;
+            }
+        }
+
+        /// <summary>
+        /// Do transformations (moves, rotates ActiveObject)
+        /// </summary>
+        private void DoTransformations()
+        {
+            foreach (GeometricObject obj in Manager.Objects)
+            {
+                if (obj == ActiveObject)
+                {
+                    //transformations:
+                    ActiveObject.Rotation += Manager.Rotate;
+                    Manager.Rotate = new Vector3(0, 0, 0);
+
+                    ActiveObject.Position += Manager.Move;
+
+                    if (!ViewRegion.Contains(ActiveObject.Position))
+                    {
+                        ActiveObject.Position -= Manager.Move;
+                    }
+                    Manager.Move = new Vector3(0, 0, 0);
+                    device.Transform.World = ActiveObject.GeometryMatrix;
+                    ActiveObject.Mesh.DrawSubset(0);
+
+                    obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
+                }
+                device.Transform.World = obj.GeometryMatrix;
+                obj.Mesh.DrawSubset(0);
+            }
+        }
+
+        /// <summary>
+        /// Do collision operations
+        /// </summary>
+        private void DoCollisions()
+        {
+            //testing collisions
+            bool isCollision = false;
+            if (ActiveObject.IsChanged)
+            {
+                foreach (GeometricObject obj in Manager.Objects)
+                {
+                    if (obj != ActiveObject)
+                    {
+                        isCollision = CollisionManager.CollisionTest(obj, ActiveObject);
+                        if (isCollision)
+                        {
+                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+                        }
+                        else
+                        {
+                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
+                           // obj.GeometryMatrix.RotateAxis(new Vector3(1, 1, 1), ++this.speedmodifier);
+                        }
+                    }
+                    device.Transform.World = obj.GeometryMatrix;
+                    obj.Mesh.DrawSubset(0);
+                }
             }
         }
 

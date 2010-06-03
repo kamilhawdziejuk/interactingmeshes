@@ -69,6 +69,13 @@ namespace InteractingMeshes
 
         #endregion
 
+        #region --- Events ---
+
+        /// <summary>
+        /// Changing collision algorithms options.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == this.checkBoxTest)
@@ -106,12 +113,11 @@ namespace InteractingMeshes
                 }
             }
 
+            if (SpaceApplication.Instance.ActiveObject != null)
+            {
+                SpaceApplication.Instance.ActiveObject.IsChanged = true;
+            }
             SpaceApplication.Instance.Focus();
-        }
-
-        private void Options_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void deleteObject_Click(object sender, EventArgs e)
@@ -150,11 +156,6 @@ namespace InteractingMeshes
             SpaceApplication.Instance.Focus();
         }
 
-        private void list_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             List<GeometricObject> selected = new List<GeometricObject>();
@@ -187,5 +188,7 @@ namespace InteractingMeshes
             SpaceApplication.Manager.Add("teapot");
             SpaceApplication.Instance.Focus();
         }
+
+        #endregion
     }
 }

@@ -43,7 +43,11 @@ namespace InteractingMeshes
 
         private string name = String.Empty;
 
-        //private bool isChanged
+        /// <summary>
+        /// Is ActiveObject changed? Flag is activated every time we move,rotate,add object or when we change algoritms for collision testing
+        /// Collisions are tested only if flag is active, for  optimizaions:)
+        /// </summary>
+        public bool IsChanged = false;
 
         #endregion
 
@@ -131,6 +135,7 @@ namespace InteractingMeshes
                     Vector3 translation = value - position;
                     GeometryMatrix *= Matrix.Translation(translation);
                     position = value;
+                    this.IsChanged = true;
                 }
             }
         }
@@ -149,6 +154,7 @@ namespace InteractingMeshes
                     Matrix rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);
                     GeometryMatrix *= rot;
                     rotation = value;
+                    this.IsChanged = true;
                 }
             }
         }

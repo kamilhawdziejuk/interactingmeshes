@@ -156,14 +156,19 @@ namespace InteractingMeshes
             return this.AddObject(obj);
         }
 
+        /// <summary>
+        /// Adding the objects to the collection
+        /// </summary>
+        /// <param name="_obj"></param>
+        /// <returns></returns>
         public bool AddObject(GeometricObject _obj)
         {
             if (_obj.Mesh != null)
             {
-
                 objects.Add(_obj);
                 SpaceApplication.Options.ListObjects.Items.Add(_obj);
                 activeObject = _obj;
+                activeObject.IsChanged = true;
                 return true;
             }
             return false;

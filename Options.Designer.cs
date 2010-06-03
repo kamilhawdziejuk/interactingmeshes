@@ -401,7 +401,6 @@
             this.list.Size = new System.Drawing.Size(136, 69);
             this.list.TabIndex = 6;
             this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
-            this.list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.list_KeyPress);
             // 
             // teapotPage
             // 
@@ -433,7 +432,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Options";
             this.Text = "Options";
-            this.Load += new System.EventHandler(this.Options_Load);
             this.tabControl.ResumeLayout(false);
             this.boxPage.ResumeLayout(false);
             this.torusPage.ResumeLayout(false);
