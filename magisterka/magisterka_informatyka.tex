@@ -16,6 +16,7 @@
 \usepackage{graphicx}
 \usepackage{epstopdf}
 
+\author{Kamil Hawdziejuk}
 \DeclareGraphicsExtensions{.pdf,.jpg,.png,.eps,.ps}
 \linespread{1.4}
 
@@ -38,7 +39,6 @@
 \newtheorem{df}[tw]{Definicja}
 \theoremstyle{df}
 \newtheorem{np}[tw]{Przyk³ad}
-%\coï¿½ ode mnie
 \theoremstyle{tw}
 \newtheorem{wn}[tw]{Wniosek}
 
@@ -49,16 +49,21 @@
 \providecommand{\okk}[1]{\biggl(#1\biggr)}
 \providecommand{\Okk}[1]{\Biggl(#1\Biggr)}
 
+\setlength{\voffset}{-3cm}
+\setlength{\hoffset}{0cm}
+\addtolength{\textheight}{4cm}
+
 %\hyphenation{pseudo\-rie\-man\-nowskiej}
 \renewcommand{\bibname}{Spis literatury}
-
+%\topmargin - 4cm
+%\textheight - 20cm
 \begin{document}
 
 \begin{titlepage}
 {\large{\sc{
 \begin{center} Uniwersytet Jagielloñski
 
-Wydzia\'l Matematyki i Informatyki\\
+Wydzia³ Matematyki i Informatyki\\
 %
 Instytut Informatyki
 \end{center}}}}
@@ -79,7 +84,7 @@ Instytut Informatyki
 
 \hspace{5cm} {\sc{napisana pod kierunkiem:}}
 
-\hspace{5cm} \large{dr. Macieja Slusarka} \vspace{2.6cm}
+\hspace{5cm} \large{dra Macieja Slusarka} \vspace{2.6cm}
 
 {\large{\sc{
 \begin{center} Kraków, 2010
@@ -93,8 +98,8 @@ Instytut Informatyki
 \tableofcontents
 
 \addcontentsline{toc}{chapter}{\hspace{12pt} Wstêp}
-
 \chapter*{Wstêp}
+\setcounter{page}{2}
 
 Detekcja kolizji jest jedn± z fundamentalnych czê¶ci wielu ró¿nych aplikacji. Nachodzenie na siebie obiektów jest czêsto niepo¿±danym stanem. System wykrywania i naprawiania kolizji odpowiadaæ ma w swoim zamierzeniu za zapewnienie poprawnego i stabilnego stanu symulowanego ¶rodowiska, wymuszaj±c odpowiednie zachowanie obiektów w momencie wzajemnej interakcji.
 I tak na przyk³ad w grach komputerowych uniemo¿liwia postaciom przechodzenie przez ¶ciany czy te¿ upadanie poni¿ej poziomu pod³ogi. Dostarcza mo¿liwo¶ci takich jak odpowied¼ na pytanie czy jeden u¿ytkownik mo¿e zobaczyæ drugiego, b±d¼ czy jest w zasiêgu strza³u wroga. W robotyce system wykrywania kolizji jest u¿ywany do planowania ruchu i wytyczania ¶cie¿ek poruszaj±cych siê robotów tak, aby nie napotyka³y na przeszkody. W aplikacjach do prototypowania uczestniczy w modelowaniu drogich i wa¿nych czê¶ci przed etapem ich produkcji, co ma ogromny wp³yw na oszczêdno¶æ. Jest tak¿e integraln± czê¶ci± wielu systemów CAD do projektowania przemys³owego, zapewniaj±c wymogi konstrukcyjne produktów firmy. Jest wreszcie u¿ywany w testach zderzeñ, wypadków i katastrof wewn±trz specjalnie do tego celu stworzonych ¶rodowisk symulacyjnych.
@@ -114,11 +119,11 @@ Wybrana reprezentacja geometryczna dla sceny oraz pojawiaj±cych siê w niej obiek
 Obiektem geometrycznym nazywamy obiekt przestrzenny reprezentuj±cy figurê geometryczn±, a wiêc dowolny podzbiór punktów przestrzeni euklidesowej.
 \end{df}
 
-W niniejszej pracy skupimy siê na obiektach z przestrzeni $R^3$.
+W niniejszej pracy skupiê siê na obiektach z przestrzeni $R^3$.
 
-Obiekty takie w grafice komputerowej  bardzo czêsto reprezentowane s± w postaci przybli¿onej. Istniej± specjalne algorytmy triangulacji, których zadanie polega na rozbiciu bardziej z³o¿onych obiektów na siatki trójk±tów, które je pokrywaj±. W procesie tym powstaje wielok±t (wielo¶cian), który jest mo¿liwie bliskim przybli¿eniem danego obiektu. Warto w tym miejscu wspomnieæ, ¿e triangulacja coraz bardziej wspierana jest ze strony sprzêtowej i ze wzglêdów wydajno¶ciowych zajmuj± siê tym obecnie pozdespo³y graficzne jeszcze w procesie renderowania. Dlatego te¿ w systemach kolizji najczê¶ciej wybieran± reprezentacj± jest siatka wielok±tów (przewa¿nie trójk±tów) reprezentuj±cych obiekt z przestrzenii. 
+Obiekty takie w grafice komputerowej  bardzo czêsto reprezentowane s± w postaci przybli¿onej. Istniej± specjalne algorytmy triangulacji, których zadanie polega na rozbiciu bardziej z³o¿onych obiektów na siatki trójk±tów, które je pokrywaj±. W procesie tym powstaje wielok±t (wielo¶cian), który jest mo¿liwie bliskim przybli¿eniem danego obiektu. Warto w tym miejscu wspomnieæ, ¿e triangulacja coraz bardziej wspierana jest ze strony sprzêtowej i ze wzglêdów wydajno¶ciowych zajmuj± siê tym obecnie podzespo³y graficzne jeszcze w procesie renderowania. Dlatego te¿ w systemach kolizji najczê¶ciej wybieran± reprezentacj± jest siatka wielok±tów (przewa¿nie trójk±tów) reprezentuj±cych obiekt z przestrzenii. 
 
-W zwi±zku z tym, naszym naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, i¿  wszystkie analizowane obiekty s± wielo¶cianami, a ka¿dy z nich utworzony jest z:
+W zwi±zku z tym, moim naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, i¿  wszystkie analizowane obiekty s± wielo¶cianami, a ka¿dy z nich utworzony jest z:
 
 - ¶cian - wielok±tów, które razem tworz± powierzchniê wielo¶cianu;
 
@@ -128,10 +133,10 @@ W zwi±zku z tym, naszym naturalnym za³o¿eniem w dalszej czê¶ci pracy jest to, i¿
 
 
 \section{Ró¿ne rodzaje zapytañ o kolizje}
-Im dok³adniejsze sprawdzenia i wyniki s± potrzebne, tym wiêksza staje siê z³o¿ono¶æ ca³ego systemu zarówno pod k±tem obliczeniowym jak i pamiêciowym. Ponadto nie wszystkie reprezentacje obiektów wspieraj± wszystkie zapytania. Warto zwróciæ na to uwagê.
+Im dok³adniejsze sprawdzenia i wyniki s± potrzebne, tym wiêksza staje siê z³o¿ono¶æ ca³ego systemu zarówno pod k±tem obliczeniowym jak i pamiêciowym. Ponadto nie wszystkie reprezentacje obiektów wspieraj± wszystkie zapytania.
 
 \section{Parametry ¶rodowiska}
-Aplikacja symuluj±ca (np. CAD lub gra) sama w sobie zawiera liczne parametry, które wp³ywaj± po¶rednio b±d¼ bezpo¶rednio na system wykrywania kolizji. Wp³ywaj± na to miêdzy innymi: liczba obiektów, ich rozmiary, pozycje, mo¿liwy sposób poruszania, zezwalanie na przenikanie, tryb ich wykrywania oraz rozwi±zywania itd.
+Aplikacja symuluj±ca (np. CAD lub gra) sama w sobie zawiera liczne parametry, które wp³ywaj± po¶rednio b±d¼ bezpo¶rednio na system wykrywania kolizji. Wp³ywaj± na to miêdzy innymi: liczba obiektów, ich rozmiary, pozycje, mo¿liwe sposoby poruszania, zezwalanie na przenikanie, tryb ich wykrywania oraz rozwi±zywania itd.
 
 \section{Kwestie wydajno¶ci i mo¿liwo¶ci implementacyjnych}
 Systemy detekcji kolizji maj± czêsto du¿y narzut obliczeniowy. Szczególnie w aplikacjach czasu rzeczywistego zak³ada siê, ¿e wykrywanie i rozwi±zywanie kolizji przebiega w sposób p³ynny, on-line.
@@ -156,7 +161,7 @@ Test kolizji dwóch obiektów OOB bazuje na nastêpuj±cym fundamentalnym twierdzeni
 
 \begin{tw}[O odzielaj±cej hiperp³aszczy¼nie]
 Niech $A$ i $B$ bêd± dwoma niepustymi, roz³±cznymi i wypuk³ymi podzbiorami przestrzeni $R^n$. Istnieje wtedy hiperp³aszczyzna $P$ oddzielaj±ca zbiory A i B, tzn. istnieje wektor $a \in R^n$ , $a \neq 0$, takie ¿e:
-$$ \sup {a^Tx} <\sup a^Tz$$
+$$ \sup {a^Tx} <\sup a^Tz.$$
 \end{tw}
 
 Test ten  sprawdza, czy dwa zorientowane prostopad³o¶ciany mog± byæ odzielone (odseparowane) w przestrzeni pewn± p³aszczyzn±. Intuicyjnie dwa wypuk³e obiekty nie sa ze sob± w kolizji, je¶li istnieje przerwa pomiêdzy nimi. 
@@ -199,8 +204,8 @@ Niech $t$ bêdzie wektorem przesuniêcia z A do B oraz niech $R = [r_{ij}]$ oznacz
 
 \section{Test oparty na wypuk³o¶ciach bry³ - algorytm GJK}
 
-W niniejszym rozdziale omówiê szczegó³owo jedn± z najefektywniejszych metod rozwi±zywania kolizji dla zbiorów wypuk³ych -  \textbf{algorytm Gilbert-Johnson-Keerthi}\footnote{Zosta³ opublikowany po raz pierwszy w 1988 roku w pracy Robotics and Automation".}(w skrócie GJK), któr± te¿ zaimplementowa³em w swojej aplikacji. Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie.
-\clearpage
+W niniejszym rozdziale omówiê szczegó³owo jedn± z najefektywniejszych metod rozwi±zywania kolizji dla zbiorów wypuk³ych -  \textbf{algorytm Gilbert-Johnson-Keerthi}\footnote{Zosta³ opublikowany po raz pierwszy w 1988 roku w pracy ''Robotics and Automation''.}(w skrócie GJK), któr± te¿ zaimplementowa³em w swojej aplikacji. Wyznacza on najmniejsz± odleg³o¶æ pomiêdzy dwoma wypuk³ymi zbiorami i w przeciwieñstwie do wielu innych algorytmów, nie wymaga, aby geometria obiektu by³a przedstawiana w specjalnej formie.
+
 Jak ³atwo zauwa¿yæ
 $$dist(A,B) =  min \{ ||a - b|| : a \in A, b \in B \}.$$
 
@@ -313,7 +318,7 @@ Za³ó¿my teraz, ¿e $||v||^2 - vw > 0$. Wtedy $\lambda_2 > 0$ oraz $||u||^2 - ||v|
 \begin{figure}[htbp]
  \centering
     %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
-  \includegraphics[width=1.0\textwidth]{uv.eps}
+  \includegraphics[width=0.7\textwidth]{uv.eps}
 \caption[Rozmiar 20]{Segment $uv$ zawiera wektor $u$, dla którego $||u|| < ||v||$ tylko wtedy, gdy $||v||^2 - v \cdot w > 0$.}
   \label{zrodlo}
 \end{figure}
@@ -370,19 +375,19 @@ Wobec tego $v_k = v(A \ominus B).$
 
 \section{Struktury podzia³u przestrzeni i test na zbiorach wklês³ych - algorytm BSP}
 
-W¶ród wszystkich problemów wystêpuj±cych w ¶rodowiskach 3D, te odnosz±ce siê do kolizji obarczone s± najbardziej krytycznymi ograniczeniami czasowymi. Wiêkszo¶æ ¶rodowisk z³o¿ona jest z du¿ej liczby (nierzadko skomplikowanych) obiektów, a oczekuje siê, ¿e ca³o¶æ dzia³aæ bêdzie w miarê p³ynny sposób. W zwi±zku z tym wprowadza siê pewne usprawnienia przyspieszaj±ce wykrywanie kolizji, które omówione zostan± w tym rozdziale - podzia³y przestrzeni.
+W¶ród wszystkich problemów wystêpuj±cych w ¶rodowiskach 3D, te odnosz±ce siê do kolizji obarczone s± najbardziej krytycznymi ograniczeniami czasowymi. Wiêkszo¶æ ¶rodowisk z³o¿ona jest z du¿ej liczby (nierzadko skomplikowanych) obiektów, a oczekuje siê, ¿e ca³o¶æ dzia³aæ bêdzie w miarê p³ynny sposób. W zwi±zku z tym wprowadza siê pewne usprawnienia przyspieszaj±ce wykrywanie kolizji, które omówione zostan± w tym rozdziale - to podzia³y przestrzeni.
 
-S± to struktury, które dziel±  przestrzeñ $d$-wymiarow± na pary podprzestrzeni (obiekty dziel±ce s± wtedy $(d-1)$-wymiarowymi hiperp³aszczyznami). W szczególno¶ci, scenê 3D przecinaæ mo¿emy p³aszczyznami.
+S± to struktury, które dziel±  przestrzeñ $d$-wymiarow± na pary podprzestrzeni (obiekty dziel±ce s± wtedy $(d-1)$-wymiarowymi hiperp³aszczyznami). W szczególno¶ci, scenê 3D przecinaæ mo¿emy p³aszczyznami, otrzymuj±c dwie pó³przestrzenie znajduj±ce siê po prawej i lewej jej stronie.
 
-Struktury te zasadniczo wykorzystywane s± na dwa sposoby. Z jednej strony (na poziomie makro) mo¿emy dziêki nim zredukowaæ ilo¶æ koniecznych do przeprowadzenia testów kolizji pomiêdzy wszystkimi obiektami. Zauwa¿my, ¿e dla $n$ obiektów istnieje $1/2 n (n-1)$ par obiektów, które mog± ze sob± kolidowaæ. Wprowadziwszy sensowny podzia³ przestrzeni, mo¿emy liczbê tych par zmniejszyæ do minimum i testowaæ jedynie te, które znajduj± siê w tej samej czê¶ci wydzielonej przestrzeni. Z drugiej strony (na poziomie mikro) wykorzystywane s± do zredukowania liczby koniecznych sprawdzeñ w poszczególnych testach kolizji. W przypadku bowiem, gdy mamy zweryfikowaæ czy dwie skomplikowane siatki ze sob± koliduj±, mo¿emy ograniczyæ testy do tych czê¶ci podzielonej przestrzeni, w której faktycznie kolizja mo¿e dla nich wystêpowaæ\footnote{Drzewa BSP wynalezione zosta³y na pocz±tku jako struktury rozwi±zuj±ce problem reprezentowania niewidocznych miejsc w przestrzeni. Maj± ponadto du¿e zastosowanie w ray traycing'u, kontrukcji obiektów CSG czy planowaniu ¶cie¿ek robotów.}. 
+Struktury te zasadniczo wykorzystywane s± na dwa sposoby. Z jednej strony, na poziomie makro, mo¿emy dziêki nim redukowaæ liczbê koniecznych do przeprowadzenia testów kolizji pomiêdzy wszystkimi parami obiektów. Zauwa¿my, ¿e dla $n$ obiektów istnieje $\frac{ n (n-1)}{2}$ par, które mog± ze sob± kolidowaæ. Wprowadziwszy sensowny podzia³ przestrzeni na mniejsze komórki, mo¿emy liczbê tych par zmniejszyæ do minimum i testowaæ jedynie te, które znajduj± siê w tych samych komórkachi. Z drugiej strony, na poziomie mikro, wykorzystywane s± do redukowania liczby koniecznych do sprawdzenia przeciêæ fragmentów obiektów w poszczególnych testach kolizji. W przypadku bowiem, gdy mamy zweryfikowaæ czy dwie z³o¿one siatki ze sob± koliduj±, mo¿emy ograniczyæ testy przeciêæ ich fragmentów do tych czê¶ci podzielonej przestrzeni, w której faktycznie kolizja mo¿e dla nich wystêpowaæ\footnote{Drzewa BSP wynalezione zosta³y na pocz±tku jako struktury rozwi±zuj±ce problem reprezentowania niewidocznych miejsc w przestrzeni. Maj± ponadto du¿e zastosowanie w ray traycing'u, kontrukcji obiektów CSG czy planowaniu ¶cie¿ek robotów.}. 
 
 \clearpage
 \subsection{Kolizje na zbiorach wklês³ych}
 
-Zauwa¿my, ¿e przedstawionymi wy¿ej podzia³ami mogliby¶my zdekomponowaæ zbiór wklês³y na zbiory wypuk³e i zastosowaæ do wykrycia kolizji ka¿dego z nich algorytm GJK, opisany w poprzednim rozdziale. Niestety, takie podej¶cie, z dwóch powodów, nie jest najw³a¶ciwsze z mo¿liwych. Przede wszystkim zagadnienie znalezienia minimalnego podzia³u zbioru wypuk³ego na zbiory wklês³e jest problemem $NP$-trudnym. Poza tym istnieje obiekt wklês³y z³o¿ony z siatki $n$ trójk±tów, który z³o¿ony jest z $\Omega(n^2)$ zbiorów wypuk³ych. To wszystko doprowadza najczê¶ciej do decyzji postêpowania z zagadnieniem w sposób polegaj±cy na dekompozycji obiektu na mniejsze obiekty, które mog± byæ szybciej przetestowane i niekoniecznie s± zbiorami wypuk³ymi\footnote{Ostatnimi czasy powstaje wiele innych ciekawych podej¶æ, jak np. wyniki naukowców z Texas A\&M University, dotycz±ce algorytmów przybli¿onej dekompozycji zbioru wklês³ego na zbiory wypuk³e, publikowywane na stronie: http://parasol.tamu.edu/groups/amatogroup/research/app-cd/}.
+W szczególno¶ci, przedstawionymi wy¿ej podzia³ami mogliby¶my zdekomponowaæ zbiór wklês³y na zbiory wypuk³e i zastosowaæ do wykrycia kolizji ka¿dego z nich algorytm GJK, opisany w poprzednim rozdziale. Niestety, takie podej¶cie, z dwóch powodów, nie jest najw³a¶ciwsze z mo¿liwych. Przede wszystkim zagadnienie znalezienia minimalnego podzia³u zbioru wypuk³ego na zbiory wklês³e jest problemem $NP$-trudnym. Poza tym istnieje siatka zbudowana z $n$ trójk±tów, która z³o¿ona jest z $\Omega(n^2)$ zbiorów wypuk³ych. To wszystko doprowadza najczê¶ciej do decyzji postêpowania z zagadnieniem w sposób polegaj±cy na dekompozycji obiektu na mniejsze obiekty, które mog± byæ szybciej przetestowane i niekoniecznie s± zbiorami wypuk³ymi\footnote{Ostatnimi czasy powstaje wiele innych ciekawych podej¶æ, jak np. wyniki naukowców z Texas A\&M University, dotycz±ce algorytmów przybli¿onej dekompozycji zbioru wklês³ego na zbiory wypuk³e, publikowywane na stronie: http://parasol.tamu.edu/groups/amatogroup/research/app-cd/}.
 
-\subsection{Konstrukcja struktury}
-Jedn± z najbardziej wszechstronnych metod podzia³u jest tworzenie struktury \textbf{Binary Space-Partitioning tree} (w skrócie BSP tree), któr± te¿ zaimplementowa³em w do³±czanej aplikacji. Polega ona na ko¿dorazowym rekurencyjnym podziale danej przestrzeni hiperp³aszczyzn± na dwie mniejsze wypuk³e czê¶ci (zwane komórkami) i nastêpnie weryfikowanie jedynie kolizji punktów (trójk±tów siatek) nale¿±cych do danych czê¶ci. 
+\subsection{Typy struktury BSP i jej konstrukcja}
+Jedn± z najbardziej wszechstronnych metod podzia³u jest tworzenie struktury \textbf{Binary Space-Partitioning tree} (w skrócie BSP tree), któr± te¿ zaimplementowa³em w do³±czanej aplikacji. Polega ona na ko¿dorazowym rekurencyjnym podziale danej przestrzeni hiperp³aszczyznami na dwie mniejsze wypuk³e czê¶ci - zwane komórkami.  Weryfikowanie kolizji polega dalej na sprawdzaniu przecinania siê fragmentów siatek dwóch obiektów tylko wtedy, gdy oba nale¿± do tej samej komórki, co stanowi ogromne przyspieszenie.
 
 \begin{df}[Drzewo BSP]
 Dla danej przestrzeni $R^d$ i hiperp³aszczyzny $h:a_1 x_1 + a_2 x_2 + ... + a_d x_d + a_{d+1} = 0$ niech $h^{+}$ bêdzie otwart± dodatni± pó³przestrzeni± ograniczon± przez $h$, a $h^{-}$ bêdzie otwart± ujemn± pó³przestrzeni± ograniczon± przez $h$:
@@ -393,107 +398,163 @@ Drzewo binarnego podzia³u przestrzeni, tzw. drzewo BSP, dla zbioru $S$ obiektów 
 
 - je¶li $card(S) \leq 1$, to $T$ jest li¶ciem. Fragment obiektu (je¶li taki istnieje) jest pamiêtany dok³adnie w li¶ciu,
 
-- je¶li $card(S) > 1$, to korzeñ drzewa $T$ pamiêta hiperp³aszczyznê $h$ wraz ze zbiorem obiektów, które s± ca³kowicie w niej zawarte. Lewym dzieckiem wêz³a $v$ jest korzeñ drzewa  BSP $T^{-}$ zawieraj±cy zbiór $S^{-} :=\{h_{v}^{-} \cap s : s \in S\}$, a prawym dzieckiem wêz³a $v$ jest korzeñ drzewa BSP $T^{+}$ zawieraj±cy zbiór $S^{+} := \{h_{v}^{+} \cap s : s \in S\}$
+- je¶li $card(S) > 1$, to korzeñ $v$ drzewa $T$ pamiêta hiperp³aszczyznê $h_v$ wraz ze zbiorem obiektów, które s± ca³kowicie w niej zawarte. Lewym dzieckiem wêz³a $v$ jest korzeñ zawieraj±cy zbiór $S^{-} :=\{h_{v}^{-} \cap s : s \in S\}$, a prawym dzieckiem wêz³a $v$ jest korzeñ zawieraj±cy zbiór $S^{+} := \{h_{v}^{+} \cap s : s \in S\}.$
 \end{df}
 
+Drzewa BSP mog± byæ podzielone na wiele sposobów: g³ównie ze wzglêdu na sposób wybierania hiperp³aszczyzny dziel±cej, ale te¿ na sposób przechowywania geometrii (w wierzcho³kach, w li¶ciach), czy ze wzglêdu na sam obiekt podzia³u - czy jest to ca³a przestrzeñ czy jeden obiekt. W szczególno¶ci, wyró¿niono trzy ich typy: $node-storing$ (przechowuj±ce w wêz³ach), $leaf-storing$ (przechowuj±ce w li¶ciach) i $solid-leaf$ (wype³nione li¶æmi). 
 
-Istnieje kilka mo¿liwych metod konstrukcji struktury drzewa BSP,  w zale¿no¶ci od wyboru hiperp³aszczyzny podzia³u. Wybór "najlepszej" takiej p³aszczyzny wp³ywa rzecza jasna na rozmiar drzewa oraz na wydajno¶æ jego przeszukiwania. Jedn± z mo¿liwych konstrukcji jest tzw. "solid-leaf BSP", polegaj±ca na wyborze jej spo¶ród p³aszczyzn zawieraj±cych ¶ciany wielo¶cianu. Metoda takiego wyboru to tzw. "autopodzia³". 
-\begin{figure}[hb]
+
+\textbf{Przechowuj±ce w wêz³ach.}
+ W takim przypadku wszystkie ¶ciany, które nale¿± do danej p³aszczyzny podzia³u $h$ l±duj± w wê¼le drzewa, a pozosta³e s± przekazywane rekurencyjnie do poddrzew zgodnie z ich przynale¿no¶ci± do odpowiednich podprzestrzeni $h^{-}$ oraz $h^{+}$ (¶ciany, które przecinaj± siê z $h$ zostaj± podzielone na dwie czê¶ci i równie¿ przekazane do odpowiednich podrzew). Oczywi¶cie li¶cie mog± byæ puste lub zawieraæ tylko jedn± ¶cianê.
+\begin{figure}[htbp]
  \centering
-    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
-  \includegraphics[width=0.75\textwidth]{BSP.eps}
-\caption[Rozmiar 20]{Podzia³ przestrzeni na cztery wypuk³e podprzestrzenie razem z odpowiadaj±cym podzia³owi drzewu BSP. (a) pocz±tkowy podzia³. (b) Pierwszy podzia³ drugiego poziomu. (c) Drugi podzia³ drugiego poziomu.}
+  \includegraphics[width=0.5\textwidth]{BSP_1.eps}
+\caption[Rozmiar 20]{Konstrukcja drzewa BSP przechowuj±cego w wêz³ach: (a) oryginalny 12-k±t. (b) Prosta podzia³u przechodzi przez ¶ciany A i G. (c) Nastêpne proste podzia³u przechodz± odpowiednio przez B i H.}
+  \label{zrodlo}
+\end{figure}
+\clearpage
+\textbf{Przechowuj±ce w li¶ciach.}
+W tym przypadku wierzcho³ki drzewa przechowuj± jedynie p³aszczyznê podzia³u, a ca³a geometria jest przechowywana w li¶ciach. Testy kolizji, wykorzystuj±cych te struktury sprawdzaj± przeciêcia we wszystkich li¶ciach, które zawieraj± w sobie dane obiekty.
+\begin{figure}[htbp]
+ \centering
+  \includegraphics[width=0.7\textwidth]{BSP_2.eps}
+\caption[Rozmiar 20]{Konstrukcja drzewa BSP przechowuj±cego w li¶ciach u¿ywaj±cego tej samej geometrii, co na poprzednim rysunku.}
+  \label{zrodlo}
+\end{figure}
+
+\textbf{Wype³nione li¶æmi}
+
+\begin{figure}[htbp]
+ \centering
+  \includegraphics[width=0.9\textwidth]{BSP_3.eps}
+\caption[Rozmiar 20]{Wype³niona figura poprzecinana i odpowiadaj±ce jej drzewo BSP wype³nione li¶æmi.}
   \label{zrodlo}
 \end{figure}
 
 \clearpage
+Przedstawiam poni¿ej algorytm konstrukcji drzewa BSP:
 
-\subsection{Czas przetwarzania}
-
-Jednym z wa¿niejszych zadañ hierarchi budowanego podzia³u jest utrzymywanie jak najmniejszej liczby wêz³ów w drzewie BSP. Dla wielo¶cianów zbudowanych z siatek metoda autopodzia³u tworzy najczê¶ciej BSP z liczb± wêz³ów zbli¿on± do $O(nlogn)$, gdzie $n$ jest liczb± elementów w drzewie. Tak samo wysoko¶æ zbudowanego drzewa to $O(logn)$, wiêc przeszukiwanie go jest szybkie.
-\begin{figure}[h]
+\begin{figure}[htbp]
  \centering
-    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
   \includegraphics[width=0.8\textwidth]{BSP_alg.eps}
 \caption[Rozmiar 20]{Algorytm konstrukcji drzewa BSP.}
   \label{zrodlo}
 \end{figure}
 
+\subsection{Czas przetwarzania.}
+
+Jednym z wa¿niejszych zadañ hierarchii budowanego podzia³u jest utrzymywanie jak najmniejszej liczby wêz³ów w drzewie BSP. Dla siatek o $n$ trójk±tach i drzewa BSP zbudowanego metod± autopodzia³u liczba jest wêz³ów zbli¿ona jest do $O(nlogn)$, a wysoko¶æ do $O(logn)$, wiêc przeszukiwanie go jest szybkie. Niestety utworzenie struktury BSP z autopodzia³em ma z³o¿ono¶æ $O(n^2)$, dlatego te¿ jej stosowanie najczê¶ciej sprowadza siê do badania kolizji na obiektach statycznych, rzadziej poruszaj±cych siê.
+Z drugiej strony utworzenie struktury BSP, w którym p³aszczyzna podzia³u jest równoleg³a do osi zajmuje ¶rednio $O(nlogn)$, a jego wysoko¶æ $O(n)$.
+
+
+
 \clearpage
-
-\subsection{Typy}
-
-Drzewa BSP mog± byæ podzielone na wiele sposobów: g³ównie ze wzglêdu na sposób wybierania hiperp³aszczyzny dziel±cej, ale te¿ na sposób przechowywania geometrii (w wierzcho³kach, w li¶ciach), czy obiekt podzia³u (ca³a przestrzeñ czy jeden obiektu). W szczególno¶ci wyró¿niono trzy ich typy: $node-storing$ (przechowywanie w wêz³ach), $leaf-storing$ (przechowywanie w li¶ciach) i $solid-leaf$ (wype³nione li¶æmi). 
-
-
-\textbf{Przechowywane w wêz³ach}
- W takim przypadku wszystkie ¶ciany, które nale¿± do danej p³aszczyzny podzia³u $h$ l±duj± w wê¼le drzewa, a pozosta³e s± przekazywane rekurencyjnie do poddrzew zgodnie z ich przynale¿no¶ci± do odpowiednich podprzestrzeni $h^{-}$ oraz $h^{+}$ (¶ciany, które przecinaj± siê z $h$ zostaj± podzielona na dwie czê¶ci i równie¿ przekazane do odpowiednich podrzew). Oczywi¶cie li¶cie mog± byæ puste lub zawieraæ tylko jedn± ¶cianê.
-\begin{figure}[htbp]
- \centering
-    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
-  \includegraphics[width=1.0\textwidth]{BSP_1.eps}
-\caption[Rozmiar 20]{Konstrukcja drzewa BSP przechowuj±cego w wêz³ach: (a) oryginalny 12-k±t. (b) Prosta podzia³u przechodzi przez ¶ciany A i G. (c) Nastêpne proste podzia³u przechodz± odpowiednio przez B i H.}
-  \label{zrodlo}
-\end{figure}
-
-\textbf{Przechowywane w li¶ciach}
-W tym przypadku wierzcho³ki drzewa przechowuj± jedynie p³aszczyznê podzia³u, a ca³a geometria jest przechowywana w li¶ciach. Testy kolizji, wykorzystuj±cych te struktury sprawdzaj± przeciêcia we wszystkich li¶ciach, które zawieraj± w sobie dane obiekty.
-
-\textbf{Wype³nione li¶æmi}
-
 
 \clearpage
 \section{Inne rozwi±zania z literatury}
-Istnieje wiele podej¶æ do wykrywania i rozwi±zywania kolizji w scenie. W poprzednich podrozdzia³ach $2.1 - 2.3$ opisa³em szczegó³owo jedynie po jednym z ka¿dego etapu testowania (wszystkie zaimplementowane s± w do³±czanej aplikacji). Wybra³em je, gdy¿ w pewnym sensie s± najbardziej wszechstronne spo¶ród pozosta³ych, przez co wybierane s± te¿ prawdopodobnie jako jedne z najczêstszych.
 
-Chcia³bym obecnie przedstawiæ pokrótce jeszcze kilka innych algorytmów dostêpnych w do³±czanej przeze mnie literaturze.
+Istnieje wiele podej¶æ do wykrywania i rozwi±zywania kolizji w scenie. W poprzednich podrozdzia³ach $2.1 - 2.3$ opisa³em szczegó³owo jedynie po jednym z ka¿dego etapu testowania (wszystkie zaimplementowane s± w do³±czanej aplikacji). Wybra³em je, gdy¿ s± w pewnym sensie najbardziej wszechstronne spo¶ród pozosta³ych, przez co wybierane s± te¿ prawdopodobnie jako jedne z najczêstszych. Chcia³bym tu jednocze¶nie podkre¶liæ, ¿e tematyka kolizji stanowi poka¼ny dzia³ z szerok± gam± algorytmów z powodzeniem stosowanych w praktyce.
+Przedstawiê poni¿ej pokrótce jeszcze kilka innych algorytmów, pojawiaj±cych siê w cytowanej przeze mnie literaturze.
 
-\underline{Grupa testów, zak³adaj±cych wypuk³o¶æ obiektów}:
+\subsection{Grupa testów, zak³adaj±cych wypuk³o¶æ obiektów}
 
 Jednym z nich jest \textbf{algorytm V-Clip}, wykorzystuj±cy technikê wspinania na szczyty i tzw. hierarchiczn± reprezentacjê Dobkina-Kirkpatricka.
 
-Kolejnym podej¶ciem jest rozwi±zanie kolizji metodami programowania liniowego, przez zastosowaniu algorytmu \textbf{eliminacji Fourier'a-Motzkin'a}, o z³o¿ono¶ci wyk³adniczej czy te¿ \textbf{algorytmu Seidel'a}, o z³o¿ono¶ci $O(d!m)$.
+Kolejnym podej¶ciem jest rozwi±zanie kolizji metodami programowania liniowego przez zastosowanie algorytmu \textbf{eliminacji Fourier'a-Motzkin'a}, o z³o¿ono¶ci wyk³adniczej czy te¿ \textbf{algorytmu Seidel'a}, o z³o¿ono¶ci $O(d!m)$, gdzie problem kolizji traktowany jest jak optymalizacyjny problem matematyczny.
 
 Istnieje wreszcie \textbf{algorytm Chunk-Wang}, który w wydajny sposób znajduje o¶ rozdzielaj±c± dwa nieprzecinaj±ce siê obiekty.
 
-\underline{Grupa szczegó³owych testów na kolizje}:
+\subsection{Grupa szczegó³owych testów na kolizje}
 
-Wiêkszo¶æ z nich polega na szczególnym podziale zbioru b±d¼ przestrzenii na mniejsze (tzw. "spatial partitioning"). Przyk³adami hierarchii takiego podzia³u s±: \textbf{k-d tree}, \textbf{quadtree} czy \textbf{octree}. 
+Wiêkszo¶æ z nich polega na szczególnym podziale zbioru b±d¼ przestrzenii na mniejsze komórki (tzw. ''spatial partitioning''). Przyk³adami takiego podzia³u s±: \textbf{k-d tree}, \textbf{quadtree} czy \textbf{octree}. 
+
+Istniej± wreszcie stosowane z powodzeniem struktury tzw. \textbf{k-DOP} opakowuj±ce dany obiekt w wielo¶cian o $k$-¶cianach, na których przeprowadzane s± przybli¿one kolizje (dla $k=6$ s± one równowa¿ne z opisanym w rozdziale $2.1$ testem na prostopad³o¶cianach).
 
 \chapter{Metody poprawy wydajno¶ci systemów detekcji kolizji}
 
-Istnieje kilka bardzo istotnych kwestii, które nale¿y poruszyæ omawiaj±c tematykê systemów detekcji kolizji.
+Istnieje kilka istotnych kwestii wydajno¶ciowych, które nie sposób pomin±æ omawiaj±c tematykê systemów detekcji kolizji. 
+
+Przede wszystkim wiele z przedstawianych algorytmów mo¿na przyspieszyæ wykorzystuj±c \textbf{programowanie równoleg³e}. Wiêkszo¶æ z obecnie produkowanych komputerów posiada procesory wielordzeniowe. W zwi±zku z tym coraz bardziej warto jest przyspieszaæ ich dzia³anie wykorzystuj±c mo¿liwo¶ci sprzêtowe\footnote{Prawdopodobnie w przysz³o¶ci bêdzie to mia³o o wiele wiêksze znaczenie dziêki przetwarzaniu rozproszonemu, do którego dostêp bêdzie dziêki powszechnie u¿ywanej technologiii przetwarzania w chmurze, czyli tzw.''Claud computing''.}. W szczególno¶ci wszelkiego typu struktury podzia³u, w których kolizje badamy rekurencyjnie w ka¿dej z komórek przestrzenii (rozdzia³ 2.3.),  mo¿na przerobiæ na wersjê równoleg³±, by w ca³kiem sensownym czasie uzyskaæ kilkukrotne przyspieszenie.
+
+Czêsto jeste¶my w stanie okre¶liæ, które obiekty nie bêd± podlega³y transformacjom (np. ¶ciany). Kolejnym podej¶ciem usprawniaj±cym wydajno¶æ jest \textbf{budowanie BSP dla obiektów statycznych} i przetrzymywanie ich razem z nimi w przeci±gu ca³ego czasu ich istnienia w aplikacji. W momencie sprawdzania kolizji nie istnieje wtedy potrzeba budowania tej struktury w locie (co jest najbardziej czasoch³onne), a jedynie przeprowadzenia wyszukiwania w danym drzewie.
+
+Tak samo, mo¿emy te¿ ''przetworzyæ'' wstêpnie obiekty np. pod k±tem ich wypuk³o¶ci (je¶li s± równe swoim otoczkom wypuk³ym, to s± wypuk³e). Je¶li w przeci±gu swojego istnienia w aplikacji nie podlegaj± one deformacjom, to mo¿emy \textbf{oznaczyæ flag± obiekty, które s± wypuk³e} i pomijaæ pewne dalsze (a przy tym bardziej z³o¿one) etapy wykrywania kolizji. Przyk³adowo, obiekty, które s± oba wypuk³e mog± zatrzymaæ test swojej kolizji w momencie zatrzymania algorytmu GJK z wynikiem prawdziwym.
+
+
 
 \clearpage
 
 \chapter{Aplikacja}
 
-Na potrzeby przetestowania powy¿szych algorytmów napisa³em aplikacjê, dziêki której mo¿na symulowaæ kolizje. Aplikacja znajduje siê pod adresem:
+Na potrzeby przetestowania powy¿szych algorytmów napisa³em aplikacjê o nazwie ''InteractingMeshes', która jest integraln± czê¶ci± mojej pracy, stworzon± do symulacji kolizji. Aplikacja dostêpna jest pod adresem:
+
 http://code.google.com/p/interactingmeshes/
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=1.2\textwidth]{application.eps}
+\caption[Rozmiar 20]{Zrzut ekranu aplikacji wykrywaj±cej kolizje na siatkach.}
+  \label{zrodlo}
+\end{figure}
 
 
 \section{Opis dzia³ania i interfejs u¿ytkownika}
 
-\section{Wykorzystana technologia i szczegó³y implementacyjne}
+Program ''InteractingMeshes'' jest aplikacj± s³u¿±c± do prezentowania kolizji na siatkach w scenie 3D. U¿ytkownik mo¿e wstawiaæ, wybieraæ oraz usuwaæ obiekty przy pomocy panelu Obiekty w oknie Opcje:
 
- \addcontentsline{toc}{chapter}{\hspace{13pt} Spis
-literatury}
+
+\begin{figure}[htbp]
+ \centering
+    %\includegraphics[width=0.65\textwidth,viewport=50 260 400 1000]{pop10/wykres10.eps}
+  \includegraphics[width=0.6\textwidth]{options.eps}
+\caption[Rozmiar 20]{Opcje programu (panel testów kolizji i panel obiektów).}
+  \label{zrodlo}
+\end{figure}
+
+Na dan± chwilê s± to standardowe obiekty dostêpne z klasy Mesh w bibliotece Directx3D (prostopad³o¶cian, sfera, torus, czajnik). Dla ka¿dego z nich istnieje szereg parametrów (np. dla sfery s± to: d³ugo¶æ promienia, liczba równole¿ników, liczba po³udników), które go definiuj±. Dlatego te¿ operowaæ mo¿na na szerokiej gamie siatek. W kolejnych wersjach programu zamierzam dodaæ mo¿liwo¶æ importowania zewnêtrznych siatek zdefiniowanych w plikach w standardowym formacie *.X.
+
+Ponadto w panelu ''Testy kolizji''  mo¿ena ustawiaæ rodzaj algorytmów detekcji kolizji, które maj± zostaæ zastosowane w programie do ich wykrywania. S± to poszczególne testy opisane przeze mnie szczegó³owo we wcze¶niejszych rozdzia³ach. Zaznaczenie opcji ''Test Boxes'' powoduje sprawdzanie kolizji obiektów na prostopad³o¶cianach opakowuj±cych (rozdzia³ 2.1.), opcji ''Test GJK''  sprawdzanie kolizji algorytmem Gilberta-Johnsona-Keerthi (rozdzia³ 2.2.), a opcji ''Test BSP'' sprawdzanie kolizji przy pomocy struktury podzia³u BSP (rozdzia³ 2.3.) jedn± z dwóch mo¿liwych metod. W kolejnych wersjach programu zamierzam poszerzyæ mo¿liwo¶ci aplikacji implementuj±c inne metody.
+
+\section{Szczegó³y implementacyjne}
+
+Projekt napisa³em w technologii .NET w jêzyku programowania C\# u¿ywaj±c ¶rodowiska Microsoft Visual Studio 2008. Do wizualizacji i operacji graficznych wykorzysta³em bibliotekê Directx w wersji 9.0. 
+
+Poni¿ej przedstawiam diagram klas i diagram sekwencji do³±czanej aplikacji.
+
+
+\begin{figure}[htbp]
+ \centering
+  \includegraphics[width=1.0\textwidth]{ClassDiagram2.eps}
+\caption[Rozmiar 20]{Diagram klas.} 
+  \label{zrodlo}
+\end{figure}
+
+\addcontentsline{toc}{chapter}{\hspace{12pt} Zakoñczenie}
+
+\chapter*{Zakoñczenie}
+
+Niniejsza praca magisterska jest wynikiem moich studiów na temat systemów detekcji kolizji w ¶rodowiskach symulacyjnych. Postanowi³em ogólnie opisaæ ich za³o¿enia oraz szczegó³owo skupiæ siê na wybranych algorytmach razem z ich implementacj±, maj±c ju¿ pewne do¶wiadczenie zawodowe w tej dziedzinie. Mam nadziejê, ¿e uda³o mi siê w zgrabny sposób przedstawiæ te wyniki zarówno od strony teoretycznej jak i praktycznej poprzez do³±czenie ¼róde³ programu. 
+
+ \addcontentsline{toc}{chapter}{\hspace{13pt} Spis literatury}
 \renewcommand{\bibname}{Spis literatury}
 \bibliographystyle{plain}
 \bibliography{spis_literatury}
 
-1. Christer Ericson, Real-Time Collision Detection", 2005  Elsevier Inc.
+1. Christer Ericson, ''Real-Time Collision Detection'', 2005  Elsevier Inc.
 
-2. Gino van den Bergen, "Collision Detection In Interactive 3D Environments", 2003 Elsevier Inc.
+2. Gino van den Bergen, ''Collision Detection In Interactive 3D Environments'', 2003 Elsevier Inc.
 
-3. Philip J.Schneider, David H.Eberly, "Geometric Tools for Computer Graphics", 2003 Elsevier Science
+3. Philip J.Schneider, David H.Eberly, ''Geometric Tools for Computer Graphics'', 2003 Elsevier Science.
 
-4. Charles Petzold, "3D Programming for Windows"
+4. Charles Petzold, ''3D Programming for Windows''.
 
-5. Ron Penton, "Beginning C\# Game Programming", 2003
+5. Ron Penton, ''Beginning C\# Game Programming'', 2003.
 
-6. www.geometrictools.com - zestaw u¿ytecznych kodów i algorytmów wykorzystywanych w grafice komputerowej, matematyce, fizyce, geometrii, analizie numerycznej
+6. M. de Berg, M. van Kreveld, M. Overmars, O. Schwarzkopf, ''Geometria obliczeniowa - algorytmy i zastosowania'', WNT 2007.
 
-7. www.microsoft.com/windows/directx - zestaw funkcji API wspomagaj±cych m.in. generowanie grafiki 
+7. www.geometrictools.com - zestaw u¿ytecznych kodów i algorytmów wykorzystywanych w grafice komputerowej, matematyce, fizyce, geometrii, analizie numerycznej
+
+8. www.microsoft.com/windows/directx - zestaw funkcji API wspomagaj±cych m.in. generowanie grafiki 
 
 \end{document}
