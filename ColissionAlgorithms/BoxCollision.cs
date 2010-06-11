@@ -6,8 +6,14 @@ using Microsoft.DirectX;
 
 namespace InteractingMeshes
 {
-    public class BoxCollision
+    public class BoxCollision : ICollisionDetector
     {
+
+        public bool DetectCollision(GeometricObject obj1, GeometricObject obj2, double tolerance)
+        {
+            return TestOverlap(obj1, obj2, tolerance);
+        }
+
         /// <summary>
         /// Performs an overlap test between two elements.
         /// </summary>

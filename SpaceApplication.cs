@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Collections.Generic;
+using InteractingMeshes.Tests;
 
 namespace InteractingMeshes
 {
@@ -27,12 +29,12 @@ namespace InteractingMeshes
         /// <summary>
         /// Szerokoœæ ekranu
         /// </summary>
-        private static int screenwidth = 1024;
+        private static int screenwidth = 640;
 
         /// <summary>
         /// Wysokoœæ ekranu
         /// </summary>
-        private static int screenheight = 700;
+        private static int screenheight = 640;
 
         private static Timer gametimer;
         private static bool paused;
@@ -89,6 +91,8 @@ namespace InteractingMeshes
         private float speedmodifier = 1.0f;
 
         public static SpaceApplication Instance;
+
+        private List<GeometricObject> collided = new List<GeometricObject>();
 
         #endregion
 
@@ -424,19 +428,18 @@ namespace InteractingMeshes
                 device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0); // Clear the window to black
                 device.BeginScene();
                 device.VertexFormat = CustomVertex.TransformedColored.Format;
-                speedmodifier += 0.01f;
+                //speedmodifier += 0.01f;
 
-                if (ActiveObject != null)
-                {
-                    this.DoTransformations();
-                    this.DoCollisions();
-                    ActiveObject.IsChanged = false;
-                }
-                //  this.TestDrawingTriangle();
+                this.ProcessTransformations();
+                this.ProcessCollisions();
+                this.ProcessVisualization();
+
                 device.Transform.World = Matrix.Identity;
                 device.Transform.View = Matrix.LookAtLH(camera.Position, // Camera position
                                                         camera.LookAtPoint, // Look-at point
                                                         camera.UpVector); // Up vector
+                
+                CollisionTestsManager.PresentStatistics();
 
 
                 device.EndScene();
@@ -452,7 +455,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Do transformations (moves, rotates ActiveObject)
         /// </summary>
-        private void DoTransformations()
+        private void ProcessTransformations()
         {
             foreach (GeometricObject obj in Manager.Objects)
             {
@@ -469,10 +472,35 @@ namespace InteractingMeshes
                         ActiveObject.Position -= Manager.Move;
                     }
                     Manager.Move = new Vector3(0, 0, 0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Do visualization
+        /// </summary>
+        /// <param name="_objects"></param>
+        private void ProcessVisualization()
+        {
+            foreach (GeometricObject obj in Manager.Objects)
+            {
+                if (obj == ActiveObject)
+                {
                     device.Transform.World = ActiveObject.GeometryMatrix;
                     ActiveObject.Mesh.DrawSubset(0);
 
                     obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
+                }
+                else
+                {
+                    if (CollisionManager.CollidedObjects.Contains(obj))
+                    {
+                        obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
+                    }
+                    else
+                    {
+                        obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
+                    }
                 }
                 device.Transform.World = obj.GeometryMatrix;
                 obj.Mesh.DrawSubset(0);
@@ -482,30 +510,20 @@ namespace InteractingMeshes
         /// <summary>
         /// Do collision operations
         /// </summary>
-        private void DoCollisions()
+        private void ProcessCollisions()
         {
-            //testing collisions
-            bool isCollision = false;
-            if (ActiveObject.IsChanged)
+            if (ActiveObject != null && ActiveObject.IsChanged)
             {
+                //collided.Clear();
+                CollisionManager.ClearCollidedObjects();
                 foreach (GeometricObject obj in Manager.Objects)
                 {
                     if (obj != ActiveObject)
                     {
-                        isCollision = CollisionManager.CollisionTest(obj, ActiveObject);
-                        if (isCollision)
-                        {
-                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Red, device);
-                        }
-                        else
-                        {
-                            obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
-                           // obj.GeometryMatrix.RotateAxis(new Vector3(1, 1, 1), ++this.speedmodifier);
-                        }
+                        CollisionManager.CollisionTest(obj, ActiveObject);
                     }
-                    device.Transform.World = obj.GeometryMatrix;
-                    obj.Mesh.DrawSubset(0);
                 }
+                ActiveObject.IsChanged = false;
             }
         }
 
