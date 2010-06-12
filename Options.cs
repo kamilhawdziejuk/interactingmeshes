@@ -35,6 +35,7 @@ namespace InteractingMeshes
             None = 0
         }
 
+        public static bool SymulationPoweredOn = false;
 
         #region --- Creating and destroying objects ---
 
@@ -190,5 +191,21 @@ namespace InteractingMeshes
         }
 
         #endregion
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SymulationPoweredOn = !SymulationPoweredOn;
+            if (SymulationPoweredOn)
+            {
+                symulationBtn.Text = "Stop Symulation";
+                symulationBtn.BackColor = Color.Red;
+                
+            }
+            else
+            {
+                symulationBtn.Text = "Start Symulation";
+                symulationBtn.BackColor = Color.LightGreen;
+            }
+        }
     }
 }

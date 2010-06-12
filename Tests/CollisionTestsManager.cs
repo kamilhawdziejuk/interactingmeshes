@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace InteractingMeshes.Tests
 {
@@ -10,6 +11,8 @@ namespace InteractingMeshes.Tests
         private static List<CollisionTest> Tests = new List<CollisionTest>();
         private static Dictionary<CollisionTest, TimeSpan> Stats = new Dictionary<CollisionTest, TimeSpan>();
         private static Dictionary<CollisionTest, int> StatsCounts = new Dictionary<CollisionTest, int>();
+
+        private static int Freequency = 100;
 
         public static void AddTest(CollisionTest _test)
         {
@@ -24,10 +27,27 @@ namespace InteractingMeshes.Tests
             }
         }
 
+        private static void SaveStatistics(int _nr, string _results)
+        {
+
+            FileInfo f = new FileInfo("stats.txt");
+            StreamWriter w = f.CreateText();
+            w.WriteLine("\n");
+            w.WriteLine(_nr.ToString());
+
+            foreach (KeyValuePair<CollisionTest, TimeSpan> kvp in Stats)
+            {
+                w.WriteLine(StatsCounts[kvp.Key] + "x" + kvp.Key + " -----> " + kvp.Value + "\n");
+                w.WriteLine(_results);
+            }
+            w.WriteLine("-----------------------");
+            w.Close();
+        }
+
         public static string PresentStatistics()
         {
 
-            if (CollisionTestsManager.TestsNumber % 40 != 1)
+            if (CollisionTestsManager.TestsNumber % Freequency != 1)
             {
                 return String.Empty;
             }
@@ -69,20 +89,11 @@ namespace InteractingMeshes.Tests
                 }
             }
 
-            foreach (KeyValuePair<CollisionTest, TimeSpan> kvp in Stats)
+            if (Stats.Count > 0)
             {
-                result = result + kvp.Key + " -----> " + kvp.Value + "\n";
-            }
+                int nr = (int)(CollisionTestsManager.TestsNumber / Freequency);
 
-            if (!result.Equals(String.Empty))
-            {
-                int nr = (int)(CollisionTestsManager.TestsNumber / 40);
-                Console.WriteLine();
-                Console.WriteLine(nr);
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine(result);
-                Console.WriteLine("-----------------------------------------------------------");
+                SaveStatistics(nr, result);
             }
             return result;
         }

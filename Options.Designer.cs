@@ -52,6 +52,8 @@
             this.radiusBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.sphereAdd = new System.Windows.Forms.Button();
+            this.teapotPage = new System.Windows.Forms.TabPage();
+            this.teapotAddBtn = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.parallelPlaneBtn = new System.Windows.Forms.RadioButton();
             this.autopartitioningBtn = new System.Windows.Forms.RadioButton();
@@ -60,15 +62,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.list = new System.Windows.Forms.ListBox();
-            this.teapotPage = new System.Windows.Forms.TabPage();
-            this.teapotAddBtn = new System.Windows.Forms.Button();
+            this.symulationBtn = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.boxPage.SuspendLayout();
             this.torusPage.SuspendLayout();
             this.spherePage.SuspendLayout();
+            this.teapotPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.teapotPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkBoxTest
@@ -311,6 +312,26 @@
             this.sphereAdd.UseVisualStyleBackColor = true;
             this.sphereAdd.Click += new System.EventHandler(this.sphereAdd_Click);
             // 
+            // teapotPage
+            // 
+            this.teapotPage.Controls.Add(this.teapotAddBtn);
+            this.teapotPage.Location = new System.Drawing.Point(4, 22);
+            this.teapotPage.Name = "teapotPage";
+            this.teapotPage.Size = new System.Drawing.Size(201, 153);
+            this.teapotPage.TabIndex = 3;
+            this.teapotPage.Text = "Teapot";
+            this.teapotPage.UseVisualStyleBackColor = true;
+            // 
+            // teapotAddBtn
+            // 
+            this.teapotAddBtn.Location = new System.Drawing.Point(61, 29);
+            this.teapotAddBtn.Name = "teapotAddBtn";
+            this.teapotAddBtn.Size = new System.Drawing.Size(75, 23);
+            this.teapotAddBtn.TabIndex = 0;
+            this.teapotAddBtn.Text = "Insert";
+            this.teapotAddBtn.UseVisualStyleBackColor = true;
+            this.teapotAddBtn.Click += new System.EventHandler(this.teapotAddBtn_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
@@ -402,32 +423,24 @@
             this.list.TabIndex = 6;
             this.list.SelectedIndexChanged += new System.EventHandler(this.list_SelectedIndexChanged);
             // 
-            // teapotPage
+            // symulationBtn
             // 
-            this.teapotPage.Controls.Add(this.teapotAddBtn);
-            this.teapotPage.Location = new System.Drawing.Point(4, 22);
-            this.teapotPage.Name = "teapotPage";
-            this.teapotPage.Size = new System.Drawing.Size(201, 153);
-            this.teapotPage.TabIndex = 3;
-            this.teapotPage.Text = "Teapot";
-            this.teapotPage.UseVisualStyleBackColor = true;
-            // 
-            // teapotAddBtn
-            // 
-            this.teapotAddBtn.Location = new System.Drawing.Point(61, 29);
-            this.teapotAddBtn.Name = "teapotAddBtn";
-            this.teapotAddBtn.Size = new System.Drawing.Size(75, 23);
-            this.teapotAddBtn.TabIndex = 0;
-            this.teapotAddBtn.Text = "Insert";
-            this.teapotAddBtn.UseVisualStyleBackColor = true;
-            this.teapotAddBtn.Click += new System.EventHandler(this.teapotAddBtn_Click);
+            this.symulationBtn.BackColor = System.Drawing.Color.LightGreen;
+            this.symulationBtn.Location = new System.Drawing.Point(76, 598);
+            this.symulationBtn.Name = "symulationBtn";
+            this.symulationBtn.Size = new System.Drawing.Size(110, 36);
+            this.symulationBtn.TabIndex = 7;
+            this.symulationBtn.Text = "Start Symulation";
+            this.symulationBtn.UseVisualStyleBackColor = false;
+            this.symulationBtn.Click += new System.EventHandler(this.button2_Click);
             // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(293, 589);
+            this.ClientSize = new System.Drawing.Size(293, 655);
+            this.Controls.Add(this.symulationBtn);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Options";
@@ -438,11 +451,11 @@
             this.torusPage.PerformLayout();
             this.spherePage.ResumeLayout(false);
             this.spherePage.PerformLayout();
+            this.teapotPage.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.teapotPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -483,6 +496,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage teapotPage;
         private System.Windows.Forms.Button teapotAddBtn;
+        private System.Windows.Forms.Button symulationBtn;
 
     }
 }

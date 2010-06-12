@@ -109,7 +109,7 @@ namespace InteractingMeshes.Tests
 
         public override string ToString()
         {
-            string result =  "[" + description + "]   " + this.obj1.ToString() + "(" + this.obj1.Polygons.Count.ToString() + ") + " + this.obj2.ToString() + "(" + this.obj2.Polygons.Count.ToString() + ") result=" + this.result.ToString() + "   duration=" + this.Duration.ToString();
+            string result = "[" + description + "]   " + this.obj1.ToString() + "(" + this.obj1.Polygons.Count.ToString() + ") + " + this.obj2.ToString() + "(" + this.obj2.Polygons.Count.ToString() + ") =" + this.result.ToString();// +"   duration=" + this.Duration.ToString();
             return result;
         }
 

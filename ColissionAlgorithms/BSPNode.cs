@@ -36,7 +36,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Max depth
         /// </summary>
-        public static readonly int MaxDepth = 64;
+        public static readonly int MaxDepth = 128;
 
         /// <summary>
         /// Min leaf size
@@ -106,22 +106,31 @@ namespace InteractingMeshes
 
             int numPolygons = _polygons.Count;
 
-            if (_depth >= 2 * MaxDepth || numPolygons <= MinLeafSize)
+            if (_depth >= MaxDepth || numPolygons <= MinLeafSize)
             {
                 return new BSPNode(_polygons);
             }
 
             //(List<Polygon>)(from polygon in _polygons where polygon.Points[0].ID == _ID select new { }); 
-            var polygons = new List<Polygon>();
-
-            foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
-            {
-                polygons.Add(polygon);
-            }
 
             Plane splitPlane = Plane.Empty;
             if (Autopartitioning)
             {
+                var polygons = new List<Polygon>();
+
+                foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
+                {
+                    polygons.Add(polygon);
+                }
+
+                if (polygons.Count * 2 > _polygons.Count)
+                {
+                    polygons.Clear();
+                    foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID != _ID))
+                    {
+                        polygons.Add(polygon);
+                    }
+                }
                 splitPlane = PickSplittingPlane(polygons, _polygons);
             }
             else
@@ -144,18 +153,24 @@ namespace InteractingMeshes
                             break;
                         }
                     case PolygonOnPlanePosition.POLYGON_IN_FRONT_OF_PLANE: //IN_FRONT_OF_PLANE
-                        frontList.Add(poly);
-                        break;
+                        {
+                            frontList.Add(poly);
+                            break;
+                        }
                     case PolygonOnPlanePosition.POLYGON_BEHIND_PLANE: //BEHIND_PLANE
-                        backList.Add(poly);
-                        break;
+                        {
+                            backList.Add(poly);
+                            break;
+                        }
                     case PolygonOnPlanePosition.POLYGON_STRADDLING_PLANE: //STRADDLING_PLANE
-                        List<Polygon> frontPart;
-                        List<Polygon> backPart;
-                        SplitPolygon(poly, splitPlane, out frontPart, out backPart);
-                        frontList.AddRange(frontPart);
-                        backList.AddRange(backPart);
-                        break;
+                        {
+                            List<Polygon> frontPart;
+                            List<Polygon> backPart;
+                            SplitPolygon(poly, splitPlane, out frontPart, out backPart);
+                            frontList.AddRange(frontPart);
+                            backList.AddRange(backPart);
+                            break;
+                        }
                 }
             }
 
@@ -176,7 +191,7 @@ namespace InteractingMeshes
                 }
             }
 
-            if (frontIDs > backIDs)
+            if (frontIDs < backIDs)
             {
                 frontList.AddRange(coplanarList);
             }
@@ -421,37 +436,47 @@ namespace InteractingMeshes
         private static Plane PickSplittingPlane(List<Polygon> _polygons0, List<Polygon> _polygons)
         {
             // Blend factor for optimizing for balance or splits (should be tweaked)
-            float K = 0.2f;
+            float K = 0.8f;
             // Variables for tracking best splitting plane seen so far
             Plane bestPlane = Plane.Empty;
             float bestScore = float.MaxValue;
+
             // Try the plane of each polygon as a dividing plane
-            for (int i = 0; i < _polygons0.Count; i++)
+            for (int i = 0; i < _polygons.Count; i++)
             {
                 int numInFront = 0, numBehind = 0, numStraddling = 0, numCoplanar = 0;
-                Plane plane = GetPlaneFromPolygon(_polygons0[i]);
+                Plane plane = GetPlaneFromPolygon(_polygons[i]);
 
                 // Test against all other polygons
-                for (int j = 0; j < _polygons.Count; j++)
+                for (int j = 0; j < _polygons0.Count; j++)
                 {
                     // Ignore testing against self
                     if (i == j) continue;
+
                     // Keep standing count of the various poly-plane relationships
-                    switch (ClassifyPolygonToPlane(_polygons[j], plane))
+                    switch (ClassifyPolygonToPlane(_polygons0[j], plane))
                     {
                         case PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE:
-                            /* Coplanar polygons treated as being in front of plane */
-                            numCoplanar++;
-                            break;
+                            {
+                                /* Coplanar polygons treated as being in front of plane */
+                                numCoplanar++;
+                                break;
+                            }
                         case PolygonOnPlanePosition.POLYGON_IN_FRONT_OF_PLANE:
-                            numInFront++;
-                            break;
+                            {
+                                numInFront++;
+                                break;
+                            }
                         case PolygonOnPlanePosition.POLYGON_BEHIND_PLANE:
-                            numBehind++;
-                            break;
+                            {
+                                numBehind++;
+                                 break;
+                            }
                         case PolygonOnPlanePosition.POLYGON_STRADDLING_PLANE:
-                            numStraddling++;
-                            break;
+                            {
+                                numStraddling++;
+                                  break;
+                            }
                     }
                 }
                 // Compute score as a weighted combination (based on K, with K in range
@@ -472,6 +497,7 @@ namespace InteractingMeshes
                     bestPlane = plane;
                 }
             }
+
             return bestPlane;
         }
 

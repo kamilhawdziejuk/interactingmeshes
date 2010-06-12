@@ -29,12 +29,12 @@ namespace InteractingMeshes
         /// <summary>
         /// Szerokoœæ ekranu
         /// </summary>
-        private static int screenwidth = 640;
+        private static int screenwidth = 800;
 
         /// <summary>
         /// Wysokoœæ ekranu
         /// </summary>
-        private static int screenheight = 640;
+        private static int screenheight = 600;
 
         private static Timer gametimer;
         private static bool paused;
@@ -53,7 +53,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Region of a screen
         /// </summary>
-        private readonly Region viewRegion = new Region(new Vector3(-16, -16, -16), new Vector3(16, 16, 16));
+        private readonly Region viewRegion = new Region(new Vector3(-10, -10, -10), new Vector3(10, 10, 10));
 
         /// <summary>
         /// Drawing device
@@ -431,6 +431,10 @@ namespace InteractingMeshes
                 //speedmodifier += 0.01f;
 
                 this.ProcessTransformations();
+                if (Options.SymulationPoweredOn)
+                {
+                    this.SymulateTransformations();
+                }
                 this.ProcessCollisions();
                 this.ProcessVisualization();
 
@@ -476,6 +480,31 @@ namespace InteractingMeshes
             }
         }
 
+        private void SymulateTransformations()
+        {
+            Random rand = new Random();
+            Random randDouble = new Random();
+            foreach (GeometricObject obj in Manager.Objects)
+            {
+                
+                int moveX = rand.Next(-1, 2);
+                int moveY = rand.Next(-1, 2);
+                double rotX = randDouble.NextDouble();
+               // int moveZ = rand.Next(-1, 2);
+                
+                Vector3 moveXY = new Vector3((float)moveX, (float)moveY, 0);
+                Vector3 rotXY = new Vector3((float)rotX * moveX, 0, 0);
+               // obj.Rotation += rotXY;
+                obj.Position += moveXY;
+
+                if (!ViewRegion.Contains(obj.Position))
+                {
+                    obj.Position -= moveXY;
+                }
+
+            }
+        }
+
         /// <summary>
         /// Do visualization
         /// </summary>
@@ -484,6 +513,7 @@ namespace InteractingMeshes
         {
             foreach (GeometricObject obj in Manager.Objects)
             {
+
                 if (obj == ActiveObject)
                 {
                     device.Transform.World = ActiveObject.GeometryMatrix;
