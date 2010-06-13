@@ -33,10 +33,12 @@ namespace InteractingMeshes
     /// </summary>
     public class BSPNode
     {
+        public static int Depth = 0;
+
         /// <summary>
         /// Max depth
         /// </summary>
-        public static readonly int MaxDepth = 128;
+        public static readonly int MaxDepth = 1024;
 
         /// <summary>
         /// Min leaf size
@@ -54,6 +56,8 @@ namespace InteractingMeshes
         /// Left BSP tree
         /// </summary>
         public BSPNode frontTree;
+
+        public static BSPNode FullNode = new BSPNode(new List<Polygon>());
 
         public static bool Autopartitioning = true;
 
@@ -99,6 +103,8 @@ namespace InteractingMeshes
         /// <returns></returns>
         public static BSPNode BuildBSPTree(List<Polygon> _polygons, int _depth, int _ID)
         {
+            Depth = Math.Max(Depth, _depth);
+
             if (_polygons.Count == 0 || !DifferentObjectsExist(_polygons))
             {
                 return null;
@@ -123,7 +129,7 @@ namespace InteractingMeshes
                     polygons.Add(polygon);
                 }
 
-                if (polygons.Count * 2 > _polygons.Count)
+                if (polygons.Count * 2 > numPolygons)
                 {
                     polygons.Clear();
                     foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID != _ID))
@@ -132,6 +138,10 @@ namespace InteractingMeshes
                     }
                 }
                 splitPlane = PickSplittingPlane(polygons, _polygons);
+                if (splitPlane == Plane.Empty)
+                {
+                    return BSPNode.FullNode;
+                }
             }
             else
             {
@@ -176,14 +186,16 @@ namespace InteractingMeshes
 
             int frontIDs = 0;
             int backIDs = 0;
-            for (int k = 0; k < frontList.Count; ++k)
+            int kn = frontList.Count;
+            for (int k = 0; k < kn; ++k)
             {
                 if (frontList[k].Points[0].ID == _ID)
                 {
                     frontIDs += 1;
                 }
             }
-            for (int k = 0; k < backList.Count; ++k)
+            int km = backList.Count;
+            for (int k = 0; k < km; ++k)
             {
                 if (backList[k].Points[0].ID == _ID)
                 {
@@ -206,6 +218,10 @@ namespace InteractingMeshes
             if (frontTree == null && backTree == null)
             {
                 return null;
+            }
+            if (frontTree == BSPNode.FullNode || backTree == BSPNode.FullNode)
+            {
+                return BSPNode.FullNode;
             }
             return new BSPNode(frontTree, backTree);
         }
@@ -441,20 +457,25 @@ namespace InteractingMeshes
             Plane bestPlane = Plane.Empty;
             float bestScore = float.MaxValue;
 
+            int n0 = _polygons0.Count;
+            int n = _polygons.Count;
+
+            int countFailed = 0;
+
             // Try the plane of each polygon as a dividing plane
-            for (int i = 0; i < _polygons.Count; i++)
+            for (int i = 0; i <n0; i++)
             {
                 int numInFront = 0, numBehind = 0, numStraddling = 0, numCoplanar = 0;
-                Plane plane = GetPlaneFromPolygon(_polygons[i]);
+                Plane plane = GetPlaneFromPolygon(_polygons0[i]);
 
                 // Test against all other polygons
-                for (int j = 0; j < _polygons0.Count; j++)
+                for (int j = 0; j < n; j++)
                 {
                     // Ignore testing against self
-                    if (i == j) continue;
+                    //if (i == j) continue;
 
                     // Keep standing count of the various poly-plane relationships
-                    switch (ClassifyPolygonToPlane(_polygons0[j], plane))
+                    switch (ClassifyPolygonToPlane(_polygons[j], plane))
                     {
                         case PolygonOnPlanePosition.POLYGON_COPLANAR_WITH_PLANE:
                             {
@@ -479,6 +500,11 @@ namespace InteractingMeshes
                             }
                     }
                 }
+
+                if (numInFront == 0 || numBehind == 0)
+                {
+                    countFailed++;
+                }
                 // Compute score as a weighted combination (based on K, with K in range
                 // 0..1) between balance and splits (lower score is better)
                 if (numInFront < numBehind)
@@ -496,6 +522,11 @@ namespace InteractingMeshes
                     bestScore = score;
                     bestPlane = plane;
                 }
+            }
+
+            if (countFailed == n0)
+            {
+                //return Plane.Empty;
             }
 
             return bestPlane;

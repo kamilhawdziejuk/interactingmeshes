@@ -1,6 +1,7 @@
 ﻿//22-04-2010
 
 using System.Collections.Generic;
+using System;
 
 namespace InteractingMeshes
 {
@@ -21,6 +22,8 @@ namespace InteractingMeshes
             var both = new List<Polygon>(polygons1);
             both.AddRange(polygons2);
             BSPNode bspNode = null;
+
+            int max = BSPNode.Depth;
             if (polygons1.Count < polygons2.Count)
             {
                 bspNode = BSPNode.BuildBSPTree(both, 3, _first.Polygons[0].Points[0].ID);
@@ -30,6 +33,10 @@ namespace InteractingMeshes
                 bspNode = BSPNode.BuildBSPTree(both, 3, _second.Polygons[0].Points[0].ID);
             }
 
+            if (max < BSPNode.Depth)
+            {
+                Console.WriteLine(BSPNode.Depth);
+            }
             return bspNode != null;
         }
     }
