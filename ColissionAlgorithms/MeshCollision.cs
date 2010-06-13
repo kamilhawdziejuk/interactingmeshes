@@ -26,11 +26,11 @@ namespace InteractingMeshes
             int max = BSPNode.Depth;
             if (polygons1.Count < polygons2.Count)
             {
-                bspNode = BSPNode.BuildBSPTree(both, 3, _first.Polygons[0].Points[0].ID);
+                bspNode = BSPNode.BuildBSPTree(ref both, 3, _first.Polygons[0].Points[0].ID);
             }
             else
             {
-                bspNode = BSPNode.BuildBSPTree(both, 3, _second.Polygons[0].Points[0].ID);
+                bspNode = BSPNode.BuildBSPTree(ref both, 3, _second.Polygons[0].Points[0].ID);
             }
 
             if (max < BSPNode.Depth)

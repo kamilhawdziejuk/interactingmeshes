@@ -101,7 +101,7 @@ namespace InteractingMeshes
         /// <param name="_polygons"></param>
         /// <param name="_depth">Depth</param>
         /// <returns></returns>
-        public static BSPNode BuildBSPTree(List<Polygon> _polygons, int _depth, int _ID)
+        public static BSPNode BuildBSPTree(ref List<Polygon> _polygons, int _depth, int _ID)
         {
             Depth = Math.Max(Depth, _depth);
 
@@ -137,7 +137,7 @@ namespace InteractingMeshes
                         polygons.Add(polygon);
                     }
                 }
-                splitPlane = PickSplittingPlane(polygons, _polygons);
+                splitPlane = PickSplittingPlane(ref polygons, ref _polygons);
                 if (splitPlane == Plane.Empty)
                 {
                     return BSPNode.FullNode;
@@ -213,8 +213,8 @@ namespace InteractingMeshes
             }
 
             // Recursively build child subtrees and return new tree root combining them
-            BSPNode frontTree = BuildBSPTree(frontList, _depth + 1, _ID);
-            BSPNode backTree = BuildBSPTree(backList, _depth + 1, _ID);
+            BSPNode frontTree = BuildBSPTree(ref frontList, _depth + 1, _ID);
+            BSPNode backTree = BuildBSPTree(ref backList, _depth + 1, _ID);
             if (frontTree == null && backTree == null)
             {
                 return null;
@@ -449,7 +449,7 @@ namespace InteractingMeshes
         /// </summary>
         /// <param name="_polygons"></param>
         /// <returns></returns>
-        private static Plane PickSplittingPlane(List<Polygon> _polygons0, List<Polygon> _polygons)
+        private static Plane PickSplittingPlane(ref List<Polygon> _polygons0, ref List<Polygon> _polygons)
         {
             // Blend factor for optimizing for balance or splits (should be tweaked)
             float K = 0.8f;
