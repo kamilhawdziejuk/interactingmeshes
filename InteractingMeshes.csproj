@@ -61,7 +61,7 @@
   -->
   <ItemGroup>
     <Compile Include="Geometry\AABox.cs" />
-    <Compile Include="ColissionAlgorithms\BoxCollision.cs" />
+    <Compile Include="ColissionAlgorithms\BoxCollisionDetector.cs" />
     <Compile Include="ColissionAlgorithms\BSPNode.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Geometry\Face.cs" />
@@ -69,7 +69,7 @@
     <Compile Include="Tests\CollisionTest.cs" />
     <Compile Include="Tests\CollisionTestsManager.cs" />
     <Compile Include="Utils\GeometricUtils.cs" />
-    <Compile Include="ColissionAlgorithms\MeshCollision.cs" />
+    <Compile Include="ColissionAlgorithms\MeshCollisionDetector.cs" />
     <Compile Include="ObjectsManager.cs" />
     <Compile Include="Options.cs">
       <SubType>Form</SubType>
@@ -81,7 +81,7 @@
     <Compile Include="Geometry\Region.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Geometry\GeometricObject.cs" />
-    <Compile Include="ColissionAlgorithms\GilbertJohnsonKeerthi.cs" />
+    <Compile Include="ColissionAlgorithms\ConvexCollisionDetector.cs" />
     <Compile Include="Utils\MeshUtils.cs" />
     <Compile Include="SpaceApplication.cs">
       <SubType>Form</SubType>

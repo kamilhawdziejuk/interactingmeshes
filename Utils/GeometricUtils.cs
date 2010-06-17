@@ -14,6 +14,18 @@ namespace InteractingMeshes
             return normal;
         }
 
+        public static bool PlaneEquality(Plane _plane1, Plane _plane2)
+        {
+            if (_plane2 == null || _plane1 == null)
+            {
+                return false;
+            }
+            if (Math.Abs(_plane1.A - _plane2.A) + Math.Abs(_plane1.B - _plane2.B) + Math.Abs(_plane1.C - _plane2.C) + Math.Abs(_plane1.D - _plane2.D) < 0.001)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public static Vector3 GetPointOnPlane(Plane _plane)
         {

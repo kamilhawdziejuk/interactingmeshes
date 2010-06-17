@@ -53,7 +53,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Region of a screen
         /// </summary>
-        private readonly Region viewRegion = new Region(new Vector3(-10, -10, -10), new Vector3(10, 10, 10));
+        private readonly Region viewRegion = new Region(new Vector3(-10, -10, -20), new Vector3(10, 10, 20));
 
         /// <summary>
         /// Drawing device
@@ -428,13 +428,14 @@ namespace InteractingMeshes
                 device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0); // Clear the window to black
                 device.BeginScene();
                 device.VertexFormat = CustomVertex.TransformedColored.Format;
-                //speedmodifier += 0.01f;
+                
+
 
                 this.ProcessTransformations();
-                if (Options.SymulationPoweredOn)
-                {
-                    this.SymulateTransformations();
-                }
+                //if (Options.SymulationPoweredOn)
+               // {
+               //     this.SymulateTransformations();
+               // }
                 this.ProcessCollisions();
                 this.ProcessVisualization();
 
@@ -516,7 +517,7 @@ namespace InteractingMeshes
 
                 if (obj == ActiveObject)
                 {
-                    device.Transform.World = ActiveObject.GeometryMatrix;
+                    device.Transform.World = ActiveObject.GeometryMatrix;// *Matrix.RotationYawPitchRoll(1, 1, 1);
                     ActiveObject.Mesh.DrawSubset(0);
 
                     obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.Green, device);
@@ -531,8 +532,9 @@ namespace InteractingMeshes
                     {
                         obj.Mesh = MeshUtils.ChangeMeshColor(obj.Mesh, Color.White, device);
                     }
+                    device.Transform.World = obj.GeometryMatrix;
                 }
-                device.Transform.World = obj.GeometryMatrix;
+                
                 obj.Mesh.DrawSubset(0);
             }
         }
@@ -557,6 +559,16 @@ namespace InteractingMeshes
             }
         }
 
+        /// <summary>
+        /// Register collision detectors
+        /// </summary>
+        private static void RegisterCollisionDetectors()
+        {
+            CollisionManager.RegisterDetector(new BoxCollisionDetector());
+            CollisionManager.RegisterDetector(new ConvexCollisionDetector());
+            CollisionManager.RegisterDetector(new MeshCollisionDetector());
+        }
+
         #endregion
 
         #region --- MAIN FUNCTION ---
@@ -573,6 +585,8 @@ namespace InteractingMeshes
                 MessageBox.Show("Could not initialize Direct3D.", "Error");
                 return;
             }
+
+            RegisterCollisionDetectors();
             mainForm.Show(); // When everything is initialized, show the form
             Options.Show();
             while (mainForm.Created) // This is our message loop
@@ -585,3 +599,7 @@ namespace InteractingMeshes
         #endregion
     }
 }
+
+
+
+

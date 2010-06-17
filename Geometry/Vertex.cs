@@ -11,7 +11,7 @@ namespace InteractingMeshes
     /// <summary>
     /// Vertex class
     /// </summary>
-    public struct Vertex
+    public struct Vertex : IEquatable<Vertex>
     {
         #region --- Static fields ---
 
@@ -105,5 +105,18 @@ namespace InteractingMeshes
 
         #endregion
 
+
+        #region IEquatable<Vertex> Members
+
+        public bool Equals(Vertex other)
+        {
+            if (Math.Abs(this.Vector.X - other.Vector.X) + Math.Abs(this.Vector.Y - other.Vector.Y) + Math.Abs(this.Vector.Z - other.Vector.Z) < 0.01)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
     };
 }

@@ -151,7 +151,7 @@ namespace InteractingMeshes
                 if (rotation != value)
                 {
                     Vector3 rotat = value - rotation;
-                    Matrix rot = Matrix.RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);
+                    Matrix rot = Matrix.RotationX(1);// .RotationYawPitchRoll(rotat.Y, rotat.X, rotat.Z);
                     GeometryMatrix *= rot;
                     rotation = value;
                     this.IsChanged = true;

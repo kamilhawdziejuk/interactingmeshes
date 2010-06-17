@@ -11,5 +11,15 @@ namespace InteractingMeshes
     public interface ICollisionDetector
     {
         bool DetectCollision(GeometricObject obj1, GeometricObject obj2, double tolerance);
+
+        string Name
+        {
+            get;
+        }
+
+        Options.CollisionStage CollisionLevel
+        {
+            get;
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace InteractingMeshes
         /// <summary>
         /// Max depth
         /// </summary>
-        public static readonly int MaxDepth = 1024;
+        public static readonly int MaxDepth = 32;
 
         /// <summary>
         /// Min leaf size
@@ -101,7 +101,7 @@ namespace InteractingMeshes
         /// <param name="_polygons"></param>
         /// <param name="_depth">Depth</param>
         /// <returns></returns>
-        public static BSPNode BuildBSPTree(ref List<Polygon> _polygons, int _depth, int _ID)
+        public static BSPNode BuildBSPTree(ref List<Polygon> _polygons, int _depth, int _ID, Plane _splittingPlane)
         {
             Depth = Math.Max(Depth, _depth);
 
@@ -112,17 +112,28 @@ namespace InteractingMeshes
 
             int numPolygons = _polygons.Count;
 
-            if (_depth >= MaxDepth || numPolygons <= MinLeafSize)
+            if (Autopartitioning)
             {
-                return new BSPNode(_polygons);
+                if (_depth >= 2 * MaxDepth || numPolygons <= MinLeafSize)
+                {
+                    return new BSPNode(_polygons);
+                }
+            }
+            else
+            {
+                if (_depth >= MaxDepth || numPolygons <= MinLeafSize)
+                {
+                    return new BSPNode(_polygons);
+                }
             }
 
             //(List<Polygon>)(from polygon in _polygons where polygon.Points[0].ID == _ID select new { }); 
 
             Plane splitPlane = Plane.Empty;
+            var polygons = new List<Polygon>();
             if (Autopartitioning)
             {
-                var polygons = new List<Polygon>();
+                
 
                 foreach (Polygon polygon in _polygons.Where(polygon => polygon.Points[0].ID == _ID))
                 {
@@ -137,22 +148,18 @@ namespace InteractingMeshes
                         polygons.Add(polygon);
                     }
                 }
-                splitPlane = PickSplittingPlane(ref polygons, ref _polygons);
-                if (splitPlane == Plane.Empty)
-                {
-                    return BSPNode.FullNode;
-                }
+                splitPlane = PickSplittingPlane(ref polygons, ref _polygons); //O(n^2)
             }
             else
             {
-                splitPlane = PickSplittingPlane2(_polygons, _depth);
+                splitPlane = PickSplittingPlane2(_polygons, _depth); //O(n)
             }
             var frontList = new List<Polygon>();
             var backList = new List<Polygon>();
             var coplanarList = new List<Polygon>();
 
             //test each polygon against the dividing plane, adding them to the front list, back list, or both, as appropriate
-            for (int i = 0; i < numPolygons; ++i)
+            for (int i = 0; i < numPolygons; ++i) //O(n)
             {
                 Polygon poly = _polygons[i];
                 switch (ClassifyPolygonToPlane(poly, splitPlane))
@@ -176,7 +183,7 @@ namespace InteractingMeshes
                         {
                             List<Polygon> frontPart;
                             List<Polygon> backPart;
-                            SplitPolygon(poly, splitPlane, out frontPart, out backPart);
+                            SplitPolygon(poly, splitPlane, out frontPart, out backPart); //O(1)
                             frontList.AddRange(frontPart);
                             backList.AddRange(backPart);
                             break;
@@ -212,9 +219,14 @@ namespace InteractingMeshes
                 backList.AddRange(coplanarList);
             }
 
+            if (GeometricUtils.PlaneEquality(splitPlane, _splittingPlane) && (frontList.Count == _polygons.Count || backList.Count == _polygons.Count ))
+            {
+                return BSPNode.FullNode;
+            }
+
             // Recursively build child subtrees and return new tree root combining them
-            BSPNode frontTree = BuildBSPTree(ref frontList, _depth + 1, _ID);
-            BSPNode backTree = BuildBSPTree(ref backList, _depth + 1, _ID);
+            BSPNode frontTree = BuildBSPTree(ref frontList, _depth + 1, _ID, splitPlane);
+            BSPNode backTree = BuildBSPTree(ref backList, _depth + 1, _ID, splitPlane);
             if (frontTree == null && backTree == null)
             {
                 return null;
@@ -501,7 +513,7 @@ namespace InteractingMeshes
                     }
                 }
 
-                if (numInFront == 0 || numBehind == 0)
+                if ((numInFront == 0 || numBehind == 0) && (numStraddling == 0))
                 {
                     countFailed++;
                 }

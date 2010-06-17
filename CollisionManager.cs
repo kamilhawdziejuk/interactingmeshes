@@ -17,6 +17,11 @@ namespace InteractingMeshes
         #region --- Static fields ---
 
         /// <summary>
+        /// Tolerance
+        /// </summary>
+        public static double Tolerance = 0.01;
+
+        /// <summary>
         /// List of collided objects
         /// </summary>
         private static List<GeometricObject> collidedObjects = new List<GeometricObject>();
@@ -83,62 +88,22 @@ namespace InteractingMeshes
         {
             bool isCollision = false;
             Options.CollisionStage collisionLevel = Options.CollisionLevel;
-            CollisionTest boxTest = new CollisionTest("BoxCollisionTesting", _obj1, _obj2);
-            CollisionTest gjkTest = new CollisionTest("GJKCollisionTesting", _obj1, _obj2);
-            CollisionTest bspXYZTest = new CollisionTest("BspXYZCollisionTesting", _obj1, _obj2);
-            CollisionTest bspAutoTest = new CollisionTest("BspAUTOCollisionTesting", _obj1, _obj2);
 
-            if (AcceptTest(collisionLevel, Options.CollisionStage.Box))
+            foreach (ICollisionDetector detector in collisionDetectors)
             {
-                boxTest.Start();
-                if (BoxCollision.TestOverlap(_obj1, _obj2, 0.01))
+                if (AcceptTest(collisionLevel, detector.CollisionLevel))
                 {
-                    isCollision = true;
-                }
-                boxTest.Stop(isCollision);
-                CollisionTestsManager.AddTest(boxTest);
-            }
+                   // CollisionTest test = new CollisionTest(detector.Name, _obj1, _obj2);
+                   // test.Start();
 
-            if (isCollision && AcceptTest(collisionLevel, Options.CollisionStage.GJK))
-            {
-                isCollision = false;
-                gjkTest.Start();
-                if (GilbertJohnsonKeerthi.BodiesIntersect(_obj1.Points, _obj2.Points))
-                {
-                    isCollision = true;
+                    if (detector.DetectCollision(_obj1, _obj2, Tolerance))
+                    {
+                        isCollision = true;
+                        break;
+                    }
+                  //  test.Stop(isCollision);
+                  //  CollisionTestsManager.AddTest(test);
                 }
-                gjkTest.Stop(isCollision);
-                CollisionTestsManager.AddTest(gjkTest);
-            }
-
-            if (isCollision && AcceptTest(collisionLevel, Options.CollisionStage.BSP))
-            {
-                isCollision = false;
-
-                if (BSPNode.Autopartitioning)
-                {
-                    bspAutoTest.Start();
-                }
-                else
-                {
-                    bspXYZTest.Start();
-                }
-                if (MeshCollision.TestBspCollision(_obj1, _obj2))
-                {
-                    isCollision = true;
-                }
-
-                if (BSPNode.Autopartitioning)
-                {
-                    bspAutoTest.Stop(isCollision);
-                    CollisionTestsManager.AddTest(bspAutoTest);
-                }
-                else
-                {
-                    bspXYZTest.Stop(isCollision);
-                    CollisionTestsManager.AddTest(bspXYZTest);
-                }
-                
             }
 
             if (isCollision)
@@ -146,8 +111,6 @@ namespace InteractingMeshes
                 AddCollidedObject(_obj1);
                 AddCollidedObject(_obj2);
             }
-           
-
             return isCollision;
         }
 
@@ -165,5 +128,6 @@ namespace InteractingMeshes
             }
             return false;
         }
+
     }
 }
