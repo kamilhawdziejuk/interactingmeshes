@@ -432,10 +432,10 @@ namespace InteractingMeshes
 
 
                 this.ProcessTransformations();
-                //if (Options.SymulationPoweredOn)
-               // {
-               //     this.SymulateTransformations();
-               // }
+                if (Options.SymulationPoweredOn)
+                {
+                    this.SymulateTransformations();
+                }
                 this.ProcessCollisions();
                 this.ProcessVisualization();
 

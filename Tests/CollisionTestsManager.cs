@@ -12,7 +12,7 @@ namespace InteractingMeshes.Tests
         private static Dictionary<CollisionTest, TimeSpan> Stats = new Dictionary<CollisionTest, TimeSpan>();
         private static Dictionary<CollisionTest, int> StatsCounts = new Dictionary<CollisionTest, int>();
 
-        private static int Freequency = 100;
+        private static int Freequency = 5;
 
         public static void AddTest(CollisionTest _test)
         {

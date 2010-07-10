@@ -94,15 +94,19 @@ namespace InteractingMeshes
                 if (AcceptTest(collisionLevel, detector.CollisionLevel))
                 {
                    // CollisionTest test = new CollisionTest(detector.Name, _obj1, _obj2);
-                   // test.Start();
+                    //test.Start();
 
                     if (detector.DetectCollision(_obj1, _obj2, Tolerance))
                     {
                         isCollision = true;
-                        break;
+                        //break;
                     }
-                  //  test.Stop(isCollision);
-                  //  CollisionTestsManager.AddTest(test);
+                    else
+                    {
+                        isCollision = false;
+                    }
+                    //test.Stop(isCollision);
+                    //CollisionTestsManager.AddTest(test);
                 }
             }
 

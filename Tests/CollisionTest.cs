@@ -12,12 +12,6 @@ namespace InteractingMeshes.Tests
     {
         #region --- Static fields ---
 
-        //private static TimeSpan SumCollidedTime = TimeSpan.Zero;
-        //private static TimeSpan SumNotCollidedTime = TimeSpan.Zero;
-
-        //private static int CountCollided = 0;
-        //private static int CountNotCollided = 0;
-
         #endregion
 
         #region --- Private fields ---

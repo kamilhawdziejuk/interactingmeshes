@@ -106,7 +106,7 @@ namespace InteractingMeshes
                 if (this.checkBSPTest.Checked)
                 {
                     CollisionLevel |= CollisionStage.BSP;
-                    this.autopartitioningBtn.Checked = true;
+                    //this.autopartitioningBtn.Checked = true;
                 }
                 else
                 {

@@ -4,22 +4,6 @@ using Microsoft.DirectX;
 
 namespace InteractingMeshes
 {
-    ///// <summary> 
-    ///// Contains extension methods for the Vector3 class to save us some typing, e.g. instead of Vector3.Dot(v1, v2) just write v1.Dot(v2) 
-    ///// </summary> 
-    //public static class Vector3Extensions
-    //{
-    //    public static float Dot(this Vector3 op1, Vector3 op2)
-    //    {
-    //        return Vector3.Dot(op1, op2);
-    //    }
-
-    //    public static Vector3 Cross(this Vector3 op1, Vector3 op2)
-    //    {
-    //        return Vector3.Cross(op1, op2);
-    //    }
-    //}
-
     /// <summary> 
     /// Implements the Gilbert-Johnson-Keerthi algorithm for collision detection in 3D, as described in the video lecture at http://mollyrocket.com/849 
     /// See also http://www.cse.ttu.edu.tw/~jmchen/compg/fall04/students-presentation/GJK.pdf 
@@ -27,7 +11,9 @@ namespace InteractingMeshes
     public class ConvexCollisionDetector : ICollisionDetector
     {
         //to prevent infinite loops - if an intersection is not found in 20 rounds, consider there is no intersection 
-        private const int MaxIterations = 20;
+        private const int MaxIterations = 40;
+
+        private static int maxIters = 0;
 
         #region --- ICollisionDetector Members ---
 
@@ -67,8 +53,14 @@ namespace InteractingMeshes
             var simplex = new List<Vector3>();
             simplex.Add(S);
 
-            for (int i = 0; i < MaxIterations; i++)
+            for (int i = 0; i <  MaxIterations; i++)
             {
+                if (i > maxIters)
+                {
+                    maxIters = i;
+                    Console.WriteLine(maxIters);
+                }
+
                 Vector3 A = MaxPointInMinkDiffAlongDir(shape1, shape2, D); //O(n)
                 if (Vector3.Dot(A, D) < 0)
                 {
